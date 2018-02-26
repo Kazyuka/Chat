@@ -14,11 +14,17 @@ class Message: NSObject {
     var toIdUser: String?
     var text: String?
     var time: NSNumber?
+    var imageUrl: String?
     
     init(dic: [String: AnyObject]) {
         self.fromIdUser = dic["fromId"] as? String
         self.toIdUser = dic["toId"] as? String
-        self.text = dic["text"] as? String
+        if let textMessage = dic["text"] as? String {
+             self.text = textMessage
+        }
+        if let imageMessage = dic["imageUrl"] as? String {
+            self.imageUrl = imageMessage
+        }
         self.time = dic["time"] as? NSNumber
     }
     

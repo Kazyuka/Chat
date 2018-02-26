@@ -4,6 +4,8 @@ import Foundation
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
+import FirebaseStorage
+
 class ChatLogController: UICollectionViewController {
    
     let cellIdentifier = "Cell"
@@ -99,21 +101,25 @@ class ChatLogController: UICollectionViewController {
         textFieldInputTex.text = "Your message"
         textFieldInputTex.textColor = UIColor.lightGray
     }
+   @objc func sendImageMassegaButtonTapped () {
     
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        present(imagePicker, animated: true, completion: nil)
+    }
+
     var  textInsideTextFeld: String? {
         
         didSet {
             if textInsideTextFeld != "" {
                 sendButton.isEnabled = true
             } else {
-                
                 sendButton.isEnabled = false
             }
         }
     }
     
     let sendButton: UIButton = {
-        
         let button = UIButton()
         button.setImage(UIImage(named:"send"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
@@ -126,6 +132,18 @@ class ChatLogController: UICollectionViewController {
         button.addTarget(self, action: #selector(sendMassegaButtonTapped), for: .touchUpInside)
         return button
     }()
+    lazy var sendImageButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named:"stack"), for: .normal)
+        button.setTitleColor(UIColor.black, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.contentMode = .scaleAspectFill
+        button.layer.cornerRadius = 20
+        button.layer.masksToBounds = true
+        button.contentMode = .scaleAspectFill
+        button.addTarget(self, action: #selector(sendImageMassegaButtonTapped), for: .touchUpInside)
+        return button
+    }()
     let massegeImputContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.white
@@ -135,6 +153,8 @@ class ChatLogController: UICollectionViewController {
     
     let textFieldInputTex: UITextView = {
         let text = UITextView()
+        text.layer.cornerRadius = 20
+        text.layer.masksToBounds = true
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
@@ -166,15 +186,21 @@ class ChatLogController: UICollectionViewController {
         textFieldInputTex.delegate = self
         self.massegeImputContainerView.addSubview(textFieldInputTex)
         self.massegeImputContainerView.addSubview(sendButton)
+        self.massegeImputContainerView.addSubview(sendImageButton)
         
         self.sendButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
         self.sendButton.rightAnchor.constraint(equalTo: self.massegeImputContainerView.rightAnchor, constant: -4).isActive = true
         self.sendButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         self.sendButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
     
+        self.sendImageButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
+        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -4).isActive = true
+         self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 1).isActive = true
+        self.sendImageButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+        self.sendImageButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        
         self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -2).isActive = true
         self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 2).isActive = true
-         self.textFieldInputTex.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 2).isActive = true
         self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -10).isActive = true
         
         self.separateView.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor).isActive = true
@@ -207,7 +233,8 @@ class ChatLogController: UICollectionViewController {
         )
     }
     
-    deinit {
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardDidShow, object: nil)
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
@@ -216,7 +243,11 @@ extension ChatLogController: UICollectionViewDelegateFlowLayout {
    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let text = arrayMessages[indexPath.item].text
-        return CGSize(width: view.frame.width, height: (text?.height(withConstrainedWidth: 200, font: UIFont.boldSystemFont(ofSize: 14)))! + 20)
+        
+        if let  messageText = text {
+            return CGSize(width: UIScreen.main.bounds.width, height: (messageText.height(withConstrainedWidth: 200, font: UIFont.boldSystemFont(ofSize: 14))) + 20)
+        }
+        return CGSize(width: UIScreen.main.bounds.width, height: 200 )
     }
 }
 extension ChatLogController: UITextViewDelegate {
@@ -245,6 +276,61 @@ extension ChatLogController: UITextViewDelegate {
             textView.text = "Your message"
             textView.textColor = UIColor.lightGray
         }
+    }
+}
+
+extension ChatLogController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+ 
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        var selectedImagefromPisker: UIImage?
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImagefromPisker = editedImage
+            
+        } else  if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            selectedImagefromPisker = originalImage
+        }
+        if let selectedImage = selectedImagefromPisker {
+            uploadImageToFirebase(image: selectedImage)
+        }
+         dismiss(animated: true, completion: nil)
+    }
+    
+    func uploadImageToFirebase(image: UIImage) {
+        let imageName = NSUUID().uuidString
+        let storageRef = Storage.storage().reference().child("message_images").child("\(imageName).png")
+        if let uploadData = UIImageJPEGRepresentation(image, 0.3) {
+            storageRef.putData(uploadData, metadata: nil, completion: { (metadata, err) in
+                if err != nil{
+                    return
+                }
+                if let urlString = metadata?.downloadURL()?.absoluteString {
+                    
+                    let ref = Database.database().reference().child("messages")
+                    let childRef  = ref.childByAutoId()
+                    let toIdUser = self.user?.userId
+                    let fromId = Auth.auth().currentUser!.uid
+                    let time = Int(NSDate().timeIntervalSince1970)
+                    let value = ["imageUrl": urlString, "toId": toIdUser, "fromId" : fromId, "time": time] as [String : Any]
+                    
+                    childRef.updateChildValues(value) { (err, data) in
+                        if err != nil {
+                            return
+                        }
+                        let messageRef = Database.database().reference().child("message-users").child(fromId)
+                        let messsID = childRef.key
+                        messageRef.updateChildValues([messsID: 2])
+                        
+                        let recipientRef = Database.database().reference().child("message-users").child(toIdUser!)
+                        recipientRef.updateChildValues([messsID: 2])
+                    }
+                    
+                }
+            })
+        }
+    }
+     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 

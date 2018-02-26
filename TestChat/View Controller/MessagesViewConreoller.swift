@@ -44,8 +44,10 @@ class MessagesViewConroller: UITableViewController {
                             return m1.time!.intValue > m2.time!.intValue
                         })
                     }
-                    self.tableView.reloadData()
                 }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                       self.tableView.reloadData()
+                    })
             })
         }
     }

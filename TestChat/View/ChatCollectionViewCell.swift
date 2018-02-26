@@ -1,7 +1,13 @@
 
 import UIKit
 import FirebaseAuth
+import SDWebImage
+import FirebaseDatabase
+
 class ChatCollectionViewCell: UICollectionViewCell {
+   
+    var const: CGFloat = 200
+    
     var message: Message? {
         didSet {
             dataForCell()
@@ -9,21 +15,51 @@ class ChatCollectionViewCell: UICollectionViewCell {
     }
     func dataForCell()  {
         messageText.text = message?.text
+        let uid = Auth.auth().currentUser?.uid
+      
+        if let messageImage = message?.imageUrl {
+            let url = NSURL.init(string: messageImage)
+            messageImageView.sd_setImage(with: url as! URL)
+            messageImageView.isHidden = false
+        } else {
+            messageImageView.isHidden = true
+        }
         
-        if Auth.auth().currentUser?.uid == message?.fromIdUser {
+        if uid == message?.fromIdUser {
             bubleView.backgroundColor = UIColor.lightGray
             messageText.textColor = UIColor.black
-            imageUser.isHidden = true
+            
             bubleLeftAchor?.isActive = false
             bubleRightAchor?.isActive = true
+            imageUser.isHidden = true
         } else {
             bubleView.backgroundColor = UIColor.blue
+            messageText.textColor = UIColor.white
             bubleLeftAchor?.isActive = true
             bubleRightAchor?.isActive = false
-            imageUser.isHidden = false
+            
+            if let fromId = message?.fromIdUser {
+               
+                let refUser = Database.database().reference().child("users").child(fromId)
+                refUser.observeSingleEvent(of: .value, with: { (snap) in
+                    
+                    if let data = snap.value as? [String  : AnyObject] {
+                        
+                        let user = User.init(dic: data)
+                        let url = NSURL.init(string: user.imageProfile!)
+                        self.imageUser.sd_setImage(with: url as! URL)
+                        self.imageUser.isHidden = false
+                    }
+                })
+            }
         }
-        let const = (message?.text?.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14)))! <= 40 ? 50 : (message?.text?.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14)))! + 20
-        bubleWidthAchor?.constant = const
+
+        if let messageText =  message!.text {
+            const =  (messageText.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14))) <= 40 ? 50 : (message?.text?.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14)))! + 20
+            bubleWidthAchor?.constant = const
+        }
+        
+         bubleWidthAchor?.constant = const
     }
     var bubleWidthAchor: NSLayoutConstraint?
     var bubleRightAchor: NSLayoutConstraint?
@@ -51,9 +87,17 @@ class ChatCollectionViewCell: UICollectionViewCell {
     
     lazy var imageUser: UIImageView = {
         var bv = UIImageView()
-        bv.backgroundColor = UIColor.blue
         bv.translatesAutoresizingMaskIntoConstraints = false
         bv.layer.cornerRadius = 12
+        bv.layer.masksToBounds = true
+        bv.contentMode = .scaleAspectFill
+        return bv
+    }()
+    
+    lazy var messageImageView: UIImageView = {
+        var bv = UIImageView()
+        bv.translatesAutoresizingMaskIntoConstraints = false
+        bv.layer.cornerRadius = 16
         bv.layer.masksToBounds = true
         bv.contentMode = .scaleAspectFill
         return bv
@@ -73,6 +117,14 @@ class ChatCollectionViewCell: UICollectionViewCell {
         addSubview(bubleView)
         addSubview(messageText)
         addSubview(imageUser)
+        addSubview(messageImageView)
+        
+        bubleView.addSubview(messageImageView)
+        
+        messageImageView.leftAnchor.constraint(equalTo: bubleView.leftAnchor).isActive = true
+        messageImageView.rightAnchor.constraint(equalTo: bubleView.rightAnchor).isActive = true
+        messageImageView.topAnchor.constraint(equalTo: bubleView.topAnchor).isActive = true
+        messageImageView.bottomAnchor.constraint(equalTo: bubleView.bottomAnchor).isActive = true
         
         imageUser.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 8).isActive = true
         imageUser.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true

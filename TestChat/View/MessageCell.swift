@@ -8,7 +8,7 @@
 
 import UIKit
 import FirebaseDatabase
-
+import SDWebImage
 class MessageCell: UserCell {
     
     var message: Message! {
@@ -26,8 +26,8 @@ class MessageCell: UserCell {
                 if let data = snap.value as? [String: AnyObject] {
                     let user = User(dic: data)
                     self.userName.text = user.name
-                    let data = NSData.init(contentsOf: URL.init(string: user.imageProfile!)!)
-                    self.userImage.image = UIImage(data: data as! Data)
+                    let url = NSURL.init(string: user.imageProfile!)
+                    self.userImage.sd_setImage(with: url as! URL)
                 }
             })
         }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class UserCell: UITableViewCell {
     
@@ -31,12 +32,16 @@ class UserCell: UITableViewCell {
     
     lazy var userName: UILabel = {
         var im = UILabel()
+        im.font = UIFont.systemFont(ofSize: 16)
+        im.textColor = UIColor.blue
         im.translatesAutoresizingMaskIntoConstraints = false
         return im
     }()
     
     lazy var messageText: UILabel = {
         var im = UILabel()
+        im.font = UIFont.systemFont(ofSize: 14)
+        im.textColor = UIColor.brown
         im.translatesAutoresizingMaskIntoConstraints = false
         return im
     }()
@@ -56,8 +61,9 @@ class UserCell: UITableViewCell {
     }
     
     func configureView() {
-        let data = NSData.init(contentsOf: URL.init(string: user.imageProfile!)!)
-        self.userImage.image = UIImage(data: data as! Data)
+         let url = NSURL.init(string: user.imageProfile!)
+        
+        self.userImage.sd_setImage(with: url as! URL)
         self.userName.text = user.name
     }
     

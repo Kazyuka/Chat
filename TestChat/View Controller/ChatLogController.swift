@@ -10,6 +10,9 @@ class ChatLogController: UICollectionViewController {
    
     let cellIdentifier = "Cell"
     var arrayMessages = [Message]()
+    var startingFrame: CGRect?
+    var blackView: UIView?
+    
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
     var user: User? {
@@ -71,6 +74,7 @@ class ChatLogController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatCollectionViewCell
+        cell?.delegate = self
         cell?.message = arrayMessages[indexPath.item]
         return cell!
     }
@@ -244,10 +248,54 @@ extension ChatLogController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let text = arrayMessages[indexPath.item].text
         
-        if let  messageText = text {
+        if let messageText = text {
             return CGSize(width: UIScreen.main.bounds.width, height: (messageText.height(withConstrainedWidth: 200, font: UIFont.boldSystemFont(ofSize: 14))) + 20)
         }
         return CGSize(width: UIScreen.main.bounds.width, height: 200 )
+    }
+}
+
+extension ChatLogController: ChatCollectionViewCellDelegate {
+    
+    func tapToImage(gesture: UIImageView) {
+        
+        startingFrame = gesture.superview?.convert(gesture.frame, to: nil)
+        let zoomingImage = UIImageView(frame: startingFrame!)
+        zoomingImage.image = gesture.image
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageZoomBack(_:)))
+        zoomingImage.isUserInteractionEnabled = true
+        gesture.numberOfTapsRequired = 1
+        zoomingImage.addGestureRecognizer(gesture)
+        
+        if let keyWindow =  UIApplication.shared.keyWindow {
+            
+            blackView = UIView(frame: keyWindow.frame)
+            blackView?.backgroundColor = UIColor.black
+            blackView?.alpha = 0
+            keyWindow.addSubview(blackView!)
+            
+            keyWindow.addSubview(zoomingImage)
+            
+            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+                self.blackView?.alpha = 1
+                zoomingImage.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: self.startingFrame!.height)
+                zoomingImage.center = keyWindow.center
+            }, completion: nil)
+        }
+    }
+    
+    @objc func tapToImageZoomBack(_ sender: UITapGestureRecognizer) {
+        
+        if let zoomOut = sender.view {
+            
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                self.blackView?.alpha = 0
+                zoomOut.frame = self.startingFrame!
+            }, completion: { (value) in
+                zoomOut.removeFromSuperview()
+            })
+        }
     }
 }
 extension ChatLogController: UITextViewDelegate {

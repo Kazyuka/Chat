@@ -11,6 +11,8 @@
 		441FFC2620347AD4000F8E99 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441FFC2520347AD4000F8E99 /* User.swift */; };
 		449F5D312035A242007114F9 /* LoginViewController+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449F5D302035A242007114F9 /* LoginViewController+Actions.swift */; };
 		44A10C2C2036CEE400990F49 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A10C2B2036CEE400990F49 /* ChatLogController.swift */; };
+		44B3F0AD204577030096911B /* PresentAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B3F0AC204577030096911B /* PresentAnimation.swift */; };
+		44B3F0AF2045794A0096911B /* AnimationHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B3F0AE2045794A0096911B /* AnimationHelper.swift */; };
 		44B51CC8202DE7A500881EB5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B51CC7202DE7A500881EB5 /* AppDelegate.swift */; };
 		44B51CCA202DE7A500881EB5 /* MessagesViewConreoller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B51CC9202DE7A500881EB5 /* MessagesViewConreoller.swift */; };
 		44B51CCD202DE7A500881EB5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44B51CCB202DE7A500881EB5 /* Main.storyboard */; };
@@ -31,6 +33,8 @@
 		441FFC2520347AD4000F8E99 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		449F5D302035A242007114F9 /* LoginViewController+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoginViewController+Actions.swift"; sourceTree = "<group>"; };
 		44A10C2B2036CEE400990F49 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		44B3F0AC204577030096911B /* PresentAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimation.swift; sourceTree = "<group>"; };
+		44B3F0AE2045794A0096911B /* AnimationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
 		44B51CC4202DE7A500881EB5 /* TestChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44B51CC7202DE7A500881EB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44B51CC9202DE7A500881EB5 /* MessagesViewConreoller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesViewConreoller.swift; sourceTree = "<group>"; };
@@ -69,13 +73,15 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		441FFC2720347ADE000F8E99 /* User */ = {
+		441FFC2720347ADE000F8E99 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				441FFC2520347AD4000F8E99 /* User.swift */,
 				44D4BC7F203DB4B200237FB6 /* Message.swift */,
+				44B3F0AE2045794A0096911B /* AnimationHelper.swift */,
+				44B3F0AC204577030096911B /* PresentAnimation.swift */,
 			);
-			path = User;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		44B51CBB202DE7A500881EB5 = {
@@ -101,7 +107,7 @@
 			children = (
 				44B51CC7202DE7A500881EB5 /* AppDelegate.swift */,
 				44D4BC81203DBC1600237FB6 /* View */,
-				441FFC2720347ADE000F8E99 /* User */,
+				441FFC2720347ADE000F8E99 /* Model */,
 				44B51CDF202DED8900881EB5 /* View Controller */,
 				44B51CCB202DE7A500881EB5 /* Main.storyboard */,
 				44B51CCE202DE7A500881EB5 /* Assets.xcassets */,
@@ -290,6 +296,8 @@
 				44D4BC83203DBC3000237FB6 /* UserCell.swift in Sources */,
 				44D4BC80203DB4B200237FB6 /* Message.swift in Sources */,
 				44B51CCA202DE7A500881EB5 /* MessagesViewConreoller.swift in Sources */,
+				44B3F0AD204577030096911B /* PresentAnimation.swift in Sources */,
+				44B3F0AF2045794A0096911B /* AnimationHelper.swift in Sources */,
 				44B51CC8202DE7A500881EB5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

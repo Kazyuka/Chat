@@ -15,6 +15,8 @@ class MessagesViewConroller: UITableViewController {
     let cellId = "cell"
     var messages = [Message]()
     var messagesDic = [String: Message]()
+    var transition = PresentAnimation()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -22,6 +24,7 @@ class MessagesViewConroller: UITableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Messages", style: .plain, target: self, action: #selector(goToMessages))
         isUserLogin()
+        navigationController?.delegate = self
     }
     
     func observeUserMessages() {
@@ -175,6 +178,32 @@ class MessagesViewConroller: UITableViewController {
                 self.goToChat(user: user)
             }
         }
+    }
+}
+
+extension MessagesViewConroller: UIViewControllerTransitioningDelegate {
+    
+    public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.duraction = 2.5
+        transition.presentDefault = .presentation
+        return transition
+    }
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return nil
+    }
+}
+
+extension MessagesViewConroller: UINavigationControllerDelegate {
+
+    public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transition.presentDefault = .presentation
+        switch operation {
+        case .push:
+            return transition
+        default:
+            break
+        }
+        return transition
     }
 }
 

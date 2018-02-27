@@ -9,12 +9,26 @@
 import UIKit
 import FirebaseDatabase
 import SDWebImage
+
 class MessageCell: UserCell {
     
     var message: Message! {
         didSet {
             configureView()
         }
+    }
+    
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setUpCell()
+        
+       
+    }
+    
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func configureView() {

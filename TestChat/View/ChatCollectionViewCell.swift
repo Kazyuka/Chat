@@ -4,10 +4,13 @@ import FirebaseAuth
 import SDWebImage
 import FirebaseDatabase
 
+@objc protocol ChatCollectionViewCellDelegate {
+    func tapToImage(gesture: UIImageView)
+}
 class ChatCollectionViewCell: UICollectionViewCell {
    
     var const: CGFloat = 200
-    
+    weak var delegate: ChatCollectionViewCellDelegate?
     var message: Message? {
         didSet {
             dataForCell()
@@ -21,8 +24,10 @@ class ChatCollectionViewCell: UICollectionViewCell {
             let url = NSURL.init(string: messageImage)
             messageImageView.sd_setImage(with: url as! URL)
             messageImageView.isHidden = false
+            messageText.isHidden = true
         } else {
             messageImageView.isHidden = true
+            messageText.isHidden = false
         }
         
         if uid == message?.fromIdUser {
@@ -55,11 +60,11 @@ class ChatCollectionViewCell: UICollectionViewCell {
         }
 
         if let messageText =  message!.text {
-            const =  (messageText.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14))) <= 40 ? 50 : (message?.text?.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14)))! + 20
-            bubleWidthAchor?.constant = const
+            let widthTextConst = (messageText.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14))) <= 40 ? 50 : (message?.text?.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14)))! + 20
+            bubleWidthAchor?.constant = widthTextConst
+        } else {
+             bubleWidthAchor?.constant = const
         }
-        
-         bubleWidthAchor?.constant = const
     }
     var bubleWidthAchor: NSLayoutConstraint?
     var bubleRightAchor: NSLayoutConstraint?
@@ -100,12 +105,17 @@ class ChatCollectionViewCell: UICollectionViewCell {
         bv.layer.cornerRadius = 16
         bv.layer.masksToBounds = true
         bv.contentMode = .scaleAspectFill
+        bv.isUserInteractionEnabled = true
         return bv
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureCell()
+    }
+    @objc func tapToImageInsideCell(_ sender: UITapGestureRecognizer) {
+        let view = sender.view as? UIImageView
+        self.delegate?.tapToImage(gesture: view!)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -120,6 +130,11 @@ class ChatCollectionViewCell: UICollectionViewCell {
         addSubview(messageImageView)
         
         bubleView.addSubview(messageImageView)
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageInsideCell(_:)))
+        gesture.numberOfTapsRequired = 1
+        messageImageView.addGestureRecognizer(gesture)
+    
         
         messageImageView.leftAnchor.constraint(equalTo: bubleView.leftAnchor).isActive = true
         messageImageView.rightAnchor.constraint(equalTo: bubleView.rightAnchor).isActive = true

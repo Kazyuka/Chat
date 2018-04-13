@@ -1,25 +1,33 @@
+//
+//  ChatGrupController.swift
+//  TestChat
+//
+//  Created by Руслан Казюка on 12.04.2018.
+//  Copyright © 2018 Руслан Казюка. All rights reserved.
+//
 
-
-import Foundation
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
-class ChatLogController: UICollectionViewController {
-   
+class ChatGrupController: UICollectionViewController {
+    
+    var idUsersWhoGetMessage = [String]()
+    var allIdUserInString = " "
+    
     let cellIdentifier = "Cell"
-    var arrayMessages = [Message]()
+    var arrayMessages = [GroupMessage]()
     var startingFrame: CGRect?
     var blackView: UIView?
     
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
-    var user: User? {
+    
+    var users: [User]? {
         didSet {
-            navigationItem.title = user?.name
             self.arrayMessages.removeAll()
-            observerMessages()
+            self.observerMessages()
         }
     }
     
@@ -27,41 +35,52 @@ class ChatLogController: UICollectionViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
+        self.arrayMessages.removeAll()
+    
         let ref = Database.database().reference().child("message-users").child(uid)
         ref.observe(.childAdded, with: { (snap) in
             
-            let idUser = snap.key
-            let messageUserRef = Database.database().reference().child("messages").child(idUser)
+            let messageUserRef = Database.database().reference().child("message-group")
             messageUserRef.observe(.value, with: { (snap) in
+                
                 guard let dic = snap.value as? [String: AnyObject] else {
                     return
                 }
-                let mes = Message(dic: dic)
-                
-                if mes.chatPartnerId == self.user?.userId {
+                if let snapshots = snap.children.allObjects as? [DataSnapshot] {
                     
-                    print(mes.chatPartnerId)
-                      self.arrayMessages.append(mes)
-                    DispatchQueue.main.async(execute: {
-                        self.collectionView?.reloadData()
-                    })
+                    for snap in snapshots {
+                        
+                        if let postDict = snap.value as? Dictionary<String, AnyObject> {
+                            
+                            let mess = GroupMessage(dic: postDict)
+                            
+                                if mess.fromIdUser == uid {
+                                    self.arrayMessages.append(mess)
+                                    DispatchQueue.main.async(execute: {
+                                        self.collectionView?.reloadData()
+                                    })
+                            }
+                        }
+                    }
                 }
             }, withCancel: { (er) in
                 
-            })
+        })
             
         }, withCancel: nil)
     }
-    
     override func viewDidLoad() {
-         super.viewDidLoad()
-         self.setupInputTextField()
-         self.setUpNotification()
-         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
-         self.collectionView?.backgroundColor = UIColor.white
-         collectionView?.alwaysBounceVertical = true
-         collectionView?.register(ChatCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        super.viewDidLoad()
+        
+        super.viewDidLoad()
+        self.setupInputTextField()
+        self.setUpNotification()
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
+        self.collectionView?.backgroundColor = UIColor.white
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
     }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
@@ -75,46 +94,51 @@ class ChatLogController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatCollectionViewCell
-        cell?.delegate = self
-        cell?.message = arrayMessages[indexPath.item]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatGroupCell
+        cell?.messageGroup = arrayMessages[indexPath.item]
         return cell!
     }
     
     @objc func sendMassegaButtonTapped()  {
-       
-        let ref = Database.database().reference().child("messages")
+        
+        let ref = Database.database().reference().child("message-group")
         let childRef  = ref.childByAutoId()
-        let toIdUser = user?.userId
         let fromId = Auth.auth().currentUser!.uid
         let time = Int(NSDate().timeIntervalSince1970)
-        let value = ["text": textFieldInputTex.text!, "toId": toIdUser, "fromId" : fromId, "time": time] as [String : Any]
-    
-        childRef.updateChildValues(value) { (err, data) in
-            if err != nil {
+        var value = ["text": textFieldInputTex.text!,"fromId" : fromId, "time": time] as [String : Any]
+        idUsersWhoGetMessage.removeAll()
+        allIdUserInString = " "
+        
+        for us in users! {
+            idUsersWhoGetMessage.append(us.userId!)
+        }
+        allIdUserInString = idUsersWhoGetMessage.joined(separator: " ")
+        value["toId"] = allIdUserInString
+        
+        childRef.updateChildValues(value) { (error, ref) in
+            
+            if error != nil {
                 return
             }
-            
-            let messsID = childRef.key
             let messageRef = Database.database().reference().child("message-users").child(fromId)
-            messageRef.updateChildValues([messsID: 2])
+            let ch = messageRef.childByAutoId()
+            ch.updateChildValues(value)
             
-            let recipientRef = Database.database().reference().child("message-users").child(toIdUser!)
-            recipientRef.updateChildValues([messsID: 2])
+            let usersStringId = self.allIdUserInString.components(separatedBy: " ")
+            
+            for id in usersStringId {
+                let recipientRef = Database.database().reference().child("message-users").child(id)
+                let ch2 = recipientRef.childByAutoId()
+                ch2.updateChildValues(value)
+            }
         }
+        
         view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
         textFieldInputTex.text = "Your message"
         textFieldInputTex.textColor = UIColor.lightGray
     }
-   @objc func sendImageMassegaButtonTapped () {
-    
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        present(imagePicker, animated: true, completion: nil)
-    }
-
     var  textInsideTextFeld: String? {
         
         didSet {
@@ -148,7 +172,7 @@ class ChatLogController: UICollectionViewController {
         button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
         button.contentMode = .scaleAspectFill
-        button.addTarget(self, action: #selector(sendImageMassegaButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(sendMassegaButtonTapped), for: .touchUpInside)
         return button
     }()
     let massegeImputContainerView: UIView = {
@@ -189,7 +213,7 @@ class ChatLogController: UICollectionViewController {
         heightConstraintForConteinerViewForMessage = self.massegeImputContainerView.heightAnchor.constraint(equalToConstant: 40)
         heightConstraintForConteinerViewForMessage!.isActive = true
         self.massegeImputContainerView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
-       
+        
         textFieldInputTex.delegate = self
         self.massegeImputContainerView.addSubview(textFieldInputTex)
         self.massegeImputContainerView.addSubview(sendButton)
@@ -199,10 +223,10 @@ class ChatLogController: UICollectionViewController {
         self.sendButton.rightAnchor.constraint(equalTo: self.massegeImputContainerView.rightAnchor, constant: -4).isActive = true
         self.sendButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         self.sendButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
-    
+        
         self.sendImageButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
         self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -4).isActive = true
-         self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 1).isActive = true
+        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 1).isActive = true
         self.sendImageButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
         self.sendImageButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
         
@@ -214,7 +238,7 @@ class ChatLogController: UICollectionViewController {
         self.separateView.widthAnchor.constraint(equalTo: self.massegeImputContainerView.widthAnchor).isActive = true
         self.separateView.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
-  
+    
     func setUpNotification()  {
         NotificationCenter.default.addObserver(self, selector: #selector(ChatLogController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ChatLogController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -246,9 +270,10 @@ class ChatLogController: UICollectionViewController {
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }
-extension ChatLogController: UICollectionViewDelegateFlowLayout {
-   
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+extension ChatGrupController: UICollectionViewDelegateFlowLayout {
+    
+    public  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let text = arrayMessages[indexPath.item].text
         
         if let messageText = text {
@@ -257,51 +282,7 @@ extension ChatLogController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: UIScreen.main.bounds.width, height: 200 )
     }
 }
-
-extension ChatLogController: ChatCollectionViewCellDelegate {
-    
-    func tapToImage(gesture: UIImageView) {
-        
-        startingFrame = gesture.superview?.convert(gesture.frame, to: nil)
-        let zoomingImage = UIImageView(frame: startingFrame!)
-        zoomingImage.image = gesture.image
-        
-        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageZoomBack(_:)))
-        zoomingImage.isUserInteractionEnabled = true
-        gesture.numberOfTapsRequired = 1
-        zoomingImage.addGestureRecognizer(gesture)
-        
-        if let keyWindow =  UIApplication.shared.keyWindow {
-            
-            blackView = UIView(frame: keyWindow.frame)
-            blackView?.backgroundColor = UIColor.black
-            blackView?.alpha = 0
-            keyWindow.addSubview(blackView!)
-            
-            keyWindow.addSubview(zoomingImage)
-            
-            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
-                self.blackView?.alpha = 1
-                zoomingImage.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: self.startingFrame!.height)
-                zoomingImage.center = keyWindow.center
-            }, completion: nil)
-        }
-    }
-    
-    @objc func tapToImageZoomBack(_ sender: UITapGestureRecognizer) {
-        
-        if let zoomOut = sender.view {
-            
-            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
-                self.blackView?.alpha = 0
-                zoomOut.frame = self.startingFrame!
-            }, completion: { (value) in
-                zoomOut.removeFromSuperview()
-            })
-        }
-    }
-}
-extension ChatLogController: UITextViewDelegate {
+extension ChatGrupController: UITextViewDelegate {
     
     public func textViewDidChange(_ textView: UITextView) {
         
@@ -328,75 +309,3 @@ extension ChatLogController: UITextViewDelegate {
         }
     }
 }
-
-extension ChatLogController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
- 
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
-        var selectedImagefromPisker: UIImage?
-        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
-            selectedImagefromPisker = editedImage
-            
-        } else  if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
-            selectedImagefromPisker = originalImage
-        }
-        if let selectedImage = selectedImagefromPisker {
-            uploadImageToFirebase(image: selectedImage)
-        }
-         dismiss(animated: true, completion: nil)
-    }
-    
-    func uploadImageToFirebase(image: UIImage) {
-        let imageName = NSUUID().uuidString
-        let storageRef = Storage.storage().reference().child("message_images").child("\(imageName).png")
-        if let uploadData = UIImageJPEGRepresentation(image, 0.3) {
-            storageRef.putData(uploadData, metadata: nil, completion: { (metadata, err) in
-                if err != nil{
-                    return
-                }
-                if let urlString = metadata?.downloadURL()?.absoluteString {
-                    
-                    let ref = Database.database().reference().child("messages")
-                    let childRef  = ref.childByAutoId()
-                    let toIdUser = self.user?.userId
-                    let fromId = Auth.auth().currentUser!.uid
-                    let time = Int(NSDate().timeIntervalSince1970)
-                    let value = ["imageUrl": urlString, "toId": toIdUser, "fromId" : fromId, "time": time] as [String : Any]
-                    
-                    childRef.updateChildValues(value) { (err, data) in
-                        if err != nil {
-                            return
-                        }
-                        let messageRef = Database.database().reference().child("message-users").child(fromId)
-                        let messsID = childRef.key
-                        messageRef.updateChildValues([messsID: 2])
-                        
-                        let recipientRef = Database.database().reference().child("message-users").child(toIdUser!)
-                        recipientRef.updateChildValues([messsID: 2])
-                    }
-                }
-            })
-        }
-    }
-     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.dismiss(animated: true, completion: nil)
-    }
-}
-
-extension String {
-    
-    func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
-        
-        return ceil(boundingBox.height)
-    }
-    
-    func width(withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
-        
-        return ceil(boundingBox.width)
-    }
-}
-

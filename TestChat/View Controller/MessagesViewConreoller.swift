@@ -22,9 +22,65 @@ class MessagesViewConroller: UITableViewController {
        
         self.tableView.register(MessageCell.self, forCellReuseIdentifier: cellId)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Messages", style: .plain, target: self, action: #selector(goToMessages))
+        
+        let newMessage = UIBarButtonItem(title: "Single", style: .plain, target: self, action: #selector(goToMessages))
+        let newGroupMessage = UIBarButtonItem(title: "Group", style: .plain, target: self, action: #selector(goToGroupMessages))
+        navigationItem.rightBarButtonItems = [newMessage, newGroupMessage]
         isUserLogin()
         navigationController?.delegate = self
+    }
+    
+    func observeGrupUserMessages() {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        let refUserMessage = Database.database().reference().child("message-users").child(uid)
+        refUserMessage.observe(.childAdded) { (snap) in
+            let messages = Database.database().reference().child("message-group")
+            messages.observeSingleEvent(of: .value, with: { (data) in
+                
+                
+                if let snapshots = data.children.allObjects as? [DataSnapshot] {
+                    
+                    for snap in snapshots {
+                        
+                        if let postDict = snap.value as? Dictionary<String, AnyObject> {
+                            
+                            let mess = GroupMessage(dic: postDict)
+                            
+                            if let chatPartnerId = mess.fromIdUser {
+                                self.messagesDic[chatPartnerId] = mess
+                                self.messages = Array(self.messagesDic.values)
+                                self.messages.sort(by: { (m1, m2) -> Bool in
+                                    return m1.time!.intValue > m2.time!.intValue
+                                })
+                            }
+                            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                                self.tableView.reloadData()
+                            })
+                        }
+                    }
+                }
+                
+                
+               /* if let dic = data.value as? [String: AnyObject] {
+                    let mes = GroupMessage(dic: dic)
+                    
+                    
+                    if let chatPartnerId = mes.fromIdUser {
+                        self.messagesDic[chatPartnerId] = mes
+                        self.messages = Array(self.messagesDic.values)
+                        self.messages.sort(by: { (m1, m2) -> Bool in
+                            return m1.time!.intValue > m2.time!.intValue
+                        })
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                    self.tableView.reloadData()
+                })*/
+            })
+        }
     }
     
     func observeUserMessages() {
@@ -75,6 +131,7 @@ class MessagesViewConroller: UITableViewController {
         messages.removeAll()
         messagesDic.removeAll()
         self.tableView.reloadData()
+        observeGrupUserMessages()
         observeUserMessages()
         self.navigationItem.title = user.name
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
@@ -113,7 +170,6 @@ class MessagesViewConroller: UITableViewController {
         nameLabel.rightAnchor.constraint(equalTo: titleView.rightAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalTo: profileImage.heightAnchor).isActive = true
         
-        
         conteinerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
         conteinerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
@@ -124,6 +180,12 @@ class MessagesViewConroller: UITableViewController {
     @objc func goToChat(user: User) {
         let chat = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
         chat.user = user
+        self.navigationController?.pushViewController(chat, animated: true)
+    }
+    
+    @objc func goToGrupChat(users: [User]) {
+        let chat = ChatGrupController(collectionViewLayout: UICollectionViewFlowLayout())
+        chat.users = users
         self.navigationController?.pushViewController(chat, animated: true)
     }
     
@@ -145,6 +207,12 @@ class MessagesViewConroller: UITableViewController {
         present(UINavigationController(rootViewController: newPostVC), animated: true, completion: nil)
     }
     
+    @objc func goToGroupMessages() {
+        let newGroupVC = GroupMessageController()
+        newGroupVC.messagesViewComtroller = self
+        present(UINavigationController(rootViewController: newGroupVC), animated: true, completion: nil)
+    }
+    
     override var prefersStatusBarHidden: Bool {
         return true
     }
@@ -162,20 +230,81 @@ class MessagesViewConroller: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        
         let messeage = messages[indexPath.row]
         
         guard let chId = messeage.chatPartnerId else {
             return
         }
         
-        let ref = Database.database().reference().child("users").child(chId)
-        ref.observeSingleEvent(of: .value) { (snap) in
+        if type(of: messeage) == GroupMessage.self {
             
-            if let data = snap.value as? [String: AnyObject] {
-                let user = User(dic: data)
-                user.userId = chId
-                self.goToChat(user: user)
+            var currentUser = " "
+            var users = [User]()
+            let messeges = messeage as? GroupMessage
+            
+            if messeage.fromIdUser == Auth.auth().currentUser?.uid {
+                currentUser = messeage.fromIdUser!
+                
+                for userId in messeges!.toIdUsers {
+                    
+                    let ref = Database.database().reference().child("users").child(userId)
+                    ref.observeSingleEvent(of: .value) { (snap) in
+                        
+                        if let data = snap.value as? [String: AnyObject] {
+                            
+                            let user = User(dic: data)
+                            user.userId = userId
+                            users.append(user)
+                            
+                        }
+                    }
+                }
+                
+            } else {
+                
+                let ref = Database.database().reference().child("users").child(messeage.fromIdUser!)
+                ref.observeSingleEvent(of: .value) { (snap) in
+                    
+                    if let data = snap.value as? [String: AnyObject] {
+                        
+                        let user = User(dic: data)
+                        user.userId = messeage.fromIdUser!
+                        users.append(user)
+                    }
+                }
+                for userId in messeges!.toIdUsers {
+                    
+                    if userId != Auth.auth().currentUser?.uid {
+                        
+                        let ref = Database.database().reference().child("users").child(userId)
+                        ref.observeSingleEvent(of: .value) { (snap) in
+                            
+                            if let data = snap.value as? [String: AnyObject] {
+                                
+                                let user = User(dic: data)
+                                user.userId = userId
+                                users.append(user)
+                            }
+                        }
+                    }
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
+                    self.goToGrupChat(users: users)
+                })
+            }
+
+        } else {
+            
+            let ref = Database.database().reference().child("users").child(chId)
+            ref.observeSingleEvent(of: .value) { (snap) in
+                
+                if let data = snap.value as? [String: AnyObject] {
+                    let user = User(dic: data)
+                    user.userId = chId
+                    self.goToChat(user: user)
+                }
             }
         }
     }

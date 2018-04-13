@@ -22,5 +22,4 @@ class User: NSObject {
             self.imageProfile = image
         }
     }
-   
 }

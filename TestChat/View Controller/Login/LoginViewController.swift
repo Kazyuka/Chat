@@ -58,8 +58,7 @@ class LoginViewController: UIViewController {
     }
     
     func registerNewUser() {
-        
-        print(registerLoginSegment.selectedSegmentIndex)
+    
          registerLoginSegment.selectedSegmentIndex == 1 ? loginUser() : registerUser()
     }
     
@@ -91,21 +90,8 @@ class LoginViewController: UIViewController {
             
             guard let uid = user?.uid else { return }
             
-            let value = ["name": name, "email": email,"lastName" : lastName]
+            let value = ["name": name, "email": email,"lastName" : lastName, "aboutMe": "", "uid": uid]
             self.registerUserIntoFirebase(uid: uid, value: value as [String : AnyObject] )
-            /*  let imageName = NSUUID().uuidString
-             let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).png")
-             let uploadData = UIImagePNGRepresentation(self.imageTopView.image!)
-             
-             storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
-             if err != nil{
-             return
-             }
-             if let meta = metadata?.downloadURL()?.absoluteString {
-             let value = ["name": name, "email": email,"profileImageUrl" : meta]
-             self.registerUserIntoFirebase(uid: uid, value: value as [String : AnyObject] )
-             }
-             })*/
         }
     }
     

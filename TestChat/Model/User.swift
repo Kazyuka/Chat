@@ -15,6 +15,7 @@ class User: NSObject {
     var imageProfile: String?
     var userId: String?
     var lastName: String?
+    var aboutMe: String?
     
     init(dic: [String: AnyObject]) {
         self.name = dic["name"] as! String
@@ -23,6 +24,7 @@ class User: NSObject {
             self.imageProfile = image
         } 
         self.lastName = dic["lastName"] as? String
+        self.aboutMe = dic["aboutMe"] as? String
     }
 }
 

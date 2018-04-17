@@ -11,6 +11,8 @@
 		441FFC2620347AD4000F8E99 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441FFC2520347AD4000F8E99 /* User.swift */; };
 		442AF4F62080E46600E10C25 /* ChatGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442AF4F52080E46600E10C25 /* ChatGroupCell.swift */; };
 		447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A422086014D00F327BA /* GroupCreateController.swift */; };
+		447E1A462086315300F327BA /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A452086315300F327BA /* ProfileController.swift */; };
+		447E1A482086395800F327BA /* OtherProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A472086395800F327BA /* OtherProfileController.swift */; };
 		44A10C2C2036CEE400990F49 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A10C2B2036CEE400990F49 /* ChatLogController.swift */; };
 		44A34A8E2084A57C0083A4F1 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A8D2084A57C0083A4F1 /* TabController.swift */; };
 		44A34A902084D40B0083A4F1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A8F2084D40B0083A4F1 /* ResetPasswordController.swift */; };
@@ -41,6 +43,8 @@
 		441FFC2520347AD4000F8E99 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		442AF4F52080E46600E10C25 /* ChatGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGroupCell.swift; sourceTree = "<group>"; };
 		447E1A422086014D00F327BA /* GroupCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateController.swift; sourceTree = "<group>"; };
+		447E1A452086315300F327BA /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		447E1A472086395800F327BA /* OtherProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileController.swift; sourceTree = "<group>"; };
 		44A10C2B2036CEE400990F49 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
 		44A34A8D2084A57C0083A4F1 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		44A34A8F2084D40B0083A4F1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordController.swift; sourceTree = "<group>"; };
@@ -102,6 +106,15 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		447E1A442086313800F327BA /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				447E1A452086315300F327BA /* ProfileController.swift */,
+				447E1A472086395800F327BA /* OtherProfileController.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		44A34A932084D7530083A4F1 /* Extentions */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +163,7 @@
 		44B51CDF202DED8900881EB5 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
+				447E1A442086313800F327BA /* Profile */,
 				44B77D98207F69DB00963656 /* Login */,
 				44B77D97207F69B500963656 /* GroupChat */,
 				44B51CC9202DE7A500881EB5 /* ChatController.swift */,
@@ -348,10 +362,12 @@
 				441FFC24203477C6000F8E99 /* ContactsSingleMessageController.swift in Sources */,
 				44A34A952084E1CE0083A4F1 /* String+Extentions.swift in Sources */,
 				44B51CDA202DE7CC00881EB5 /* LoginViewController.swift in Sources */,
+				447E1A462086315300F327BA /* ProfileController.swift in Sources */,
 				441FFC2620347AD4000F8E99 /* User.swift in Sources */,
 				44A34A8E2084A57C0083A4F1 /* TabController.swift in Sources */,
 				44B77D96207F5FC300963656 /* GroupMessageController.swift in Sources */,
 				44A34A922084D74E0083A4F1 /* UIViewController+Extentions.swift in Sources */,
+				447E1A482086395800F327BA /* OtherProfileController.swift in Sources */,
 				447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */,
 				44D4BC83203DBC3000237FB6 /* UserCell.swift in Sources */,
 				442AF4F62080E46600E10C25 /* ChatGroupCell.swift in Sources */,

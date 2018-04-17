@@ -81,6 +81,9 @@ class ChatLogController: UIViewController {
     }
     @objc func pressToUserImageRightButton() {
         
+        let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "OtherProfileController") as! OtherProfileController
+        chatLogController.user = user
+        self.navigationController?.pushViewController(chatLogController, animated: true)
     }
     
     @objc func sendMassegaButtonTapped()  {

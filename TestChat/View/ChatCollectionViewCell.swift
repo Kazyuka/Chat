@@ -72,7 +72,7 @@ class ChatCollectionViewCell: UICollectionViewCell {
     
     lazy var messageText: UITextView = {
         var tv = UITextView()
-        tv.text = "sadasd Ssfdsf sdfsdfsd sdf dsfsdfsadhgjghj gj fgjghjfdf df tydfty dfg dfy fydfy dfyf dgyd fydfy afsdfsdf"
+        tv.text = "u"
         tv.font = UIFont.systemFont(ofSize: 14)
         tv.isScrollEnabled = false
         tv.backgroundColor = UIColor.clear
@@ -111,17 +111,18 @@ class ChatCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         configureCell()
     }
     @objc func tapToImageInsideCell(_ sender: UITapGestureRecognizer) {
         let view = sender.view as? UIImageView
         self.delegate?.tapToImage(gesture: view!)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("Shat user")
-    }
-    
+
     func configureCell() {
         
         addSubview(bubleView)

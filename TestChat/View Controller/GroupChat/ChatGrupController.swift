@@ -24,7 +24,8 @@ class ChatGrupController: UICollectionViewController {
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
     
-    var users: [User]? {
+    var allUsers: [String]? {
+        
         didSet {
             self.arrayMessages.removeAll()
             self.observerMessages()
@@ -36,7 +37,7 @@ class ChatGrupController: UICollectionViewController {
             return
         }
         self.arrayMessages.removeAll()
-    
+        
         let ref = Database.database().reference().child("message-users").child(uid)
         ref.observe(.childAdded, with: { (snap) in
             
@@ -54,18 +55,16 @@ class ChatGrupController: UICollectionViewController {
                             
                             let mess = GroupMessage(dic: postDict)
                             
-                                if mess.fromIdUser == uid {
-                                    self.arrayMessages.append(mess)
-                                    DispatchQueue.main.async(execute: {
-                                        self.collectionView?.reloadData()
-                                    })
-                            }
+                            self.arrayMessages.append(mess)
+                            DispatchQueue.main.async(execute: {
+                                self.collectionView?.reloadData()
+                            })
                         }
                     }
                 }
             }, withCancel: { (er) in
                 
-        })
+            })
             
         }, withCancel: nil)
     }
@@ -109,8 +108,8 @@ class ChatGrupController: UICollectionViewController {
         idUsersWhoGetMessage.removeAll()
         allIdUserInString = " "
         
-        for us in users! {
-            idUsersWhoGetMessage.append(us.userId!)
+        for userId in allUsers! {
+            idUsersWhoGetMessage.append(userId)
         }
         allIdUserInString = idUsersWhoGetMessage.joined(separator: " ")
         value["toId"] = allIdUserInString

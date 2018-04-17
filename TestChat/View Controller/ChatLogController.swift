@@ -6,18 +6,31 @@ import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
-class ChatLogController: UICollectionViewController {
+class ChatLogController: UIViewController {
    
-    let cellIdentifier = "Cell"
+    @IBOutlet weak var collectionView: UICollectionView!
     var arrayMessages = [Message]()
     var startingFrame: CGRect?
     var blackView: UIView?
-    
+    var imageUserForNavigationBar = UIImage()
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
     var user: User? {
         didSet {
             navigationItem.title = user?.name
+            if let im = user?.imageProfile {
+                let data = NSData.init(contentsOf: URL.init(string: im)!)
+                imageUserForNavigationBar = UIImage(data: data as! Data)!
+            } else {
+                imageUserForNavigationBar = UIImage.init(named: "user.png")!
+            }
+            
+            let button: UIButton = UIButton(type: UIButtonType.custom) as! UIButton
+            button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
+            button.addTarget(self, action: #selector(pressToUserImageRightButton), for: UIControlEvents.touchUpInside)
+            button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+            let barButton = UIBarButtonItem(customView: button)
+            self.navigationItem.rightBarButtonItem = barButton
             self.arrayMessages.removeAll()
             observerMessages()
         }
@@ -39,9 +52,7 @@ class ChatLogController: UICollectionViewController {
                 let mes = Message(dic: dic)
                 
                 if mes.chatPartnerId == self.user?.userId {
-                    
-                    print(mes.chatPartnerId)
-                      self.arrayMessages.append(mes)
+                    self.arrayMessages.append(mes)
                     DispatchQueue.main.async(execute: {
                         self.collectionView?.reloadData()
                     })
@@ -60,7 +71,6 @@ class ChatLogController: UICollectionViewController {
          collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
          self.collectionView?.backgroundColor = UIColor.white
          collectionView?.alwaysBounceVertical = true
-         collectionView?.register(ChatCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
     }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
@@ -69,16 +79,8 @@ class ChatLogController: UICollectionViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrayMessages.count
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatCollectionViewCell
-        cell?.delegate = self
-        cell?.message = arrayMessages[indexPath.item]
-        return cell!
+    @objc func pressToUserImageRightButton() {
+        
     }
     
     @objc func sendMassegaButtonTapped()  {
@@ -246,6 +248,22 @@ class ChatLogController: UICollectionViewController {
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }
+
+extension ChatLogController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return arrayMessages.count
+    }
+    
+     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? ChatCollectionViewCell
+        cell?.delegate = self
+        cell?.message = arrayMessages[indexPath.item]
+        return cell!
+    }
+    
+}
+
 extension ChatLogController: UICollectionViewDelegateFlowLayout {
    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -383,20 +401,19 @@ extension ChatLogController: UIImagePickerControllerDelegate, UINavigationContro
     }
 }
 
-extension String {
-    
-    func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
+extension UIImage {
+    func resizeImage(targetSize: CGSize) -> UIImage {
+        let size = self.size
+        let widthRatio  = targetSize.width  / size.width
+        let heightRatio = targetSize.height / size.height
+        let newSize = widthRatio > heightRatio ?  CGSize(width: size.width * heightRatio, height: size.height * heightRatio) : CGSize(width: size.width * widthRatio,  height: size.height * widthRatio)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
         
-        return ceil(boundingBox.height)
-    }
-    
-    func width(withConstrainedHeight height: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: .greatestFiniteMagnitude, height: height)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [NSAttributedStringKey.font: font], context: nil)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        self.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         
-        return ceil(boundingBox.width)
+        return newImage!
     }
 }
-

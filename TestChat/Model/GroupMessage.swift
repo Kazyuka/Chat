@@ -34,10 +34,10 @@ class GroupMessage: Message {
         self.time = dic["time"] as? NSNumber
     
     }
-    func getCurrentUserChat() {
+    
+    func getCurrentUserGroupChat() {
         
-        if fromIdUser == Auth.auth().currentUser?.uid {
-            currentUser = fromIdUser!
+         if fromIdUser == Auth.auth().currentUser?.uid {
             
             for userId in toIdUsers {
                 
@@ -53,25 +53,13 @@ class GroupMessage: Message {
                     }
                 }
             }
+         } else {
             
-        } else {
-            
-            let ref = Database.database().reference().child("users").child(fromIdUser!)
-            ref.observeSingleEvent(of: .value) { (snap) in
-                
-                if let data = snap.value as? [String: AnyObject] {
-                    
-                    let user = User(dic: data)
-                    user.userId = self.fromIdUser!
-                    self.usersWhuGetMessage.append(user)
-                }
-            }
+            toIdUsers.append(fromIdUser!)
             for userId in toIdUsers {
-                
                 if userId == Auth.auth().currentUser?.uid {
-                    self.currentUser = userId
+                    self.fromIdUser = userId
                 } else {
-                    
                     let ref = Database.database().reference().child("users").child(userId)
                     ref.observeSingleEvent(of: .value) { (snap) in
                         

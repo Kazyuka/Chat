@@ -8,9 +8,9 @@
 
 import UIKit
 
-class GroupMessageController: NewMessagesController {
+class GroupMessageController: ContactsSingleMessageController {
 
-    var checkUsers = [User]()
+    var checkUsers = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,18 +27,18 @@ class GroupMessageController: NewMessagesController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let user = self.userArray[indexPath.row]
-
+        let user = self.userArray[indexPath.row].userId
+        
         if let cell = tableView.cellForRow(at: indexPath as IndexPath) {
-            if cell.accessoryType == .checkmark{
+            if cell.accessoryType == .checkmark {
                 cell.accessoryType = .none
-                let indexToDelete = checkUsers.index(of: user)
+                let indexToDelete = checkUsers.index(of: user!)
                 checkUsers.remove(at: indexToDelete!)
-            }
-            else{
+            } else {
                 cell.accessoryType = .checkmark
-                checkUsers.append(user)
+                checkUsers.append(user!)
             }
         }
     }
 }
+

@@ -12,6 +12,7 @@ import SDWebImage
 
 class MessageCell: UserCell {
     
+    @IBOutlet weak var messageText: UILabel!
     var message: Message! {
         didSet {
             configureView()
@@ -20,17 +21,14 @@ class MessageCell: UserCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setUpCell()
         
-       
     }
-    
-    
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
     }
     
+
     override func configureView() {
         
         if let todId  = message?.chatPartnerId {
@@ -40,8 +38,15 @@ class MessageCell: UserCell {
                 if let data = snap.value as? [String: AnyObject] {
                     let user = User(dic: data)
                     self.userName.text = user.name
-                    let url = NSURL.init(string: user.imageProfile!)
-                    self.userImage.sd_setImage(with: url as! URL)
+                    
+                    if let im = user.imageProfile {
+                        let url = NSURL.init(string: im)
+                        self.userPhoto.sd_setImage(with: url! as URL)
+                    } else {
+                        
+                        self.userPhoto.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+                        }, completed: nil)
+                    }
                 }
             })
         }
@@ -50,7 +55,7 @@ class MessageCell: UserCell {
             let timeS = NSDate(timeIntervalSince1970: sec)
             let dateFormater = DateFormatter()
             dateFormater.dateFormat = "hh:mm:ss a"
-            timeLabel.text = dateFormater.string(from: timeS as Date)
+            //timeLabel.text = dateFormater.string(from: timeS as Date)
         }
     }
 }

@@ -14,12 +14,15 @@ class User: NSObject {
     var email: String = " "
     var imageProfile: String?
     var userId: String?
+    var lastName: String?
     
     init(dic: [String: AnyObject]) {
         self.name = dic["name"] as! String
         self.email = dic["email"] as! String
         if let image = dic["profileImageUrl"] as? String {
             self.imageProfile = image
-        }
+        } 
+        self.lastName = dic["lastName"] as? String
     }
 }
+

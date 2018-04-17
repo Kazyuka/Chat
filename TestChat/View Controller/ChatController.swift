@@ -10,9 +10,9 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 
-class MessagesViewConroller: UITableViewController {
+class ChatController: UIViewController {
     
-    let cellId = "cell"
+    @IBOutlet weak var tableView: UITableView!
     var messages = [Message]()
     var messagesDic = [String: Message]()
     var transition = PresentAnimation()
@@ -20,12 +20,8 @@ class MessagesViewConroller: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        self.tableView.register(MessageCell.self, forCellReuseIdentifier: cellId)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
-        
-        let newMessage = UIBarButtonItem(title: "Single", style: .plain, target: self, action: #selector(goToMessages))
-        let newGroupMessage = UIBarButtonItem(title: "Group", style: .plain, target: self, action: #selector(goToGroupMessages))
-        navigationItem.rightBarButtonItems = [newMessage, newGroupMessage]
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain, target: self, action: #selector(createGroupButtonClick))
         isUserLogin()
         navigationController?.delegate = self
     }
@@ -35,7 +31,19 @@ class MessagesViewConroller: UITableViewController {
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-        let refUserMessage = Database.database().reference().child("message-users").child(uid)
+        
+        let refGroup = Database.database().reference().child("group")
+        refGroup.observe(.childAdded) { (snap) in
+            let messageGroup = Database.database().reference().child("message-group")
+            messageGroup.observeSingleEvent(of: .value, with: { (snapshot) in
+                
+               
+                
+            })
+            
+        }
+        
+        /*let refUserMessage = Database.database().reference().child("message-users").child(uid)
         refUserMessage.observe(.childAdded) { (snap) in
             let messages = Database.database().reference().child("message-group")
             messages.observeSingleEvent(of: .value, with: { (data) in
@@ -62,25 +70,8 @@ class MessagesViewConroller: UITableViewController {
                         }
                     }
                 }
-                
-                
-               /* if let dic = data.value as? [String: AnyObject] {
-                    let mes = GroupMessage(dic: dic)
-                    
-                    
-                    if let chatPartnerId = mes.fromIdUser {
-                        self.messagesDic[chatPartnerId] = mes
-                        self.messages = Array(self.messagesDic.values)
-                        self.messages.sort(by: { (m1, m2) -> Bool in
-                            return m1.time!.intValue > m2.time!.intValue
-                        })
-                    }
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                    self.tableView.reloadData()
-                })*/
             })
-        }
+        }*/
     }
     
     func observeUserMessages() {
@@ -151,8 +142,8 @@ class MessagesViewConroller: UITableViewController {
         profileImage.backgroundColor = UIColor.black
         profileImage.contentMode = .scaleAspectFill
       
-        let data = NSData.init(contentsOf: URL.init(string: user.imageProfile!)!)
-        profileImage.image = UIImage(data: data as! Data)
+       // let data = NSData.init(contentsOf: URL.init(string: user.imageProfile!)!)
+       // profileImage.image = UIImage(data: data as! Data)
         conteinerView.addSubview(profileImage)
        
         profileImage.leftAnchor.constraint(equalTo: titleView.leftAnchor).isActive = true
@@ -177,15 +168,20 @@ class MessagesViewConroller: UITableViewController {
         titleView.isUserInteractionEnabled = true
     }
     
-    @objc func goToChat(user: User) {
-        let chat = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
-        chat.user = user
-        self.navigationController?.pushViewController(chat, animated: true)
+    @objc func createGroupButtonClick () {
+        let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "GroupCreateController") as! GroupCreateController
+        self.navigationController?.pushViewController(loginVC, animated: true)
     }
     
-    @objc func goToGrupChat(users: [User]) {
+    @objc func goToChat(user: User) {
+        /*let chat = ChatLogController(collectionViewLayout: UICollectionViewFlowLayout())
+        chat.user = user
+        self.navigationController?.pushViewController(chat, animated: true)*/
+    }
+    
+    @objc func goToGrupChat(users: [String]) {
         let chat = ChatGrupController(collectionViewLayout: UICollectionViewFlowLayout())
-        chat.users = users
+        chat.allUsers = users
         self.navigationController?.pushViewController(chat, animated: true)
     }
     
@@ -196,40 +192,31 @@ class MessagesViewConroller: UITableViewController {
             print(err)
         }
         
-        let loginVC = LoginViewController()
+        let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         loginVC.messagseController = self
         self.present(loginVC, animated: true, completion: nil)
-    }
-    
-    @objc func goToMessages() {
-        let newPostVC = NewMessagesController()
-        newPostVC.messagesViewComtroller = self
-        present(UINavigationController(rootViewController: newPostVC), animated: true, completion: nil)
-    }
-    
-    @objc func goToGroupMessages() {
-        let newGroupVC = GroupMessageController()
-        newGroupVC.messagesViewComtroller = self
-        present(UINavigationController(rootViewController: newGroupVC), animated: true, completion: nil)
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
-   
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+}
+
+extension ChatController: UITableViewDelegate, UITableViewDataSource {
+    
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! MessageCell
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! MessageCell
         cell.message = messages[indexPath.row]
         return cell
     }
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let messeage = messages[indexPath.row]
         
@@ -239,62 +226,9 @@ class MessagesViewConroller: UITableViewController {
         
         if type(of: messeage) == GroupMessage.self {
             
-            var currentUser = " "
-            var users = [User]()
-            let messeges = messeage as? GroupMessage
+            let  mes = messeage as? GroupMessage
+            goToGrupChat(users: mes!.toIdUsers )
             
-            if messeage.fromIdUser == Auth.auth().currentUser?.uid {
-                currentUser = messeage.fromIdUser!
-                
-                for userId in messeges!.toIdUsers {
-                    
-                    let ref = Database.database().reference().child("users").child(userId)
-                    ref.observeSingleEvent(of: .value) { (snap) in
-                        
-                        if let data = snap.value as? [String: AnyObject] {
-                            
-                            let user = User(dic: data)
-                            user.userId = userId
-                            users.append(user)
-                            
-                        }
-                    }
-                }
-                
-            } else {
-                
-                let ref = Database.database().reference().child("users").child(messeage.fromIdUser!)
-                ref.observeSingleEvent(of: .value) { (snap) in
-                    
-                    if let data = snap.value as? [String: AnyObject] {
-                        
-                        let user = User(dic: data)
-                        user.userId = messeage.fromIdUser!
-                        users.append(user)
-                    }
-                }
-                for userId in messeges!.toIdUsers {
-                    
-                    if userId != Auth.auth().currentUser?.uid {
-                        
-                        let ref = Database.database().reference().child("users").child(userId)
-                        ref.observeSingleEvent(of: .value) { (snap) in
-                            
-                            if let data = snap.value as? [String: AnyObject] {
-                                
-                                let user = User(dic: data)
-                                user.userId = userId
-                                users.append(user)
-                            }
-                        }
-                    }
-                }
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(5), execute: {
-                    self.goToGrupChat(users: users)
-                })
-            }
-
         } else {
             
             let ref = Database.database().reference().child("users").child(chId)
@@ -310,7 +244,7 @@ class MessagesViewConroller: UITableViewController {
     }
 }
 
-extension MessagesViewConroller: UIViewControllerTransitioningDelegate {
+extension ChatController: UIViewControllerTransitioningDelegate {
     
     public func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.duraction = 2.5
@@ -322,7 +256,7 @@ extension MessagesViewConroller: UIViewControllerTransitioningDelegate {
     }
 }
 
-extension MessagesViewConroller: UINavigationControllerDelegate {
+extension ChatController: UINavigationControllerDelegate {
 
     public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationControllerOperation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         transition.presentDefault = .presentation

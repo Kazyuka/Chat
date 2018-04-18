@@ -6,7 +6,7 @@ import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
-class ChatLogController: UIViewController {
+class ChatSingleController: UIViewController {
    
     @IBOutlet weak var collectionView: UICollectionView!
     var arrayMessages = [Message]()
@@ -114,7 +114,6 @@ class ChatLogController: UIViewController {
         textFieldInputTex.textColor = UIColor.lightGray
     }
    @objc func sendImageMassegaButtonTapped () {
-    
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         present(imagePicker, animated: true, completion: nil)
@@ -221,8 +220,8 @@ class ChatLogController: UIViewController {
     }
   
     func setUpNotification()  {
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatLogController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatLogController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     @objc func animateWithKeyboard(notification: NSNotification) {
@@ -252,7 +251,7 @@ class ChatLogController: UIViewController {
     }
 }
 
-extension ChatLogController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension ChatSingleController: UICollectionViewDelegate, UICollectionViewDataSource {
     
      func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return arrayMessages.count
@@ -267,7 +266,7 @@ extension ChatLogController: UICollectionViewDelegate, UICollectionViewDataSourc
     
 }
 
-extension ChatLogController: UICollectionViewDelegateFlowLayout {
+extension ChatSingleController: UICollectionViewDelegateFlowLayout {
    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let text = arrayMessages[indexPath.item].text
@@ -279,7 +278,7 @@ extension ChatLogController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension ChatLogController: ChatCollectionViewCellDelegate {
+extension ChatSingleController: ChatCollectionViewCellDelegate {
     
     func tapToImage(gesture: UIImageView) {
         
@@ -322,7 +321,7 @@ extension ChatLogController: ChatCollectionViewCellDelegate {
         }
     }
 }
-extension ChatLogController: UITextViewDelegate {
+extension ChatSingleController: UITextViewDelegate {
     
     public func textViewDidChange(_ textView: UITextView) {
         
@@ -350,7 +349,7 @@ extension ChatLogController: UITextViewDelegate {
     }
 }
 
-extension ChatLogController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
  
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         

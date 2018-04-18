@@ -28,15 +28,9 @@ class ProfileController: UIViewController {
 
     func getDataWithFireBase() {
         
-        if let uid = Auth.auth().currentUser?.uid {
-            let ref = Database.database().reference().child("users").child(uid)
-            ref.observeSingleEvent(of: .value, with: { (snap) in
-                
-                if let user = snap.value as? [String: AnyObject] {
-                    self.user = User.init(dic: user)
-                    self.configureView()
-                }
-            })
+        User.getCurrentUserFromFirebase {[weak self] (us) in
+            self?.user = us
+            self?.configureView()
         }
     }
     
@@ -56,5 +50,7 @@ class ProfileController: UIViewController {
 
     @IBAction func editProfileButtonClick(_ sender: Any) {
         
+        let editProfileVC =  self.storyboard?.instantiateViewController(withIdentifier: "EditProfileController") as! EditProfileController
+        self.navigationController?.pushViewController(editProfileVC, animated: true)
     }
 }

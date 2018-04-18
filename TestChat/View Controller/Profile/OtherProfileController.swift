@@ -29,8 +29,8 @@ class OtherProfileController: UIViewController {
         if let im = user?.imageProfile {
             let url = NSURL.init(string: im)
             self.userImage.sd_setImage(with: url! as URL)
-        } else {
             
+        } else {
             self.userImage.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
             }, completed: nil)
         }

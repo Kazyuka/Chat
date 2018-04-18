@@ -239,8 +239,8 @@ class ChatGrupController: UICollectionViewController {
     }
     
     func setUpNotification()  {
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatLogController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatLogController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     @objc func animateWithKeyboard(notification: NSNotification) {

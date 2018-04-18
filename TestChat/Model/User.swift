@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 
 class User: NSObject {
     
@@ -16,6 +18,7 @@ class User: NSObject {
     var userId: String?
     var lastName: String?
     var aboutMe: String?
+    var uid: String?
     
     init(dic: [String: AnyObject]) {
         self.name = dic["name"] as! String
@@ -25,6 +28,23 @@ class User: NSObject {
         } 
         self.lastName = dic["lastName"] as? String
         self.aboutMe = dic["aboutMe"] as? String
+        if let id = dic["uid"] as? String {
+            self.uid = id
+        }
+    }
+    
+    static func getCurrentUserFromFirebase(user: @escaping (User)->())  {
+
+        if let uid = Auth.auth().currentUser?.uid {
+            let ref = Database.database().reference().child("users").child(uid)
+            ref.observeSingleEvent(of: .value, with: { (snap) in
+                
+                if let u = snap.value as? [String: AnyObject] {
+                    let use = User(dic: u)
+                    user(use)
+                }
+            })
+        }
     }
 }
 

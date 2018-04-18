@@ -13,7 +13,7 @@
 		447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A422086014D00F327BA /* GroupCreateController.swift */; };
 		447E1A462086315300F327BA /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A452086315300F327BA /* ProfileController.swift */; };
 		447E1A482086395800F327BA /* OtherProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A472086395800F327BA /* OtherProfileController.swift */; };
-		44A10C2C2036CEE400990F49 /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A10C2B2036CEE400990F49 /* ChatLogController.swift */; };
+		44A10C2C2036CEE400990F49 /* ChatSingleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A10C2B2036CEE400990F49 /* ChatSingleController.swift */; };
 		44A34A8E2084A57C0083A4F1 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A8D2084A57C0083A4F1 /* TabController.swift */; };
 		44A34A902084D40B0083A4F1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A8F2084D40B0083A4F1 /* ResetPasswordController.swift */; };
 		44A34A922084D74E0083A4F1 /* UIViewController+Extentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A912084D74E0083A4F1 /* UIViewController+Extentions.swift */; };
@@ -34,6 +34,11 @@
 		44D4BC80203DB4B200237FB6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D4BC7F203DB4B200237FB6 /* Message.swift */; };
 		44D4BC83203DBC3000237FB6 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D4BC82203DBC3000237FB6 /* UserCell.swift */; };
 		44D4BC85203DBC9E00237FB6 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44D4BC84203DBC9E00237FB6 /* MessageCell.swift */; };
+		44FE62D120872E9A00F734E0 /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D020872E9A00F734E0 /* EditProfileController.swift */; };
+		44FE62D320873C3D00F734E0 /* AboutUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D220873C3D00F734E0 /* AboutUserController.swift */; };
+		44FE62D5208754AC00F734E0 /* DetailGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D4208754AC00F734E0 /* DetailGroupController.swift */; };
+		44FE62D720877D1B00F734E0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D620877D1B00F734E0 /* Group.swift */; };
+		44FE62DA20878F4C00F734E0 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D920878F4C00F734E0 /* SettingsController.swift */; };
 		AC465896F28AAF84EB9418AC /* Pods_TestChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */; };
 /* End PBXBuildFile section */
 
@@ -45,7 +50,7 @@
 		447E1A422086014D00F327BA /* GroupCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateController.swift; sourceTree = "<group>"; };
 		447E1A452086315300F327BA /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		447E1A472086395800F327BA /* OtherProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileController.swift; sourceTree = "<group>"; };
-		44A10C2B2036CEE400990F49 /* ChatLogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		44A10C2B2036CEE400990F49 /* ChatSingleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSingleController.swift; sourceTree = "<group>"; };
 		44A34A8D2084A57C0083A4F1 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		44A34A8F2084D40B0083A4F1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordController.swift; sourceTree = "<group>"; };
 		44A34A912084D74E0083A4F1 /* UIViewController+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extentions.swift"; sourceTree = "<group>"; };
@@ -69,6 +74,11 @@
 		44D4BC7F203DB4B200237FB6 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		44D4BC82203DBC3000237FB6 /* UserCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		44D4BC84203DBC9E00237FB6 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		44FE62D020872E9A00F734E0 /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
+		44FE62D220873C3D00F734E0 /* AboutUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUserController.swift; sourceTree = "<group>"; };
+		44FE62D4208754AC00F734E0 /* DetailGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupController.swift; sourceTree = "<group>"; };
+		44FE62D620877D1B00F734E0 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		44FE62D920878F4C00F734E0 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		DAC1371A2BC8DFB6B8E46945 /* Pods-TestChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestChat/Pods-TestChat.release.xcconfig"; sourceTree = "<group>"; };
 		E35FD9F327CD75A808887F1F /* Pods-TestChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestChat/Pods-TestChat.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -102,6 +112,7 @@
 				44B3F0AE2045794A0096911B /* AnimationHelper.swift */,
 				44B3F0AC204577030096911B /* PresentAnimation.swift */,
 				44B77D9B207F859000963656 /* GroupMessage.swift */,
+				44FE62D620877D1B00F734E0 /* Group.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -111,8 +122,27 @@
 			children = (
 				447E1A452086315300F327BA /* ProfileController.swift */,
 				447E1A472086395800F327BA /* OtherProfileController.swift */,
+				44FE62D020872E9A00F734E0 /* EditProfileController.swift */,
+				44FE62D220873C3D00F734E0 /* AboutUserController.swift */,
 			);
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		449F9E062087257600C36F75 /* Tab */ = {
+			isa = PBXGroup;
+			children = (
+				44A34A8D2084A57C0083A4F1 /* TabController.swift */,
+			);
+			path = Tab;
+			sourceTree = "<group>";
+		};
+		449F9E07208727A100C36F75 /* SingleChat */ = {
+			isa = PBXGroup;
+			children = (
+				44A10C2B2036CEE400990F49 /* ChatSingleController.swift */,
+				441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */,
+			);
+			path = SingleChat;
 			sourceTree = "<group>";
 		};
 		44A34A932084D7530083A4F1 /* Extentions */ = {
@@ -163,14 +193,13 @@
 		44B51CDF202DED8900881EB5 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
+				44FE62D820878F3600F734E0 /* Settings */,
+				449F9E062087257600C36F75 /* Tab */,
 				447E1A442086313800F327BA /* Profile */,
 				44B77D98207F69DB00963656 /* Login */,
 				44B77D97207F69B500963656 /* GroupChat */,
+				449F9E07208727A100C36F75 /* SingleChat */,
 				44B51CC9202DE7A500881EB5 /* ChatController.swift */,
-				441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */,
-				44A10C2B2036CEE400990F49 /* ChatLogController.swift */,
-				44A34A8D2084A57C0083A4F1 /* TabController.swift */,
-				447E1A422086014D00F327BA /* GroupCreateController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -180,6 +209,8 @@
 			children = (
 				44B77D95207F5FC300963656 /* GroupMessageController.swift */,
 				44B77D99207F6A4600963656 /* ChatGrupController.swift */,
+				447E1A422086014D00F327BA /* GroupCreateController.swift */,
+				44FE62D4208754AC00F734E0 /* DetailGroupController.swift */,
 			);
 			path = GroupChat;
 			sourceTree = "<group>";
@@ -202,6 +233,14 @@
 				442AF4F52080E46600E10C25 /* ChatGroupCell.swift */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		44FE62D820878F3600F734E0 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				44FE62D920878F4C00F734E0 /* SettingsController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		9FEE0E7F3189911755B32B8D /* Frameworks */ = {
@@ -355,14 +394,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				44A10C2C2036CEE400990F49 /* ChatLogController.swift in Sources */,
+				44A10C2C2036CEE400990F49 /* ChatSingleController.swift in Sources */,
 				44C75741203EF00F009E3A81 /* ChatCollectionViewCell.swift in Sources */,
+				44FE62D5208754AC00F734E0 /* DetailGroupController.swift in Sources */,
 				44A34A902084D40B0083A4F1 /* ResetPasswordController.swift in Sources */,
 				44D4BC85203DBC9E00237FB6 /* MessageCell.swift in Sources */,
 				441FFC24203477C6000F8E99 /* ContactsSingleMessageController.swift in Sources */,
 				44A34A952084E1CE0083A4F1 /* String+Extentions.swift in Sources */,
 				44B51CDA202DE7CC00881EB5 /* LoginViewController.swift in Sources */,
 				447E1A462086315300F327BA /* ProfileController.swift in Sources */,
+				44FE62D720877D1B00F734E0 /* Group.swift in Sources */,
 				441FFC2620347AD4000F8E99 /* User.swift in Sources */,
 				44A34A8E2084A57C0083A4F1 /* TabController.swift in Sources */,
 				44B77D96207F5FC300963656 /* GroupMessageController.swift in Sources */,
@@ -370,11 +411,14 @@
 				447E1A482086395800F327BA /* OtherProfileController.swift in Sources */,
 				447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */,
 				44D4BC83203DBC3000237FB6 /* UserCell.swift in Sources */,
+				44FE62D320873C3D00F734E0 /* AboutUserController.swift in Sources */,
 				442AF4F62080E46600E10C25 /* ChatGroupCell.swift in Sources */,
 				44D4BC80203DB4B200237FB6 /* Message.swift in Sources */,
+				44FE62D120872E9A00F734E0 /* EditProfileController.swift in Sources */,
 				44B51CCA202DE7A500881EB5 /* ChatController.swift in Sources */,
 				44B3F0AD204577030096911B /* PresentAnimation.swift in Sources */,
 				44B3F0AF2045794A0096911B /* AnimationHelper.swift in Sources */,
+				44FE62DA20878F4C00F734E0 /* SettingsController.swift in Sources */,
 				44B51CC8202DE7A500881EB5 /* AppDelegate.swift in Sources */,
 				44B77D9A207F6A4600963656 /* ChatGrupController.swift in Sources */,
 				44B77D9C207F859000963656 /* GroupMessage.swift in Sources */,

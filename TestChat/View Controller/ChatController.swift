@@ -169,8 +169,10 @@ class ChatController: UIViewController {
     }
     
     @objc func createGroupButtonClick () {
-        let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "GroupCreateController") as! GroupCreateController
-        self.navigationController?.pushViewController(loginVC, animated: true)
+        
+       let createGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "GroupCreateController") as! GroupCreateController
+        createGroupVC.delegate = self
+       self.present(createGroupVC, animated: true, completion: nil)
     }
     
     @objc func goToChat(user: User) {
@@ -267,6 +269,15 @@ extension ChatController: UINavigationControllerDelegate {
             break
         }
         return transition
+    }
+}
+
+extension ChatController: GroupCreateControllerDelegate {
+    
+    func goToDetailCreateGroup(g: Group) {
+        let detailGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailGroupController") as! DetailGroupController
+        detailGroupVC.group = g
+        self.present(detailGroupVC, animated: true, completion: nil)
     }
 }
 

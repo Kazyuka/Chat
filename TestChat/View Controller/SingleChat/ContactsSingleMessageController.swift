@@ -90,7 +90,7 @@ extension ContactsSingleMessageController: UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
        
         let user = self.userArray[indexPath.row]
-        let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatLogController") as! ChatLogController
+        let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatSingleController") as! ChatSingleController
         chatLogController.user = user
         self.navigationController?.pushViewController(chatLogController, animated: true)
     }

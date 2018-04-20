@@ -15,53 +15,52 @@ class ChatSingleController: UIViewController {
     var imageUserForNavigationBar = UIImage()
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
+    var unicKyeForChatRoom: String?
+    var grouChat = [RoomChat]()
+    
+    var databaseRef: DatabaseReference! {
+        return Database.database().reference()
+    }
+
     var user: User? {
+        
         didSet {
             navigationItem.title = user?.name
             if let im = user?.imageProfile {
                 let data = NSData.init(contentsOf: URL.init(string: im)!)
-                imageUserForNavigationBar = UIImage(data: data as! Data)!
+                imageUserForNavigationBar = UIImage(data: data! as Data)!
             } else {
                 imageUserForNavigationBar = UIImage.init(named: "user.png")!
             }
             
-            let button: UIButton = UIButton(type: UIButtonType.custom) as! UIButton
+            let button: UIButton = UIButton(type: UIButtonType.custom)
             button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
             button.addTarget(self, action: #selector(pressToUserImageRightButton), for: UIControlEvents.touchUpInside)
             button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
             let barButton = UIBarButtonItem(customView: button)
             self.navigationItem.rightBarButtonItem = barButton
             self.arrayMessages.removeAll()
-            observerMessages()
         }
     }
     
     func observerMessages() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        let ref = Database.database().reference().child("message-users").child(uid)
-        ref.observe(.childAdded, with: { (snap) in
+      
+        arrayMessages.removeAll()
+    
+        let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
+        refChatRom.observe(.childAdded) { (snap) in
             
-            let idUser = snap.key
-            let messageUserRef = Database.database().reference().child("messages").child(idUser)
-            messageUserRef.observe(.value, with: { (snap) in
-                guard let dic = snap.value as? [String: AnyObject] else {
-                    return
-                }
-                let mes = Message(dic: dic)
-                
-                if mes.chatPartnerId == self.user?.userId {
-                    self.arrayMessages.append(mes)
-                    DispatchQueue.main.async(execute: {
-                        self.collectionView?.reloadData()
-                    })
-                }
-            }, withCancel: { (er) in
-                
+            guard let dic = snap.value as? [String: AnyObject] else {
+                return
+            }
+            
+            let g = Message.init(dic: dic)
+            self.arrayMessages.append(g)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                self.collectionView.reloadData()
             })
-            
-        }, withCancel: nil)
+        }
     }
     
     override func viewDidLoad() {
@@ -71,6 +70,8 @@ class ChatSingleController: UIViewController {
          collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
          self.collectionView?.backgroundColor = UIColor.white
          collectionView?.alwaysBounceVertical = true
+        
+         observerMessages()
     }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
@@ -88,24 +89,41 @@ class ChatSingleController: UIViewController {
     
     @objc func sendMassegaButtonTapped()  {
        
-        let ref = Database.database().reference().child("messages")
-        let childRef  = ref.childByAutoId()
-        let toIdUser = user?.userId
+        let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!)
+        let toIdUser = user?.uid
         let fromId = Auth.auth().currentUser!.uid
         let time = Int(NSDate().timeIntervalSince1970)
-        let value = ["text": textFieldInputTex.text!, "toId": toIdUser, "fromId" : fromId, "time": time] as [String : Any]
-    
-        childRef.updateChildValues(value) { (err, data) in
+        let value =  ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": unicKyeForChatRoom] as [String : Any]
+        let text = self.textFieldInputTex.text
+        
+        ref.updateChildValues(value) { (err, data) in
             if err != nil {
                 return
             }
             
-            let messsID = childRef.key
-            let messageRef = Database.database().reference().child("message-users").child(fromId)
-            messageRef.updateChildValues([messsID: 2])
+            let ref1 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+            let value2 =  ["text": text, "fromId": fromId, "toId": toIdUser, "time": time] as [String : Any]
             
-            let recipientRef = Database.database().reference().child("message-users").child(toIdUser!)
-            recipientRef.updateChildValues([messsID: 2])
+            ref1.updateChildValues(value2) { (err, data) in
+                if err != nil {
+                    return
+                }
+            }
+            
+            let ref2 = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("users")
+            let ref3 = ref2.childByAutoId()
+            let value3 =  ["toId": toIdUser] as [String : Any]
+            
+            ref3.updateChildValues(value3) { (err, data) in
+                if err != nil {
+                    return
+                }
+            }
+            
+            let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+            refLastMessage.updateChildValues(["last-message": text])
+            let refToIdUser = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+            refToIdUser.updateChildValues(["toId": toIdUser])
         }
         view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
@@ -376,23 +394,36 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
                 }
                 if let urlString = metadata?.downloadURL()?.absoluteString {
                     
-                    let ref = Database.database().reference().child("messages")
-                    let childRef  = ref.childByAutoId()
-                    let toIdUser = self.user?.userId
-                    let fromId = Auth.auth().currentUser!.uid
+                    let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
                     let time = Int(NSDate().timeIntervalSince1970)
-                    let value = ["imageUrl": urlString, "toId": toIdUser, "fromId" : fromId, "time": time] as [String : Any]
+                 
+                    let toIdUser = self.user?.uid
+                    let fromId = Auth.auth().currentUser!.uid
+                    let value =  ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": self.self.unicKyeForChatRoom] as [String : Any]
+                    let text = self.textFieldInputTex.text
                     
-                    childRef.updateChildValues(value) { (err, data) in
+                    ref.updateChildValues(value) { (err, data) in
                         if err != nil {
                             return
                         }
-                        let messageRef = Database.database().reference().child("message-users").child(fromId)
-                        let messsID = childRef.key
-                        messageRef.updateChildValues([messsID: 2])
                         
-                        let recipientRef = Database.database().reference().child("message-users").child(toIdUser!)
-                        recipientRef.updateChildValues([messsID: 2])
+                        let ref1 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+                        let value2 =  ["fromId" : fromId, "toId": toIdUser, "imageUrl": urlString, "time": time] as [String : Any]
+                        
+                        ref1.updateChildValues(value2) { (err, data) in
+                            if err != nil {
+                                return
+                            }
+                        }
+                        
+                        let ref2 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("users")
+                        let value3 =  ["toId": toIdUser] as [String : Any]
+                        
+                        ref2.updateChildValues(value3) { (err, data) in
+                            if err != nil {
+                                return
+                            }
+                        }
                     }
                 }
             })

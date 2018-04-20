@@ -9,6 +9,10 @@ class ContactsSingleMessageController: UIViewController {
     var messagesViewComtroller: ChatController?
     var searchController:UISearchController!
     
+    private var currentUserUid: String! {
+        return Auth.auth().currentUser?.uid
+    }
+    
     @IBOutlet weak var tableView: UITableView!
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +96,33 @@ extension ContactsSingleMessageController: UITableViewDataSource, UITableViewDel
         let user = self.userArray[indexPath.row]
         let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatSingleController") as! ChatSingleController
         chatLogController.user = user
-        self.navigationController?.pushViewController(chatLogController, animated: true)
+        let idGroup = self.currentUserUid + " " + user.uid!
+        let reverseidGroup = user.uid! + " " + self.currentUserUid
+        
+        let refChatRom = Database.database().reference().child("chat-romm").child(idGroup)
+        
+        refChatRom.observeSingleEvent(of: .value) { (snap) in
+         
+            if snap.value is NSNull {
+                
+                let refChatRom2 = Database.database().reference().child("chat-romm").child(reverseidGroup)
+                
+                refChatRom2.observeSingleEvent(of: .value, with: { (snap) in
+                    
+                    if snap.value is NSNull  {
+                        chatLogController.unicKyeForChatRoom = idGroup
+                        self.navigationController?.pushViewController(chatLogController, animated: true)
+                    } else {
+                        chatLogController.unicKyeForChatRoom = reverseidGroup
+                        self.navigationController?.pushViewController(chatLogController, animated: true)
+                    }
+                })
+                
+            } else {
+                chatLogController.unicKyeForChatRoom = idGroup
+                self.navigationController?.pushViewController(chatLogController, animated: true)
+            }
+        }
     }
 }
 

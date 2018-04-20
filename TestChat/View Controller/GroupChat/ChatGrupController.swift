@@ -11,62 +11,74 @@ import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
-class ChatGrupController: UICollectionViewController {
-    
+class ChatGrupController: UIViewController {
+  
+    @IBOutlet weak var collectionView: UICollectionView!
+
     var idUsersWhoGetMessage = [String]()
     var allIdUserInString = " "
-    
+
     let cellIdentifier = "Cell"
     var arrayMessages = [GroupMessage]()
     var startingFrame: CGRect?
     var blackView: UIView?
+    var imageUserForNavigationBar = UIImage()
     
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
-    
-    var allUsers: [String]? {
+    var unicKyeForChatRoom: String?
+    var room: RoomChat! {
         
         didSet {
+            navigationItem.title = room?.groupName
+            if let im = room?.imageGroup {
+                let data = NSData.init(contentsOf: URL.init(string: im)!)
+                imageUserForNavigationBar = UIImage(data: data! as Data)!
+            } else {
+                imageUserForNavigationBar = UIImage.init(named: "user.png")!
+            }
+            
+            let button: UIButton = UIButton(type: UIButtonType.custom)
+            button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
+            button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
+            button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+            let barButton = UIBarButtonItem(customView: button)
+            self.navigationItem.rightBarButtonItem = barButton
+        }
+    }
+    
+    @objc func pressToGropImageRightButton() {
+       /* let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "OtherProfileController") as! OtherProfileController
+        chatLogController.user = user
+        self.navigationController?.pushViewController(chatLogController, animated: true)*/
+    }
+    var databaseRef: DatabaseReference! {
+        return Database.database().reference()
+    }
+    
+    var allUsers: [String]? {
+        didSet {
             self.arrayMessages.removeAll()
-            self.observerMessages()
         }
     }
     
     func observerMessages() {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
-        self.arrayMessages.removeAll()
+        arrayMessages.removeAll()
         
-        let ref = Database.database().reference().child("message-users").child(uid)
-        ref.observe(.childAdded, with: { (snap) in
+        let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
+        refChatRom.observe(.childAdded) { (snap) in
             
-            let messageUserRef = Database.database().reference().child("message-group")
-            messageUserRef.observe(.value, with: { (snap) in
-                
-                guard let dic = snap.value as? [String: AnyObject] else {
-                    return
-                }
-                if let snapshots = snap.children.allObjects as? [DataSnapshot] {
-                    
-                    for snap in snapshots {
-                        
-                        if let postDict = snap.value as? Dictionary<String, AnyObject> {
-                            
-                            let mess = GroupMessage(dic: postDict)
-                            
-                            self.arrayMessages.append(mess)
-                            DispatchQueue.main.async(execute: {
-                                self.collectionView?.reloadData()
-                            })
-                        }
-                    }
-                }
-            }, withCancel: { (er) in
-                
+            guard let dic = snap.value as? [String: AnyObject] else {
+                return
+            }
+            
+            let g = GroupMessage.init(dic: dic)
+            self.arrayMessages.append(g)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                self.collectionView?.reloadData()
             })
-            
-        }, withCancel: nil)
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +90,7 @@ class ChatGrupController: UICollectionViewController {
         self.collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        self.observerMessages()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -88,55 +101,31 @@ class ChatGrupController: UICollectionViewController {
         return true
     }
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return arrayMessages.count
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatGroupCell
-        cell?.messageGroup = arrayMessages[indexPath.item]
-        return cell!
-    }
     
     @objc func sendMassegaButtonTapped()  {
-        
-        let ref = Database.database().reference().child("message-group")
-        let childRef  = ref.childByAutoId()
+        let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!).child("messages").childByAutoId()
         let fromId = Auth.auth().currentUser!.uid
         let time = Int(NSDate().timeIntervalSince1970)
-        var value = ["text": textFieldInputTex.text!,"fromId" : fromId, "time": time] as [String : Any]
-        idUsersWhoGetMessage.removeAll()
-        allIdUserInString = " "
         
-        for userId in allUsers! {
-            idUsersWhoGetMessage.append(userId)
-        }
-        allIdUserInString = idUsersWhoGetMessage.joined(separator: " ")
-        value["toId"] = allIdUserInString
-        
-        childRef.updateChildValues(value) { (error, ref) in
+        let value = ["text": textFieldInputTex.text!,"fromId" : fromId, "time": time] as [String : Any]
+        ref.updateChildValues(value) { (error, ref) in
             
             if error != nil {
                 return
             }
-            let messageRef = Database.database().reference().child("message-users").child(fromId)
-            let ch = messageRef.childByAutoId()
-            ch.updateChildValues(value)
-            
-            let usersStringId = self.allIdUserInString.components(separatedBy: " ")
-            
-            for id in usersStringId {
-                let recipientRef = Database.database().reference().child("message-users").child(id)
-                let ch2 = recipientRef.childByAutoId()
-                ch2.updateChildValues(value)
-            }
         }
-        
+    
         view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
         textFieldInputTex.text = "Your message"
         textFieldInputTex.textColor = UIColor.lightGray
+    }
+    
+    @objc func sendImageMassegaButtonTapped () {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        present(imagePicker, animated: true, completion: nil)
     }
     var  textInsideTextFeld: String? {
         
@@ -171,7 +160,7 @@ class ChatGrupController: UICollectionViewController {
         button.layer.cornerRadius = 20
         button.layer.masksToBounds = true
         button.contentMode = .scaleAspectFill
-        button.addTarget(self, action: #selector(sendMassegaButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(sendImageMassegaButtonTapped), for: .touchUpInside)
         return button
     }()
     let massegeImputContainerView: UIView = {
@@ -270,6 +259,19 @@ class ChatGrupController: UICollectionViewController {
     }
 }
 
+extension ChatGrupController: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return arrayMessages.count
+    }
+    
+   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatGroupCell
+        cell?.messageGroup = arrayMessages[indexPath.item]
+        return cell!
+    }
+}
+
 extension ChatGrupController: UICollectionViewDelegateFlowLayout {
     
     public  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -306,5 +308,53 @@ extension ChatGrupController: UITextViewDelegate {
             textView.text = "Your message"
             textView.textColor = UIColor.lightGray
         }
+    }
+}
+
+
+extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        var selectedImagefromPisker: UIImage?
+        if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            selectedImagefromPisker = editedImage
+            
+        } else  if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            selectedImagefromPisker = originalImage
+        }
+        if let selectedImage = selectedImagefromPisker {
+            uploadImageToFirebase(image: selectedImage)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func uploadImageToFirebase(image: UIImage) {
+        let imageName = NSUUID().uuidString
+        let storageRef = Storage.storage().reference().child("message_images").child("\(imageName).png")
+        if let uploadData = UIImageJPEGRepresentation(image, 0.3) {
+            storageRef.putData(uploadData, metadata: nil, completion: { (metadata, err) in
+                if err != nil{
+                    return
+                }
+                if let urlString = metadata?.downloadURL()?.absoluteString {
+                    
+                    let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+                    let fromId = Auth.auth().currentUser!.uid
+                    let time = Int(NSDate().timeIntervalSince1970)
+                    
+                    let value = ["imageUrl": urlString,"fromId" : fromId, "time": time] as [String : Any]
+                    ref.updateChildValues(value) { (error, ref) in
+                        
+                        if error != nil {
+                            return
+                        }
+                    }
+                }
+            })
+        }
+    }
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.dismiss(animated: true, completion: nil)
     }
 }

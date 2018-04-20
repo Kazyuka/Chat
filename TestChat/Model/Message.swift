@@ -25,7 +25,10 @@ class Message: NSObject {
         if let imageMessage = dic["imageUrl"] as? String {
             self.imageUrl = imageMessage
         }
-        self.time = dic["time"] as? NSNumber
+        
+        if let t = dic["time"] as? NSNumber {
+            self.time = t
+        }
     }
     
     var chatPartnerId: String? {

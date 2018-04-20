@@ -27,6 +27,7 @@
 		44B51CD2202DE7A500881EB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44B51CD0202DE7A500881EB5 /* LaunchScreen.storyboard */; };
 		44B51CDA202DE7CC00881EB5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B51CD9202DE7CC00881EB5 /* LoginViewController.swift */; };
 		44B51CDE202DE86B00881EB5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44B51CDD202DE86B00881EB5 /* GoogleService-Info.plist */; };
+		44B751C8208A04340036198E /* EditDetailGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B751C7208A04340036198E /* EditDetailGroupController.swift */; };
 		44B77D96207F5FC300963656 /* GroupMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B77D95207F5FC300963656 /* GroupMessageController.swift */; };
 		44B77D9A207F6A4600963656 /* ChatGrupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B77D99207F6A4600963656 /* ChatGrupController.swift */; };
 		44B77D9C207F859000963656 /* GroupMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B77D9B207F859000963656 /* GroupMessage.swift */; };
@@ -37,7 +38,7 @@
 		44FE62D120872E9A00F734E0 /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D020872E9A00F734E0 /* EditProfileController.swift */; };
 		44FE62D320873C3D00F734E0 /* AboutUserController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D220873C3D00F734E0 /* AboutUserController.swift */; };
 		44FE62D5208754AC00F734E0 /* DetailGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D4208754AC00F734E0 /* DetailGroupController.swift */; };
-		44FE62D720877D1B00F734E0 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D620877D1B00F734E0 /* Group.swift */; };
+		44FE62D720877D1B00F734E0 /* RoomChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D620877D1B00F734E0 /* RoomChat.swift */; };
 		44FE62DA20878F4C00F734E0 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D920878F4C00F734E0 /* SettingsController.swift */; };
 		AC465896F28AAF84EB9418AC /* Pods_TestChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */; };
 /* End PBXBuildFile section */
@@ -66,6 +67,7 @@
 		44B51CD3202DE7A500881EB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44B51CD9202DE7CC00881EB5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		44B51CDD202DE86B00881EB5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		44B751C7208A04340036198E /* EditDetailGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDetailGroupController.swift; sourceTree = "<group>"; };
 		44B77D94207F56C000963656 /* TestChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestChat.entitlements; sourceTree = "<group>"; };
 		44B77D95207F5FC300963656 /* GroupMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMessageController.swift; sourceTree = "<group>"; };
 		44B77D99207F6A4600963656 /* ChatGrupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGrupController.swift; sourceTree = "<group>"; };
@@ -77,7 +79,7 @@
 		44FE62D020872E9A00F734E0 /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		44FE62D220873C3D00F734E0 /* AboutUserController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutUserController.swift; sourceTree = "<group>"; };
 		44FE62D4208754AC00F734E0 /* DetailGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupController.swift; sourceTree = "<group>"; };
-		44FE62D620877D1B00F734E0 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		44FE62D620877D1B00F734E0 /* RoomChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomChat.swift; sourceTree = "<group>"; };
 		44FE62D920878F4C00F734E0 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 		DAC1371A2BC8DFB6B8E46945 /* Pods-TestChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestChat/Pods-TestChat.release.xcconfig"; sourceTree = "<group>"; };
 		E35FD9F327CD75A808887F1F /* Pods-TestChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestChat/Pods-TestChat.debug.xcconfig"; sourceTree = "<group>"; };
@@ -112,7 +114,7 @@
 				44B3F0AE2045794A0096911B /* AnimationHelper.swift */,
 				44B3F0AC204577030096911B /* PresentAnimation.swift */,
 				44B77D9B207F859000963656 /* GroupMessage.swift */,
-				44FE62D620877D1B00F734E0 /* Group.swift */,
+				44FE62D620877D1B00F734E0 /* RoomChat.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -211,6 +213,7 @@
 				44B77D99207F6A4600963656 /* ChatGrupController.swift */,
 				447E1A422086014D00F327BA /* GroupCreateController.swift */,
 				44FE62D4208754AC00F734E0 /* DetailGroupController.swift */,
+				44B751C7208A04340036198E /* EditDetailGroupController.swift */,
 			);
 			path = GroupChat;
 			sourceTree = "<group>";
@@ -403,13 +406,14 @@
 				44A34A952084E1CE0083A4F1 /* String+Extentions.swift in Sources */,
 				44B51CDA202DE7CC00881EB5 /* LoginViewController.swift in Sources */,
 				447E1A462086315300F327BA /* ProfileController.swift in Sources */,
-				44FE62D720877D1B00F734E0 /* Group.swift in Sources */,
+				44FE62D720877D1B00F734E0 /* RoomChat.swift in Sources */,
 				441FFC2620347AD4000F8E99 /* User.swift in Sources */,
 				44A34A8E2084A57C0083A4F1 /* TabController.swift in Sources */,
 				44B77D96207F5FC300963656 /* GroupMessageController.swift in Sources */,
 				44A34A922084D74E0083A4F1 /* UIViewController+Extentions.swift in Sources */,
 				447E1A482086395800F327BA /* OtherProfileController.swift in Sources */,
 				447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */,
+				44B751C8208A04340036198E /* EditDetailGroupController.swift in Sources */,
 				44D4BC83203DBC3000237FB6 /* UserCell.swift in Sources */,
 				44FE62D320873C3D00F734E0 /* AboutUserController.swift in Sources */,
 				442AF4F62080E46600E10C25 /* ChatGroupCell.swift in Sources */,

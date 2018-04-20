@@ -20,7 +20,7 @@ class GroupCreateController: UIViewController {
     @IBOutlet weak var nameTextView: UITextView!
     
     var progressHUD: ProgressHUD? = nil
-
+    var imageGroup = UIImage()
     let imagePicker = UIImagePickerController()
     weak var delegate: GroupCreateControllerDelegate?
     
@@ -54,44 +54,13 @@ class GroupCreateController: UIViewController {
         if photoImageGroup.image == nil || nameTextView.text == "" {
             self.present(self.allertControllerWithOneButton(message: "Выберите фото для группового чата или заполните название"), animated: true, completion: nil)
         } else {
-            self.progressHUD?.show()
-            let imageName = NSUUID().uuidString
-            let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
-            let uploadData = UIImagePNGRepresentation(self.photoImageGroup.image!)
             
-            storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
-                if err != nil{
-                    
-                    self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
-                    return
-                }
-                if let meta = metadata?.downloadURL()?.absoluteString {
-                    let uid = Auth.auth().currentUser?.uid
-                    let value = ["nameGroup": self.nameTextView.text, "groupImageUrl" : meta, "fromId": uid] as [String : Any]
-                    self.registerGroupIntoFirebase(value: value as [String : AnyObject] )
-                }
+            let group = Group(nameGroup: self.nameTextView.text, image: self.photoImageGroup.image!, typeGroup: false)
+            
+            self.dismiss(animated: true, completion: {
+                self.delegate?.goToDetailCreateGroup(g: group)
             })
         }
-    }
-    private func registerGroupIntoFirebase(value: [String: AnyObject]) {
-        
-        var v = value
-        let ref = Database.database().reference().child("group-messages")
-        let childRef  = ref.childByAutoId()
-        
-        v["uidGroup"] = childRef.key as AnyObject
-        childRef.setValue(v)
-        
-        childRef.observeSingleEvent(of: .value, with: { (snap) in
-            
-            if let dic = snap.value as? [String: AnyObject] {
-                let group = Group(dic: dic)
-                self.progressHUD?.hide()
-                self.dismiss(animated: true, completion: {
-                    self.delegate?.goToDetailCreateGroup(g: group)
-                })
-            }
-        })
     }
 }
 
@@ -183,4 +152,10 @@ class ProgressHUD: UIVisualEffectView {
     func hide() {
         self.isHidden = true
     }
+}
+
+struct Group {
+    var nameGroup: String?
+    var image: UIImage?
+    var typeGroup: Bool?
 }

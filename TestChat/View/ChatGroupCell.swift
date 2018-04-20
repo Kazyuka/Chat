@@ -55,8 +55,15 @@ class ChatGroupCell: UICollectionViewCell {
                     if let data = snap.value as? [String  : AnyObject] {
                         
                         let user = User.init(dic: data)
-                        let url = NSURL.init(string: user.imageProfile!)
-                        self.imageUser.sd_setImage(with: url as! URL)
+                        
+                        if let im = user.imageProfile {
+                            let url = NSURL.init(string: im)
+                            self.imageUser.sd_setImage(with: url! as URL)
+                        } else {
+                            
+                            self.imageUser.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+                            }, completed: nil)
+                        }
                         self.imageUser.isHidden = false
                     }
                 })

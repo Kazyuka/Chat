@@ -9,11 +9,12 @@
 import UIKit
 import FirebaseDatabase
 import SDWebImage
+import FirebaseAuth
 
 class MessageCell: UserCell {
     
     @IBOutlet weak var messageText: UILabel!
-    var message: Message! {
+    var chat: RoomChat! {
         didSet {
             configureView()
         }
@@ -31,14 +32,11 @@ class MessageCell: UserCell {
 
     override func configureView() {
         
-        if let todId  = message?.chatPartnerId {
-            let ref = Database.database().reference().child("users")
-            ref.child(todId).observeSingleEvent(of: .value, with: { (snap) in
+        if let isSingleOptional = chat.isSingle {
+            
+            if isSingleOptional {
                 
-                if let data = snap.value as? [String: AnyObject] {
-                    let user = User(dic: data)
-                    self.userName.text = user.name
-                    
+                RoomChat.getCurrentUserFromSingleMessage(chatRoom: chat, user: { (user) in
                     if let im = user.imageProfile {
                         let url = NSURL.init(string: im)
                         self.userPhoto.sd_setImage(with: url! as URL)
@@ -47,15 +45,18 @@ class MessageCell: UserCell {
                         self.userPhoto.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
                         }, completed: nil)
                     }
+                    self.userName.text = user.name
+                    self.messageText.text = self.chat.lastMessage
+                })
+             
+            } else {
+                
+                if let im = chat.imageGroup {
+                    let url = NSURL.init(string: im)
+                    self.userPhoto.sd_setImage(with: url! as URL)
                 }
-            })
-        }
-        self.messageText.text = message.text
-        if let sec = message.time?.doubleValue {
-            let timeS = NSDate(timeIntervalSince1970: sec)
-            let dateFormater = DateFormatter()
-            dateFormater.dateFormat = "hh:mm:ss a"
-            //timeLabel.text = dateFormater.string(from: timeS as Date)
+                self.userName.text = chat.groupName
+            }
         }
     }
 }

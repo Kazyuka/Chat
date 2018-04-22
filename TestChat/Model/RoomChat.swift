@@ -103,6 +103,5 @@ struct RoomChat {
         }
         return arrayMessage
     }
-    
 }
 

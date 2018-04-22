@@ -15,6 +15,9 @@ class ChatController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var transition = PresentAnimation()
     var grouChat = [RoomChat]()
+    var filteredGroupChat = [RoomChat]()
+    
+    var searchController:UISearchController!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -26,6 +29,13 @@ class ChatController: UIViewController {
        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain, target: self, action: #selector(createGroupButtonClick))
+        searchController = UISearchController(searchResultsController: nil);
+        tableView.tableHeaderView = searchController.searchBar
+        searchController.searchBar.placeholder = "Search"
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.searchBar.delegate = self
         isUserLogin()
     }
     
@@ -101,35 +111,43 @@ class ChatController: UIViewController {
     func gotoSingleChat(roomChat: RoomChat) {
         
         let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatSingleController") as! ChatSingleController
-        User.getCurrentUserFromFirebase(user: { (us) in
+        RoomChat.getCurrentUserFromSingleMessage(chatRoom: roomChat) { (us) in
             chatLogController.user = us
             chatLogController.unicKyeForChatRoom = roomChat.groupUID
             self.navigationController?.pushViewController(chatLogController, animated: true)
-        })
+        }
     }
 }
 
 extension ChatController: UITableViewDelegate, UITableViewDataSource {
     
      func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return grouChat.count
+        
+        if searchController.isActive && searchController.searchBar.text != "" {
+            return filteredGroupChat.count
+        } else {
+            return grouChat.count
+        }
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! MessageCell
-        if grouChat.count != 0 {
-            cell.chat = grouChat[indexPath.row]
+        
+        if searchController.isActive && searchController.searchBar.text != "" {
+            cell.chat = filteredGroupChat[indexPath.row]
+        } else {
+            if grouChat.count != 0 {
+                cell.chat = grouChat[indexPath.row]
+            }
         }
-
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let chatRoom = grouChat[indexPath.row]
-
         if let isTypeGroup = chatRoom.isSingle {
-            
             if isTypeGroup {
                 gotoSingleChat(roomChat: chatRoom)
             } else {
@@ -204,4 +222,43 @@ extension ChatController: GoToGroupCahatRoomDelegate {
     }
 }
 
+extension ChatController: UISearchResultsUpdating {
+    @available(iOS 8.0, *)
+    public func updateSearchResults(for searchController: UISearchController) {
+        
+        if let searchText = searchController.searchBar.text {
+            filterContent(searchText: searchText)
+            tableView.reloadData()
+        }
+    }
+    
+    func filterContent(searchText:String) {
+        
+        filteredGroupChat = grouChat.filter({ (room) -> Bool in
+    
+            if room.groupName == nil {
+                let name = room.usersChat!.first?.range(of: searchText, options: NSString.CompareOptions.caseInsensitive, range: nil, locale: nil)
+                return name != nil
+            } else {
+                let name = room.groupName?.range(of: searchText, options: NSString.CompareOptions.caseInsensitive, range: nil, locale: nil)
+                return name != nil
+            }
+            return false
+        })
+    }
+}
+
+extension ChatController: UISearchBarDelegate {
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        self.searchController.isActive = false
+        self.tableView.reloadData()
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.showsCancelButton = true
+    }
+    
+}
 

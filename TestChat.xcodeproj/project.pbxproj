@@ -13,6 +13,7 @@
 		447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A422086014D00F327BA /* GroupCreateController.swift */; };
 		447E1A462086315300F327BA /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A452086315300F327BA /* ProfileController.swift */; };
 		447E1A482086395800F327BA /* OtherProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A472086395800F327BA /* OtherProfileController.swift */; };
+		448FD14E208C9C6B00F03C45 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 448FD14D208C9C6B00F03C45 /* ProgressHUD.swift */; };
 		44A10C2C2036CEE400990F49 /* ChatSingleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A10C2B2036CEE400990F49 /* ChatSingleController.swift */; };
 		44A34A8E2084A57C0083A4F1 /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A8D2084A57C0083A4F1 /* TabController.swift */; };
 		44A34A902084D40B0083A4F1 /* ResetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A34A8F2084D40B0083A4F1 /* ResetPasswordController.swift */; };
@@ -51,6 +52,7 @@
 		447E1A422086014D00F327BA /* GroupCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateController.swift; sourceTree = "<group>"; };
 		447E1A452086315300F327BA /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		447E1A472086395800F327BA /* OtherProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileController.swift; sourceTree = "<group>"; };
+		448FD14D208C9C6B00F03C45 /* ProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		44A10C2B2036CEE400990F49 /* ChatSingleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSingleController.swift; sourceTree = "<group>"; };
 		44A34A8D2084A57C0083A4F1 /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		44A34A8F2084D40B0083A4F1 /* ResetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetPasswordController.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				44B3F0AC204577030096911B /* PresentAnimation.swift */,
 				44B77D9B207F859000963656 /* GroupMessage.swift */,
 				44FE62D620877D1B00F734E0 /* RoomChat.swift */,
+				448FD14D208C9C6B00F03C45 /* ProgressHUD.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -346,7 +349,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		8B33C819C7F2F2FA296A1746 /* [CP] Embed Pods Frameworks */ = {
@@ -405,6 +408,7 @@
 				441FFC24203477C6000F8E99 /* ContactsSingleMessageController.swift in Sources */,
 				44A34A952084E1CE0083A4F1 /* String+Extentions.swift in Sources */,
 				44B51CDA202DE7CC00881EB5 /* LoginViewController.swift in Sources */,
+				448FD14E208C9C6B00F03C45 /* ProgressHUD.swift in Sources */,
 				447E1A462086315300F327BA /* ProfileController.swift in Sources */,
 				44FE62D720877D1B00F734E0 /* RoomChat.swift in Sources */,
 				441FFC2620347AD4000F8E99 /* User.swift in Sources */,

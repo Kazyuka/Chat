@@ -15,14 +15,19 @@ import FirebaseAuth
     func getCheckUser(users: [User])
 }
 
+protocol GoToGroupCahatRoomDelegate: class {
+    func goToGroupChat(room: RoomChat)
+}
+
 class DetailGroupController: UIViewController {
 
     @IBOutlet weak var nameGroup: UILabel!
     @IBOutlet weak var imageGroupView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
-    
+    var progressHUD: ProgressHUD? = nil
     var userArray = [User]()
     var group: Group?
+    weak var delegate: GoToGroupCahatRoomDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +39,11 @@ class DetailGroupController: UIViewController {
     }
     
     func configureView() {
+        
+        progressHUD = ProgressHUD(text: "Please Wait")
+        progressHUD?.hide()
+        self.view.addSubview(progressHUD!)
+        
         nameGroup.text = group?.nameGroup
         if let im = group?.image {
             self.imageGroupView.image = im
@@ -71,7 +81,7 @@ class DetailGroupController: UIViewController {
     }
     
     private func registerGroupIntoFirebase() {
-        
+        progressHUD?.show()
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
         let uploadData = UIImagePNGRepresentation(self.group!.image!)
@@ -95,10 +105,36 @@ class DetailGroupController: UIViewController {
                     let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": keyChat] as [String : Any]
                     let ref = Database.database().reference().child("chat-romm").child(keyChat)
                     ref.updateChildValues(value)
-                    self.dismiss(animated: true, completion: nil)
+                    self.getChatRommFromFirebaseDatabase()
                 }
             })
-
+    }
+    
+    
+    func getChatRommFromFirebaseDatabase() {
+        
+        let keyChat = self.getUIDForGroup()
+        let refChatRom = Database.database().reference().child("chat-romm")
+        
+        refChatRom.observeSingleEvent(of: .childChanged) { (snap) in
+            guard let dic = snap.value as? [String: AnyObject] else {
+                return
+            }
+            let g = RoomChat.init(dic: dic)
+            print(g)
+        }
+        refChatRom.observe(.childAdded) { (snap) in
+            
+            guard let dic = snap.value as? [String: AnyObject] else {
+                return
+            }
+            let g = RoomChat.init(dic: dic)
+            self.progressHUD?.hide()
+            self.dismiss(animated: true, completion: {
+                self.delegate?.goToGroupChat(room: g)
+            })
+            
+        }
     }
 
     @IBAction func editButtonClick(_ sender: Any) {
@@ -141,8 +177,8 @@ extension DetailGroupController: UITableViewDataSource, UITableViewDelegate {
 
 extension DetailGroupController: DetailGroupControllerDelegate {
     func getCheckUser(users: [User]) {
+       
         userArray.removeAll()
-        
         User.getCurrentUserFromFirebase { (us) in
             self.userArray = users
             self.userArray.append(us)

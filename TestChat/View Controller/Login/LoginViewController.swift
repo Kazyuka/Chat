@@ -58,7 +58,6 @@ class LoginViewController: UIViewController {
     }
     
     func registerNewUser() {
-    
          registerLoginSegment.selectedSegmentIndex == 1 ? loginUser() : registerUser()
     }
     

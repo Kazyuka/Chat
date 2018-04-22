@@ -26,21 +26,24 @@ class ChatSingleController: UIViewController {
         
         didSet {
             navigationItem.title = user?.name
-            if let im = user?.imageProfile {
-                let data = NSData.init(contentsOf: URL.init(string: im)!)
-                imageUserForNavigationBar = UIImage(data: data! as Data)!
-            } else {
-                imageUserForNavigationBar = UIImage.init(named: "user.png")!
-            }
-            
-            let button: UIButton = UIButton(type: UIButtonType.custom)
-            button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
-            button.addTarget(self, action: #selector(pressToUserImageRightButton), for: UIControlEvents.touchUpInside)
-            button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
-            let barButton = UIBarButtonItem(customView: button)
-            self.navigationItem.rightBarButtonItem = barButton
-            self.arrayMessages.removeAll()
         }
+    }
+    
+    func addImageForNavigationButton() {
+        if let im = user?.imageProfile {
+            let data = NSData.init(contentsOf: URL.init(string: im)!)
+            imageUserForNavigationBar = UIImage(data: data! as Data)!
+        } else {
+            imageUserForNavigationBar = UIImage.init(named: "user.png")!
+        }
+        
+        let button: UIButton = UIButton(type: UIButtonType.custom)
+        button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(pressToUserImageRightButton), for: UIControlEvents.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+        let barButton = UIBarButtonItem(customView: button)
+        self.navigationItem.rightBarButtonItem = barButton
+        self.arrayMessages.removeAll()
     }
     
     func observerMessages() {
@@ -70,7 +73,7 @@ class ChatSingleController: UIViewController {
          collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
          self.collectionView?.backgroundColor = UIColor.white
          collectionView?.alwaysBounceVertical = true
-        
+         addImageForNavigationButton()
          observerMessages()
     }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {

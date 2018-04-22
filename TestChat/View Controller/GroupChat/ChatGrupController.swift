@@ -22,7 +22,7 @@ class ChatGrupController: UIViewController {
     var arrayMessages = [GroupMessage]()
     var startingFrame: CGRect?
     var blackView: UIView?
-    var imageUserForNavigationBar = UIImage()
+    var imageUserForNavigationBar = UIImageView()
     
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
@@ -31,19 +31,6 @@ class ChatGrupController: UIViewController {
         
         didSet {
             navigationItem.title = room?.groupName
-            if let im = room?.imageGroup {
-                let data = NSData.init(contentsOf: URL.init(string: im)!)
-                imageUserForNavigationBar = UIImage(data: data! as Data)!
-            } else {
-                imageUserForNavigationBar = UIImage.init(named: "user.png")!
-            }
-            
-            let button: UIButton = UIButton(type: UIButtonType.custom)
-            button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
-            button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
-            button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
-            let barButton = UIBarButtonItem(customView: button)
-            self.navigationItem.rightBarButtonItem = barButton
         }
     }
     
@@ -62,16 +49,33 @@ class ChatGrupController: UIViewController {
         }
     }
     
+    
+    func addImageForNavigationButton() {
+        if let im = room?.imageGroup {
+            let url = NSURL.init(string: im)
+            imageUserForNavigationBar.sd_setImage(with: url! as URL)
+        } else {
+            imageUserForNavigationBar.image = UIImage.init(named: "user.png")!
+        }
+        self.allUsers = room.usersChat
+        self.unicKyeForChatRoom = room.groupUID
+        let button: UIButton = UIButton(type: UIButtonType.custom)
+        button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
+        button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
+        button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+        let barButton = UIBarButtonItem(customView: button)
+        self.navigationItem.rightBarButtonItem = barButton
+    }
+    
+    
     func observerMessages() {
         arrayMessages.removeAll()
-        
         let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
         refChatRom.observe(.childAdded) { (snap) in
             
             guard let dic = snap.value as? [String: AnyObject] else {
                 return
             }
-            
             let g = GroupMessage.init(dic: dic)
             self.arrayMessages.append(g)
             
@@ -90,7 +94,9 @@ class ChatGrupController: UIViewController {
         self.collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        addImageForNavigationButton()
         self.observerMessages()
+       
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -106,13 +112,17 @@ class ChatGrupController: UIViewController {
         let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!).child("messages").childByAutoId()
         let fromId = Auth.auth().currentUser!.uid
         let time = Int(NSDate().timeIntervalSince1970)
+        let text = textFieldInputTex.text!
         
-        let value = ["text": textFieldInputTex.text!,"fromId" : fromId, "time": time] as [String : Any]
+        let value = ["text": text,"fromId" : fromId, "time": time] as [String : Any]
         ref.updateChildValues(value) { (error, ref) in
             
             if error != nil {
                 return
             }
+            
+            let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+            refLastMessage.updateChildValues(["last-message": text])
         }
     
         view.endEditing(true)

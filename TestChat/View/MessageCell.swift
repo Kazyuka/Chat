@@ -29,7 +29,6 @@ class MessageCell: UserCell {
         super.init(coder: aDecoder)
     }
     
-
     override func configureView() {
         
         if let isSingleOptional = chat.isSingle {
@@ -48,7 +47,7 @@ class MessageCell: UserCell {
                     self.userName.text = user.name
                     self.messageText.text = self.chat.lastMessage
                 })
-             
+                
             } else {
                 
                 if let im = chat.imageGroup {
@@ -56,6 +55,7 @@ class MessageCell: UserCell {
                     self.userPhoto.sd_setImage(with: url! as URL)
                 }
                 self.userName.text = chat.groupName
+                self.messageText.text = self.chat.lastMessage
             }
         }
     }

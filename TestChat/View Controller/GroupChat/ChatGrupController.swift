@@ -17,8 +17,8 @@ class ChatGrupController: UIViewController {
 
     var idUsersWhoGetMessage = [String]()
     var allIdUserInString = " "
-
     let cellIdentifier = "Cell"
+    
     var arrayMessages = [GroupMessage]()
     var startingFrame: CGRect?
     var blackView: UIView?
@@ -27,6 +27,7 @@ class ChatGrupController: UIViewController {
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
     var unicKyeForChatRoom: String?
+    
     var room: RoomChat! {
         
         didSet {
@@ -35,9 +36,9 @@ class ChatGrupController: UIViewController {
     }
     
     @objc func pressToGropImageRightButton() {
-       /* let chatLogController =  self.storyboard?.instantiateViewController(withIdentifier: "OtherProfileController") as! OtherProfileController
-        chatLogController.user = user
-        self.navigationController?.pushViewController(chatLogController, animated: true)*/
+       let  detailGroupControllerFromRoomChat =  self.storyboard?.instantiateViewController(withIdentifier: "DetailGroupControllerFromRoomChat") as! DetailGroupControllerFromRoomChat
+        detailGroupControllerFromRoomChat.unicKyeForChatRoom = unicKyeForChatRoom
+       self.present(detailGroupControllerFromRoomChat, animated: true, completion: nil)
     }
     var databaseRef: DatabaseReference! {
         return Database.database().reference()
@@ -48,7 +49,6 @@ class ChatGrupController: UIViewController {
             self.arrayMessages.removeAll()
         }
     }
-    
     
     func addImageForNavigationButton() {
         if let im = room?.imageGroup {
@@ -106,8 +106,7 @@ class ChatGrupController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-    
-    
+
     @objc func sendMassegaButtonTapped()  {
         let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!).child("messages").childByAutoId()
         let fromId = Auth.auth().currentUser!.uid
@@ -132,10 +131,44 @@ class ChatGrupController: UIViewController {
         textFieldInputTex.textColor = UIColor.lightGray
     }
     
+    func camera() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType = UIImagePickerControllerSourceType.camera
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func photoLibrary() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func showActionSheet() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Make Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            self.camera()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Chose Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            self.photoLibrary()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Make Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Chose Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     @objc func sendImageMassegaButtonTapped () {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        present(imagePicker, animated: true, completion: nil)
+        showActionSheet()
     }
     var  textInsideTextFeld: String? {
         

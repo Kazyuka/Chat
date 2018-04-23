@@ -18,6 +18,11 @@ class AboutUserController: UIViewController {
         super.viewDidLoad()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.texViewAboutMe.becomeFirstResponder()
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
          delegate?.getAboutMeText(text: texViewAboutMe.text)

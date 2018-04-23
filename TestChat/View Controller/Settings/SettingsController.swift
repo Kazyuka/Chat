@@ -8,7 +8,6 @@
 
 import UIKit
 
-import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
@@ -22,7 +21,6 @@ class SettingsController: UIViewController {
     
     @IBOutlet weak var repeatPassword: UITextField!
     
-    var firebaseUser: Firebase.User?
     
     var langueages = ["English", "Русский"]
     
@@ -44,7 +42,7 @@ class SettingsController: UIViewController {
         
         
     
-        firebaseUser = Auth.auth().currentUser
+        let firebaseUser = Auth.auth().currentUser
         let credential = EmailAuthProvider.credential(withEmail: email!, password: password!)
         firebaseUser?.reauthenticateAndRetrieveData(with: credential, completion: { (res, err) in
             if err != nil {

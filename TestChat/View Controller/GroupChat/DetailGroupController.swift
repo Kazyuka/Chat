@@ -61,13 +61,11 @@ class DetailGroupController: UIViewController {
     
     func getUIDForGroup() -> String {
         
-        let uid = Auth.auth().currentUser?.uid
         var users = [String]()
         for us in userArray {
             users.append(us.uid!)
         }
-        let string = users.joined(separator: " ")
-        let keyChat  = string + " " + uid!
+        let keyChat = users.joined(separator: " ")
         return keyChat
     }
     
@@ -85,7 +83,7 @@ class DetailGroupController: UIViewController {
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
         let uploadData = UIImagePNGRepresentation(self.group!.image!)
-        let keyChat = self.getUIDForGroup()
+        let keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
         let ref = Database.database().reference().child("chat-romm").child(keyChat).child("users")
     
             for us in userArray {
@@ -121,7 +119,6 @@ class DetailGroupController: UIViewController {
                 return
             }
             let g = RoomChat.init(dic: dic)
-            print(g)
         }
         refChatRom.observe(.childAdded) { (snap) in
             
@@ -138,8 +135,10 @@ class DetailGroupController: UIViewController {
     }
 
     @IBAction func editButtonClick(_ sender: Any) {
-        
-        
+        let editGroup =  self.storyboard?.instantiateViewController(withIdentifier: "EditDetailGroupController") as! EditDetailGroupController
+        editGroup.group = group
+        editGroup.delegate = self
+        self.present(editGroup, animated: true, completion: nil)
     }
     override var prefersStatusBarHidden: Bool {
         return true
@@ -175,9 +174,18 @@ extension DetailGroupController: UITableViewDataSource, UITableViewDelegate {
     }
 }
 
+extension DetailGroupController: EditDetailGroupControllerDelegate {
+    func getEditedGroup(group: Group) {
+        self.group = group
+        nameGroup.text = group.nameGroup
+        if let im = group.image {
+            self.imageGroupView.image = im
+        }
+    }
+}
+
 extension DetailGroupController: DetailGroupControllerDelegate {
     func getCheckUser(users: [User]) {
-       
         userArray.removeAll()
         User.getCurrentUserFromFirebase { (us) in
             self.userArray = users
@@ -185,6 +193,5 @@ extension DetailGroupController: DetailGroupControllerDelegate {
             self.userArray = Array(self.userArray.reversed())
             self.tableView.reloadData()
         }
-     
     }
 }

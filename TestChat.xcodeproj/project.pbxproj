@@ -10,6 +10,7 @@
 		441FFC24203477C6000F8E99 /* ContactsSingleMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */; };
 		441FFC2620347AD4000F8E99 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441FFC2520347AD4000F8E99 /* User.swift */; };
 		442AF4F62080E46600E10C25 /* ChatGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442AF4F52080E46600E10C25 /* ChatGroupCell.swift */; };
+		4479B12C208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4479B12B208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift */; };
 		447E1A432086014D00F327BA /* GroupCreateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A422086014D00F327BA /* GroupCreateController.swift */; };
 		447E1A462086315300F327BA /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A452086315300F327BA /* ProfileController.swift */; };
 		447E1A482086395800F327BA /* OtherProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447E1A472086395800F327BA /* OtherProfileController.swift */; };
@@ -49,6 +50,7 @@
 		441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSingleMessageController.swift; sourceTree = "<group>"; };
 		441FFC2520347AD4000F8E99 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		442AF4F52080E46600E10C25 /* ChatGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGroupCell.swift; sourceTree = "<group>"; };
+		4479B12B208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupControllerFromRoomChat.swift; sourceTree = "<group>"; };
 		447E1A422086014D00F327BA /* GroupCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateController.swift; sourceTree = "<group>"; };
 		447E1A452086315300F327BA /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		447E1A472086395800F327BA /* OtherProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherProfileController.swift; sourceTree = "<group>"; };
@@ -120,6 +122,14 @@
 				448FD14D208C9C6B00F03C45 /* ProgressHUD.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		4479B12A208DD71A001FA3EB /* DetailGroupControllerFromGropRoomCgat */ = {
+			isa = PBXGroup;
+			children = (
+				4479B12B208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift */,
+			);
+			path = DetailGroupControllerFromGropRoomCgat;
 			sourceTree = "<group>";
 		};
 		447E1A442086313800F327BA /* Profile */ = {
@@ -217,6 +227,7 @@
 				447E1A422086014D00F327BA /* GroupCreateController.swift */,
 				44FE62D4208754AC00F734E0 /* DetailGroupController.swift */,
 				44B751C7208A04340036198E /* EditDetailGroupController.swift */,
+				4479B12A208DD71A001FA3EB /* DetailGroupControllerFromGropRoomCgat */,
 			);
 			path = GroupChat;
 			sourceTree = "<group>";
@@ -349,7 +360,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8B33C819C7F2F2FA296A1746 /* [CP] Embed Pods Frameworks */ = {
@@ -427,6 +438,7 @@
 				44B3F0AD204577030096911B /* PresentAnimation.swift in Sources */,
 				44B3F0AF2045794A0096911B /* AnimationHelper.swift in Sources */,
 				44FE62DA20878F4C00F734E0 /* SettingsController.swift in Sources */,
+				4479B12C208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift in Sources */,
 				44B51CC8202DE7A500881EB5 /* AppDelegate.swift in Sources */,
 				44B77D9A207F6A4600963656 /* ChatGrupController.swift in Sources */,
 				44B77D9C207F859000963656 /* GroupMessage.swift in Sources */,

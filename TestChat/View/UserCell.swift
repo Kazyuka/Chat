@@ -39,7 +39,7 @@ class UserCell: UITableViewCell {
             }, completed: nil)
         }
         
-        self.userName.text = user.name
+        self.userName.text = user.name + " " + user.lastName!
     }
 }
 

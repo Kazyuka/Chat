@@ -90,6 +90,43 @@ class ChatSingleController: UIViewController {
         self.navigationController?.pushViewController(chatLogController, animated: true)
     }
     
+    func camera() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType = UIImagePickerControllerSourceType.camera
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func photoLibrary() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func showActionSheet() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Make Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            self.camera()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Chose Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            self.photoLibrary()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Make Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Chose Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            
+        }))
+        
+        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        self.present(actionSheet, animated: true, completion: nil)
+    }
+    
     @objc func sendMassegaButtonTapped()  {
        
         let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!)
@@ -135,9 +172,7 @@ class ChatSingleController: UIViewController {
         textFieldInputTex.textColor = UIColor.lightGray
     }
    @objc func sendImageMassegaButtonTapped () {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        present(imagePicker, animated: true, completion: nil)
+        showActionSheet()
     }
 
     var  textInsideTextFeld: String? {

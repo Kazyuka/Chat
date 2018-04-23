@@ -50,12 +50,13 @@ class ChatController: UIViewController {
             }
             let g = RoomChat.init(dic: dic)
             if let uid = Auth.auth().currentUser?.uid {
-                if let usersInChatRomm = g.groupUID?.components(separatedBy:" ") {
-                    if usersInChatRomm.contains(uid) {
+                
+                if let val = g.usersChat {
+                    if val.contains(uid) {
+                        self.grouChat.append(g)
+                    } else {
                         self.grouChat.append(g)
                     }
-                } else {
-                    self.grouChat.append(g)
                 }
             }
             
@@ -149,8 +150,10 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
         let chatRoom = grouChat[indexPath.row]
         if let isTypeGroup = chatRoom.isSingle {
             if isTypeGroup {
+                self.searchController.isActive = false
                 gotoSingleChat(roomChat: chatRoom)
             } else {
+                self.searchController.isActive = false
                 goToGroupChat(roomChat: chatRoom)
             }
         }

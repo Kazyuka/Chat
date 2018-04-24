@@ -93,6 +93,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     
     private func updateGroupIntoFirebase() {
         progressHUD?.show()
+        Storage.storage().reference().child("group_images")
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
         let uploadData = UIImagePNGRepresentation(self.imageGroup.image!)

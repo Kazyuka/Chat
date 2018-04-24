@@ -14,7 +14,7 @@ import FirebaseDatabase
 class SettingsController: UIViewController {
     
     @IBOutlet weak var savebutt: UIBarButtonItem!
-    @IBOutlet weak var testPerewod: UILabel!
+ 
     @IBOutlet weak var emailTextView: UITextField!
     
     @IBOutlet weak var tableView: UITableView!
@@ -36,12 +36,12 @@ class SettingsController: UIViewController {
 
     @IBAction func logOutButtonClick(_ sender: Any) {
        
+         Language.language = Language.english
     }
     @IBAction func saveButtonClick(_ sender: Any) {
         
-        Language.language = Language.english
-        testPerewod.text?.localized
-        savebutt.title!.localized
+        Language.language = Language.russia
+
       /*  let password = passworfTextField.text
         let rPassword = passworfTextField.text
         let email = emailTextView.text

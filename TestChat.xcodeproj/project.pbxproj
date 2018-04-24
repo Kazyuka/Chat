@@ -52,6 +52,8 @@
 		441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSingleMessageController.swift; sourceTree = "<group>"; };
 		441FFC2520347AD4000F8E99 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		442AF4F52080E46600E10C25 /* ChatGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGroupCell.swift; sourceTree = "<group>"; };
+		44495F26208FAD97009CCF7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		44495F28208FADE9009CCF7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		4479B12B208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupControllerFromRoomChat.swift; sourceTree = "<group>"; };
 		447E1A422086014D00F327BA /* GroupCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateController.swift; sourceTree = "<group>"; };
 		447E1A452086315300F327BA /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
@@ -372,7 +374,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		8B33C819C7F2F2FA296A1746 /* [CP] Embed Pods Frameworks */ = {
@@ -476,6 +478,7 @@
 			children = (
 				44B51CD1202DE7A500881EB5 /* Base */,
 				44CF2021208F71CD00781EE0 /* ru */,
+				44495F28208FADE9009CCF7F /* en */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -485,6 +488,7 @@
 			children = (
 				44CF202B208F7DF300781EE0 /* en */,
 				44CF202D208F7DF800781EE0 /* ru */,
+				44495F26208FAD97009CCF7F /* Base */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

@@ -58,6 +58,7 @@ class DetailGroupController: UIViewController {
     @IBAction func addUsersButtonClick(_ sender: Any) {
         let groupMC = self.storyboard?.instantiateViewController(withIdentifier: "GroupMessageController") as! GroupMessageController
         groupMC.delegate = self
+        groupMC.currentLisrUser = userArray
         self.present(groupMC, animated: true, completion: nil)
     }
     

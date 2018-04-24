@@ -15,12 +15,14 @@ class OtherProfileController: UIViewController {
     @IBOutlet weak var abouUserText: UITextView!
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var userImage: UIImageView!
-
+    @IBOutlet weak var aboutMelabel: UILabel!
+    
     var user: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+         aboutMelabel.text! = "About Me".localized
     }
   
     

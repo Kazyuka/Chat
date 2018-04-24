@@ -35,14 +35,14 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="h2b-dK-2e2">
-                                                    <rect key="frame" x="15.000000000000004" y="23" width="40.333333333333343" height="40"/>
+                                                    <rect key="frame" x="14.999999999999996" y="23" width="40.666666666666657" height="40"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="40" id="Mkh-u9-UZ6"/>
                                                         <constraint firstAttribute="height" constant="40" id="tUa-oH-7cO"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MR5-BD-syM">
-                                                    <rect key="frame" x="76.333333333333314" y="23" width="245" height="21"/>
+                                                    <rect key="frame" x="76.666666666666686" y="23" width="245" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="245" id="V5j-5i-mMa"/>
                                                         <constraint firstAttribute="height" constant="21" id="kRw-b0-Y3u"/>
@@ -52,7 +52,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5YS-2J-meQ">
-                                                    <rect key="frame" x="76.333333333333314" y="52" width="260" height="21"/>
+                                                    <rect key="frame" x="76.666666666666686" y="52" width="260" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="260" id="K3i-os-NBW"/>
                                                         <constraint firstAttribute="height" constant="21" id="PQ8-gz-WXz"/>
@@ -188,13 +188,6 @@
                                     <action selector="logOutButtonClick:" destination="Q5o-dP-u1c" eventType="touchUpInside" id="Ct1-89-orR"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TestPerewod" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38x-Br-rlA">
-                                <rect key="frame" x="36" y="310" width="151" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.89343070811813008" green="1" blue="0.87042533124728594" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -230,7 +223,6 @@
                         <outlet property="repeatPassword" destination="Zlw-6I-cnu" id="QNK-ZD-eWy"/>
                         <outlet property="savebutt" destination="oHb-ET-x6A" id="FQb-82-fXr"/>
                         <outlet property="tableView" destination="qF3-83-wzg" id="rUl-oW-oYM"/>
-                        <outlet property="testPerewod" destination="38x-Br-rlA" id="71b-eS-Z04"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lA4-Fg-aL7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1445,6 +1437,7 @@
                     <navigationItem key="navigationItem" id="PMO-F8-wsR"/>
                     <connections>
                         <outlet property="abouUserText" destination="kFq-aN-hS7" id="eWc-nV-LA7"/>
+                        <outlet property="aboutMelabel" destination="L77-HE-q5t" id="19Z-pT-dWT"/>
                         <outlet property="userImage" destination="YZ4-RC-7Er" id="Goq-YQ-Np8"/>
                         <outlet property="userNameLabel" destination="VB3-tp-WGJ" id="hbD-oJ-eOv"/>
                     </connections>

@@ -5,6 +5,8 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
+import MobileCoreServices
+import AVKit
 
 class ChatSingleController: UIViewController {
    
@@ -49,7 +51,6 @@ class ChatSingleController: UIViewController {
     func observerMessages() {
       
         arrayMessages.removeAll()
-    
         let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
         refChatRom.observe(.childAdded) { (snap) in
             
@@ -92,22 +93,31 @@ class ChatSingleController: UIViewController {
     
     func camera() {
         let myPickerController = UIImagePickerController()
-        myPickerController.delegate = self;
+        myPickerController.delegate = self
+        myPickerController.mediaTypes = [kUTTypeMovie as NSString as String]
         myPickerController.sourceType = UIImagePickerControllerSourceType.camera
         self.present(myPickerController, animated: true, completion: nil)
     }
     
+    func photo() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self
+        myPickerController.sourceType = UIImagePickerControllerSourceType.camera
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+
     func photoLibrary() {
         let myPickerController = UIImagePickerController()
         myPickerController.delegate = self;
-        myPickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        myPickerController.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
         self.present(myPickerController, animated: true, completion: nil)
     }
+
     
     func showActionSheet() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Make Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            self.camera()
+            self.photo()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Chose Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
@@ -115,16 +125,24 @@ class ChatSingleController: UIViewController {
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Make Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            
+            self.camera()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Chose Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            
+            self.photoLibrary()
         }))
         
         
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-        self.present(actionSheet, animated: true, completion: nil)
+        
+        if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
+            actionSheet.popoverPresentationController?.sourceView = self.view
+            actionSheet.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            actionSheet.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            self.present(actionSheet, animated: true, completion: nil)
+        } else {
+            self.present(actionSheet, animated: true, completion: nil)
+        }
     }
     
     @objc func sendMassegaButtonTapped()  {
@@ -336,6 +354,16 @@ extension ChatSingleController: UICollectionViewDelegateFlowLayout {
 
 extension ChatSingleController: ChatCollectionViewCellDelegate {
     
+    func playVideo(video: NSURL) {
+        
+        let player = AVPlayer(url: video as URL)
+        let playerViewController = AVPlayerViewController()
+         playerViewController.player = player
+        self.present(playerViewController, animated: true) {
+            playerViewController.player!.play()
+        }
+    }
+    
     func tapToImage(gesture: UIImageView) {
         
         startingFrame = gesture.superview?.convert(gesture.frame, to: nil)
@@ -409,6 +437,56 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
  
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
+        if let videoUrl = info[UIImagePickerControllerMediaURL] as? NSURL {
+            videoSelectedForInfo(url: videoUrl)
+        } else {
+            imageSelectedForInfo(info: info as [String : AnyObject])
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func videoSelectedForInfo(url: NSURL) {
+        let fileName = NSUUID().uuidString + ".mov"
+        let uploadTask =  Storage.storage().reference().child("message_movies").child(fileName).putFile(from: url as URL, metadata: nil, completion: { (metadata, error) in
+    
+            if error != nil {
+                return
+            }
+            
+            if let storageUrlVideo = metadata?.downloadURL()?.absoluteString {
+                let url = URL.init(string: storageUrlVideo)
+                let image = self.makeUIImageFromUrl(url: url as! NSURL)
+                
+                self.uploadImageToFirebase(image: image!, completion: { (storageUrl) in
+                    self.saveVideoFileInFirebase(url: storageUrlVideo, photoUrl: storageUrl)
+                })
+            }
+        })
+        
+        uploadTask.observe(.progress) { (snapshot) in
+            if let complectedUnitCount = snapshot.progress?.completedUnitCount {
+            }
+        }
+        
+        uploadTask.observe(.success) { (snapshot) in
+        
+        }
+    }
+    
+    private func makeUIImageFromUrl(url: NSURL) -> UIImage? {
+        let asset = AVAsset(url: url as URL)
+        let inmageGenerator = AVAssetImageGenerator(asset: asset)
+        do {
+            
+            let cgImage =  try inmageGenerator.copyCGImage(at: CMTime.init(value: 1, timescale: 60), actualTime: nil)
+             return UIImage(cgImage: cgImage)
+        } catch let err {
+            print(err)
+        }
+        return nil
+    }
+    
+    private func imageSelectedForInfo(info: [String: AnyObject]) {
         var selectedImagefromPisker: UIImage?
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             selectedImagefromPisker = editedImage
@@ -417,12 +495,13 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
             selectedImagefromPisker = originalImage
         }
         if let selectedImage = selectedImagefromPisker {
-            uploadImageToFirebase(image: selectedImage)
+            uploadImageToFirebase(image: selectedImage, completion: { (urlImage) in
+                self.savePhotoFileInFirebase(url: urlImage)
+            })
         }
-         dismiss(animated: true, completion: nil)
     }
     
-    func uploadImageToFirebase(image: UIImage) {
+    func uploadImageToFirebase(image: UIImage, completion: @escaping (String) -> ()) {
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("message_images").child("\(imageName).png")
         if let uploadData = UIImageJPEGRepresentation(image, 0.3) {
@@ -431,40 +510,71 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
                     return
                 }
                 if let urlString = metadata?.downloadURL()?.absoluteString {
-                    
-                    let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
-                    let time = Int(NSDate().timeIntervalSince1970)
-                 
-                    let toIdUser = self.user?.uid
-                    let fromId = Auth.auth().currentUser!.uid
-                    let value =  ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": self.self.unicKyeForChatRoom] as [String : Any]
-                    let text = self.textFieldInputTex.text
-                    
-                    ref.updateChildValues(value) { (err, data) in
-                        if err != nil {
-                            return
-                        }
-                        
-                        let ref1 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
-                        let value2 =  ["fromId" : fromId, "toId": toIdUser, "imageUrl": urlString, "time": time] as [String : Any]
-                        
-                        ref1.updateChildValues(value2) { (err, data) in
-                            if err != nil {
-                                return
-                            }
-                        }
-                        
-                        let ref2 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("users")
-                        let value3 =  ["toId": toIdUser] as [String : Any]
-                        
-                        ref2.updateChildValues(value3) { (err, data) in
-                            if err != nil {
-                                return
-                            }
-                        }
-                    }
+                    completion(urlString)
                 }
             })
+        }
+    }
+    
+    private func savePhotoFileInFirebase(url: String) {
+        
+        let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+        let time = Int(NSDate().timeIntervalSince1970)
+        let toIdUser = self.user?.uid
+        let fromId = Auth.auth().currentUser!.uid
+        let value =  ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": self.unicKyeForChatRoom, "toId": toIdUser] as [String : Any]
+        
+        ref.updateChildValues(value) { (err, data) in
+            if err != nil {
+                return
+            }
+            let ref1 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+            let value2 =  ["fromId" : fromId, "toId": toIdUser, "imageUrl": url, "time": time] as [String : Any]
+            
+            ref1.updateChildValues(value2) { (err, data) in
+                if err != nil {
+                    return
+                }
+            }
+            
+            let ref2 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("users")
+            let value3 =  ["toId": toIdUser] as [String : Any]
+            
+            ref2.updateChildValues(value3) { (err, data) in
+                if err != nil {
+                    return
+                }
+            }
+        }
+    }
+    private func saveVideoFileInFirebase(url: String, photoUrl: String) {
+
+        let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+        let time = Int(NSDate().timeIntervalSince1970)
+        let toIdUser = user!.uid
+        
+        let fromId = Auth.auth().currentUser!.uid
+        let value =  ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": self.unicKyeForChatRoom, "toId": toIdUser] as [String : Any]
+        
+        ref.updateChildValues(value) { (err, data) in
+            if err != nil {
+                return
+            }
+            let ref1 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+            let value2 =  ["fromId" : fromId, "toId": toIdUser, "videoUrl": url, "time": time, "imageUrl": photoUrl] as [String : Any]
+        
+            ref1.updateChildValues(value2) { (err, data) in
+                if err != nil {
+                    return
+                }
+            }
+            let ref2 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("users")
+            let value3 =  ["toId": toIdUser] as [String : Any]
+            ref2.updateChildValues(value3) { (err, data) in
+                if err != nil {
+                    return
+                }
+            }
         }
     }
      public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

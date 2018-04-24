@@ -13,6 +13,8 @@ import FirebaseDatabase
 
 class SettingsController: UIViewController {
     
+    @IBOutlet weak var savebutt: UIBarButtonItem!
+    @IBOutlet weak var testPerewod: UILabel!
     @IBOutlet weak var emailTextView: UITextField!
     
     @IBOutlet weak var tableView: UITableView!
@@ -26,6 +28,7 @@ class SettingsController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        savebutt.title! = "save".localized
         User.getCurrentUserFromFirebase { (user) in
             self.emailTextView.text = user.email
         }
@@ -36,21 +39,32 @@ class SettingsController: UIViewController {
     }
     @IBAction func saveButtonClick(_ sender: Any) {
         
-        let password = passworfTextField.text
+        Language.language = Language.english
+        testPerewod.text?.localized
+        savebutt.title!.localized
+      /*  let password = passworfTextField.text
         let rPassword = passworfTextField.text
         let email = emailTextView.text
         
-        
-    
         let firebaseUser = Auth.auth().currentUser
-        let credential = EmailAuthProvider.credential(withEmail: email!, password: password!)
+        
+        firebaseUser?.updateEmail(to: email!, completion: { (err) in
+            if err != nil {
+                self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
+            }
+            
+            
+    
+            
+        })*/
+       /* let credential = EmailAuthProvider.credential(withEmail: email!, password: password!)
         firebaseUser?.reauthenticateAndRetrieveData(with: credential, completion: { (res, err) in
             if err != nil {
                 print(err.debugDescription)
             }
             
         
-        })
+        })*/
       
     }
 }

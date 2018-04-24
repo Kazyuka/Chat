@@ -188,6 +188,13 @@
                                     <action selector="logOutButtonClick:" destination="Q5o-dP-u1c" eventType="touchUpInside" id="Ct1-89-orR"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="TestPerewod" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38x-Br-rlA">
+                                <rect key="frame" x="36" y="310" width="151" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.89343070811813008" green="1" blue="0.87042533124728594" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -221,7 +228,9 @@
                         <outlet property="emailTextView" destination="eQa-8X-AAf" id="fpz-EF-kA8"/>
                         <outlet property="passworfTextField" destination="wsw-k9-ZsR" id="I2n-tS-Ulg"/>
                         <outlet property="repeatPassword" destination="Zlw-6I-cnu" id="QNK-ZD-eWy"/>
+                        <outlet property="savebutt" destination="oHb-ET-x6A" id="FQb-82-fXr"/>
                         <outlet property="tableView" destination="qF3-83-wzg" id="rUl-oW-oYM"/>
+                        <outlet property="testPerewod" destination="38x-Br-rlA" id="71b-eS-Z04"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lA4-Fg-aL7" userLabel="First Responder" sceneMemberID="firstResponder"/>

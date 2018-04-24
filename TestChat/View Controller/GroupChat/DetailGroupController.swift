@@ -27,6 +27,8 @@ class DetailGroupController: UIViewController {
     var progressHUD: ProgressHUD? = nil
     var userArray = [User]()
     var group: Group?
+    var keyChat: String?
+    
     weak var delegate: GoToGroupCahatRoomDelegate?
     
     override func viewDidLoad() {
@@ -83,8 +85,8 @@ class DetailGroupController: UIViewController {
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
         let uploadData = UIImagePNGRepresentation(self.group!.image!)
-        let keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
-        let ref = Database.database().reference().child("chat-romm").child(keyChat).child("users")
+        keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
+        let ref = Database.database().reference().child("chat-romm").child(keyChat!).child("users")
     
             for us in userArray {
                 let ch = ref.childByAutoId()
@@ -100,8 +102,8 @@ class DetailGroupController: UIViewController {
                 }
                 if let meta = metadata?.downloadURL()?.absoluteString {
                     let uid = Auth.auth().currentUser?.uid
-                    let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": keyChat] as [String : Any]
-                    let ref = Database.database().reference().child("chat-romm").child(keyChat)
+                    let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": self.keyChat!] as [String : Any]
+                    let ref = Database.database().reference().child("chat-romm").child(self.keyChat!)
                     ref.updateChildValues(value)
                     self.getChatRommFromFirebaseDatabase()
                 }
@@ -110,18 +112,9 @@ class DetailGroupController: UIViewController {
     
     
     func getChatRommFromFirebaseDatabase() {
-        
-        let keyChat = self.getUIDForGroup()
-        let refChatRom = Database.database().reference().child("chat-romm")
-        
-        refChatRom.observeSingleEvent(of: .childChanged) { (snap) in
-            guard let dic = snap.value as? [String: AnyObject] else {
-                return
-            }
-            let g = RoomChat.init(dic: dic)
-        }
-        refChatRom.observe(.childAdded) { (snap) in
-            
+    
+        let refChatRom = Database.database().reference().child("chat-romm").child(self.keyChat!)
+        refChatRom.observe(.value) { (snap) in
             guard let dic = snap.value as? [String: AnyObject] else {
                 return
             }
@@ -130,7 +123,6 @@ class DetailGroupController: UIViewController {
             self.dismiss(animated: true, completion: {
                 self.delegate?.goToGroupChat(room: g)
             })
-            
         }
     }
 

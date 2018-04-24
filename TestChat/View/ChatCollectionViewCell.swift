@@ -3,9 +3,10 @@ import UIKit
 import FirebaseAuth
 import SDWebImage
 import FirebaseDatabase
-
+import AVKit
 @objc protocol ChatCollectionViewCellDelegate {
     func tapToImage(gesture: UIImageView)
+    func playVideo(video: NSURL)
 }
 class ChatCollectionViewCell: UICollectionViewCell {
    
@@ -20,6 +21,12 @@ class ChatCollectionViewCell: UICollectionViewCell {
         messageText.text = message?.text
         let uid = Auth.auth().currentUser?.uid
       
+        if message?.videoUrl != nil {
+            playButton.isHidden = false
+        } else {
+            playButton.isHidden = true
+        }
+        
         if let messageImage = message?.imageUrl {
             let url = NSURL.init(string: messageImage)
             messageImageView.sd_setImage(with: url as! URL)
@@ -97,6 +104,16 @@ class ChatCollectionViewCell: UICollectionViewCell {
         return bv
     }()
     
+    lazy var playButton: UIButton = {
+        var button = UIButton(type: .system)
+        var image = UIImage.init(named: "play")
+        button.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(playVideo), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     lazy var imageUser: UIImageView = {
         var bv = UIImageView()
         bv.translatesAutoresizingMaskIntoConstraints = false
@@ -116,6 +133,13 @@ class ChatCollectionViewCell: UICollectionViewCell {
         return bv
     }()
     
+    lazy var activityIndicatorView: UIActivityIndicatorView = {
+        var act = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        act.translatesAutoresizingMaskIntoConstraints = false
+        act.hidesWhenStopped = true
+        return act
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -126,8 +150,24 @@ class ChatCollectionViewCell: UICollectionViewCell {
         configureCell()
     }
     @objc func tapToImageInsideCell(_ sender: UITapGestureRecognizer) {
+        
+        if message?.videoUrl != nil {
+             return
+        }
         let view = sender.view as? UIImageView
         self.delegate?.tapToImage(gesture: view!)
+    }
+    
+    @objc func playVideo() {
+      
+        if let videoUrlString = message?.videoUrl, let url = NSURL.init(string: videoUrlString){
+        
+            self.delegate?.playVideo(video: url)
+        }
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
     }
 
     func configureCell() {
@@ -138,11 +178,21 @@ class ChatCollectionViewCell: UICollectionViewCell {
         addSubview(messageImageView)
         
         bubleView.addSubview(messageImageView)
-        
+        bubleView.addSubview(playButton)
+  
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageInsideCell(_:)))
         gesture.numberOfTapsRequired = 1
         messageImageView.addGestureRecognizer(gesture)
     
+        playButton.centerXAnchor.constraint(equalTo: bubleView.centerXAnchor).isActive = true
+        playButton.centerYAnchor.constraint(equalTo: bubleView.centerYAnchor).isActive = true
+        playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        activityIndicatorView.centerXAnchor.constraint(equalTo: bubleView.centerXAnchor).isActive = true
+        activityIndicatorView.centerYAnchor.constraint(equalTo: bubleView.centerYAnchor).isActive = true
+        activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         messageImageView.leftAnchor.constraint(equalTo: bubleView.leftAnchor).isActive = true
         messageImageView.rightAnchor.constraint(equalTo: bubleView.rightAnchor).isActive = true

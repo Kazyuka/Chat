@@ -1,0 +1,9 @@
+/* 
+  Localizable.strings
+  TestChat
+
+  Created by Руслан Казюка on 24.04.2018.
+  Copyright © 2018 Руслан Казюка. All rights reserved.
+*/
+"Логин" = "Login";
+"save" = "Сохранить";

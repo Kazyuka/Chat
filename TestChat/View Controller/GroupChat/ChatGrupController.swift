@@ -10,6 +10,8 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
+import MobileCoreServices
+import AVKit
 
 class ChatGrupController: UIViewController {
   
@@ -133,7 +135,15 @@ class ChatGrupController: UIViewController {
     
     func camera() {
         let myPickerController = UIImagePickerController()
-        myPickerController.delegate = self;
+        myPickerController.delegate = self
+        myPickerController.mediaTypes = [kUTTypeMovie as NSString as String]
+        myPickerController.sourceType = UIImagePickerControllerSourceType.camera
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func photo() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self
         myPickerController.sourceType = UIImagePickerControllerSourceType.camera
         self.present(myPickerController, animated: true, completion: nil)
     }
@@ -141,7 +151,7 @@ class ChatGrupController: UIViewController {
     func photoLibrary() {
         let myPickerController = UIImagePickerController()
         myPickerController.delegate = self;
-        myPickerController.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        myPickerController.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
         self.present(myPickerController, animated: true, completion: nil)
     }
     
@@ -156,15 +166,23 @@ class ChatGrupController: UIViewController {
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Make Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            
+            self.photo()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Chose Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            
+            self.photoLibrary()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
-        self.present(actionSheet, animated: true, completion: nil)
+        
+        if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
+            actionSheet.popoverPresentationController?.sourceView = self.view
+            actionSheet.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            actionSheet.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            self.present(actionSheet, animated: true, completion: nil)
+        } else {
+            self.present(actionSheet, animated: true, completion: nil)
+        }
     }
     
     @objc func sendImageMassegaButtonTapped () {
@@ -310,6 +328,7 @@ extension ChatGrupController: UICollectionViewDelegate, UICollectionViewDataSour
     
    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? ChatGroupCell
+        cell?.delegate = self
         cell?.messageGroup = arrayMessages[indexPath.item]
         return cell!
     }
@@ -354,11 +373,114 @@ extension ChatGrupController: UITextViewDelegate {
     }
 }
 
+extension ChatGrupController: ChatCollectionViewCellDelegate {
+    
+    func playVideo(video: NSURL) {
+        let player = AVPlayer(url: video as URL)
+        let playerViewController = AVPlayerViewController()
+        playerViewController.player = player
+        self.present(playerViewController, animated: true) {
+            playerViewController.player!.play()
+        }
+    }
+    
+    func tapToImage(gesture: UIImageView) {
+        
+        startingFrame = gesture.superview?.convert(gesture.frame, to: nil)
+        let zoomingImage = UIImageView(frame: startingFrame!)
+        zoomingImage.image = gesture.image
+        
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageZoomBack(_:)))
+        zoomingImage.isUserInteractionEnabled = true
+        gesture.numberOfTapsRequired = 1
+        zoomingImage.addGestureRecognizer(gesture)
+        
+        if let keyWindow =  UIApplication.shared.keyWindow {
+            
+            blackView = UIView(frame: keyWindow.frame)
+            blackView?.backgroundColor = UIColor.black
+            blackView?.alpha = 0
+            keyWindow.addSubview(blackView!)
+            
+            keyWindow.addSubview(zoomingImage)
+            
+            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+                self.blackView?.alpha = 1
+                zoomingImage.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: self.startingFrame!.height)
+                zoomingImage.center = keyWindow.center
+            }, completion: nil)
+        }
+    }
+    
+    @objc func tapToImageZoomBack(_ sender: UITapGestureRecognizer) {
+        
+        if let zoomOut = sender.view {
+            
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+                self.blackView?.alpha = 0
+                zoomOut.frame = self.startingFrame!
+            }, completion: { (value) in
+                zoomOut.removeFromSuperview()
+            })
+        }
+    }
+}
+
 
 extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
+        if let videoUrl = info[UIImagePickerControllerMediaURL] as? NSURL {
+            videoSelectedForInfo(url: videoUrl)
+        } else {
+            imageSelectedForInfo(info: info as [String : AnyObject])
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    private func videoSelectedForInfo(url: NSURL) {
+        let fileName = NSUUID().uuidString + ".mov"
+        let uploadTask =  Storage.storage().reference().child("message_movies").child(fileName).putFile(from: url as URL, metadata: nil, completion: { (metadata, error) in
+            
+            if error != nil {
+                return
+            }
+            
+            if let storageUrlVideo = metadata?.downloadURL()?.absoluteString {
+                let url = URL.init(string: storageUrlVideo)
+                let image = self.makeUIImageFromUrl(url: url as! NSURL)
+                
+                self.uploadImageToFirebase(image: image!, completion: { (storageUrl) in
+                    self.saveVideoFileInFirebase(url: storageUrlVideo, urlPhoto: storageUrl)
+                })
+            }
+        })
+        
+        uploadTask.observe(.progress) { (snapshot) in
+            if let complectedUnitCount = snapshot.progress?.completedUnitCount {
+            }
+        }
+        
+        uploadTask.observe(.success) { (snapshot) in
+            
+        }
+    }
+    
+    private func makeUIImageFromUrl(url: NSURL) -> UIImage? {
+        let asset = AVAsset(url: url as URL)
+        let inmageGenerator = AVAssetImageGenerator(asset: asset)
+        do {
+            
+            let cgImage =  try inmageGenerator.copyCGImage(at: CMTime.init(value: 1, timescale: 60), actualTime: nil)
+            return UIImage(cgImage: cgImage)
+        } catch let err {
+            print(err)
+        }
+        return nil
+    }
+    
+    private func imageSelectedForInfo(info: [String: AnyObject]) {
         var selectedImagefromPisker: UIImage?
         if let editedImage = info["UIImagePickerControllerEditedImage"] as? UIImage {
             selectedImagefromPisker = editedImage
@@ -367,12 +489,13 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
             selectedImagefromPisker = originalImage
         }
         if let selectedImage = selectedImagefromPisker {
-            uploadImageToFirebase(image: selectedImage)
+            uploadImageToFirebase(image: selectedImage, completion: { (urlImage) in
+                self.savePhotoFileInFirebase(url: urlImage)
+            })
         }
-        dismiss(animated: true, completion: nil)
     }
     
-    func uploadImageToFirebase(image: UIImage) {
+    func uploadImageToFirebase(image: UIImage, completion: @escaping (String) -> ()) {
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("message_images").child("\(imageName).png")
         if let uploadData = UIImageJPEGRepresentation(image, 0.3) {
@@ -381,22 +504,41 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
                     return
                 }
                 if let urlString = metadata?.downloadURL()?.absoluteString {
-                    
-                    let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
-                    let fromId = Auth.auth().currentUser!.uid
-                    let time = Int(NSDate().timeIntervalSince1970)
-                    
-                    let value = ["imageUrl": urlString,"fromId" : fromId, "time": time] as [String : Any]
-                    ref.updateChildValues(value) { (error, ref) in
-                        
-                        if error != nil {
-                            return
-                        }
-                    }
+                    completion(urlString)
                 }
             })
         }
     }
+    
+    private func savePhotoFileInFirebase(url: String) {
+        
+        let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+        let fromId = Auth.auth().currentUser!.uid
+        let time = Int(NSDate().timeIntervalSince1970)
+        
+        let value = ["imageUrl": url,"fromId" : fromId, "time": time] as [String : Any]
+        ref.updateChildValues(value) { (error, ref) in
+            
+            if error != nil {
+                return
+            }
+        }
+    }
+    private func saveVideoFileInFirebase(url: String, urlPhoto: String) {
+        
+        let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
+        let fromId = Auth.auth().currentUser!.uid
+        let time = Int(NSDate().timeIntervalSince1970)
+        
+        let value = ["imageUrl": urlPhoto,"fromId" : fromId, "time": time,  "videoUrl": url] as [String : Any]
+        ref.updateChildValues(value) { (error, ref) in
+            
+            if error != nil {
+                return
+            }
+        }
+    }
+    
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         self.dismiss(animated: true, completion: nil)
     }

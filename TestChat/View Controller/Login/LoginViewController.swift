@@ -34,7 +34,7 @@ class LoginViewController: UIViewController {
             firstNmeLastNAmeView.isHidden = false
             forgotPasswordButton.isHidden = true
         case 1:
-            loginButton.setTitle("Login", for: .normal)
+            loginButton.setTitle("Login".localized, for: .normal)
             firstNmeLastNAmeView.isHidden = true
             forgotPasswordButton.isHidden = false
         default:

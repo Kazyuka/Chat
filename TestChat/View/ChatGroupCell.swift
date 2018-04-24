@@ -10,9 +10,11 @@ import UIKit
 import FirebaseAuth
 import SDWebImage
 import FirebaseDatabase
+import AVKit
 
 class ChatGroupCell: UICollectionViewCell {
-
+   
+    weak var delegate: ChatCollectionViewCellDelegate?
     var const: CGFloat = 200
     var messageGroup: GroupMessage? {
         didSet {
@@ -24,6 +26,12 @@ class ChatGroupCell: UICollectionViewCell {
         messageText.text = messageGroup?.text
         let uid = Auth.auth().currentUser?.uid
         
+        
+        if messageGroup?.videoUrl != nil {
+            playButton.isHidden = false
+        } else {
+            playButton.isHidden = true
+        }
         if let messageImage = messageGroup?.imageUrl {
             let url = NSURL.init(string: messageImage)
             messageImageView.sd_setImage(with: url as! URL)
@@ -82,6 +90,23 @@ class ChatGroupCell: UICollectionViewCell {
     var bubleRightAchor: NSLayoutConstraint?
     var bubleLeftAchor: NSLayoutConstraint?
     
+    lazy var playButton: UIButton = {
+        var button = UIButton(type: .system)
+        var image = UIImage.init(named: "play")
+        button.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        button.setImage(image, for: .normal)
+        button.addTarget(self, action: #selector(playVideo), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    
+    @objc func playVideo() {
+        
+        if let videoUrlString = messageGroup?.videoUrl, let url = NSURL.init(string: videoUrlString){
+           self.delegate?.playVideo(video: url)
+        }
+    }
     lazy var messageText: UITextView = {
         var tv = UITextView()
         tv.text = "sadasd Ssfdsf sdfsdfsd sdf dsfsdfsadhgjghj gj fgjghjfdf df tydfty dfg dfy fydfy dfyf dgyd fydfy afsdfsdf"
@@ -142,6 +167,8 @@ class ChatGroupCell: UICollectionViewCell {
         addSubview(messageImageView)
         
         bubleView.addSubview(messageImageView)
+        bubleView.addSubview(playButton)
+      
         
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageInsideCell(_:)))
         gesture.numberOfTapsRequired = 1
@@ -172,5 +199,11 @@ class ChatGroupCell: UICollectionViewCell {
         messageText.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         messageText.widthAnchor.constraint(equalToConstant: 200).isActive = true
         messageText.heightAnchor.constraint(equalTo: self.heightAnchor).isActive = true
+        
+        playButton.centerXAnchor.constraint(equalTo: bubleView.centerXAnchor).isActive = true
+        playButton.centerYAnchor.constraint(equalTo: bubleView.centerYAnchor).isActive = true
+        playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+    
     }
 }

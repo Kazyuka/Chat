@@ -116,24 +116,24 @@ class ChatSingleController: UIViewController {
     
     func showActionSheet() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Make Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Make Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photo()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Chose Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Chose Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photoLibrary()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Make Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Make Video".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.camera()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Chose Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Chose Video".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photoLibrary()
         }))
         
         
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Cancel".localized, style: UIAlertActionStyle.cancel, handler: nil))
         
         if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
             actionSheet.popoverPresentationController?.sourceView = self.view
@@ -146,7 +146,8 @@ class ChatSingleController: UIViewController {
     }
     
     @objc func sendMassegaButtonTapped()  {
-       
+        var lastItemIndex = NSIndexPath.init(item: self.arrayMessages.count - 1, section: 0)
+        self.collectionView?.scrollToItem(at: lastItemIndex as IndexPath, at: .bottom, animated: true)
         let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!)
         let toIdUser = user?.uid
         let fromId = Auth.auth().currentUser!.uid
@@ -578,6 +579,7 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
         }
     }
      public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        view.endEditing(true)
         self.dismiss(animated: true, completion: nil)
     }
 }

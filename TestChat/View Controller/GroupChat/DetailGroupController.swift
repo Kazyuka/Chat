@@ -21,6 +21,9 @@ protocol GoToGroupCahatRoomDelegate: class {
 
 class DetailGroupController: UIViewController {
 
+    @IBOutlet weak var addUserButton: UIButton!
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var chatButton: UIBarButtonItem!
     @IBOutlet weak var nameGroup: UILabel!
     @IBOutlet weak var imageGroupView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
@@ -33,6 +36,9 @@ class DetailGroupController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        chatButton.title = "Chat".localized
+        editButton.title = "Edit".localized
+        addUserButton.setTitle("Add user", for: .normal)
         configureView()
     }
     
@@ -87,17 +93,9 @@ class DetailGroupController: UIViewController {
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
         let uploadData = UIImagePNGRepresentation(self.group!.image!)
         keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
-        let ref = Database.database().reference().child("chat-romm").child(keyChat!).child("users")
-    
-            for us in userArray {
-                let ch = ref.childByAutoId()
-                let v = ["toId" : us.userId]
-                ch.updateChildValues(v)
-            }
-            
+        
             storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
                 if err != nil{
-                    
                     self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                     return
                 }
@@ -105,7 +103,20 @@ class DetailGroupController: UIViewController {
                     let uid = Auth.auth().currentUser?.uid
                     let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": self.keyChat!] as [String : Any]
                     let ref = Database.database().reference().child("chat-romm").child(self.keyChat!)
-                    ref.updateChildValues(value)
+                    
+                
+                    ref.updateChildValues(value, withCompletionBlock: { (err, snap) in
+                        
+                        if err != nil {
+                            return
+                        }
+            
+                        for us in self.userArray {
+                           let ref2 = Database.database().reference().child("chat-romm").child(self.keyChat!).child("users").childByAutoId()
+                           ref2.updateChildValues(["toId" :us.uid])
+                        }
+                    })
+                    
                     self.getChatRommFromFirebaseDatabase()
                 }
             })
@@ -179,11 +190,9 @@ extension DetailGroupController: EditDetailGroupControllerDelegate {
 
 extension DetailGroupController: DetailGroupControllerDelegate {
     func getCheckUser(users: [User]) {
-        userArray.removeAll()
-        User.getCurrentUserFromFirebase { (us) in
-            self.userArray = users
+        
+        users.forEach { (us) in
             self.userArray.append(us)
-            self.userArray = Array(self.userArray.reversed())
             self.tableView.reloadData()
         }
     }

@@ -5,6 +5,30 @@
   Created by Руслан Казюка on 24.04.2018.
   Copyright © 2018 Руслан Казюка. All rights reserved.
 */
-"Логин" = "Login";
+"Login" = "Логин";
 "save" = "Сохранить";
 "About Me" = "Обо мне";
+"Chat" = "Чат";
+"Profile" = "Профиль";
+"Contact" = "Контакты";
+"Reset password" = "Сброс пароля";
+"LogOut" = "Выйти";
+"Add user" = "Добавить пользователя";
+"Email" = "Email";
+"Back" ="Назад";
+"Contacts" = "Контакты";
+"Password" = "Пароль";
+"Register" ="Регистрация";
+"Forgot Password" = "Забыл пароль";
+"Last name" ="Фамилия";
+"First Name" = "Имя";
+"Settings" = "Настройки";
+"Edit" = "Редактировать";
+"Search" = "Поиск";
+"Make Photo" = "Сделать фото";
+"Chose Photo" = "Выбрать фото";
+"Make Video" = "Сделать видео";
+"Chose Video" = "Выбрать видео";
+"Cancel" = "Отменить";
+"Group" = "Группа";
+"Add user" = "добавить пользователя";

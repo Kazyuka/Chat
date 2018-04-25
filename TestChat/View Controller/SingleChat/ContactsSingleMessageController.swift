@@ -23,9 +23,10 @@ class ContactsSingleMessageController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.title = "Contacts".localized
         searchController = UISearchController(searchResultsController: nil);
         tableView.tableHeaderView = searchController.searchBar
-        searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.placeholder = "Search".localized
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false

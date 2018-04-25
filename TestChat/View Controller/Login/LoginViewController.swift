@@ -15,12 +15,13 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+
     
     var messagseController: ChatController?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.lightGray
-      
+        forgotPasswordButton.setTitle("Forgot Password".localized, for: .normal)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
@@ -30,11 +31,11 @@ class LoginViewController: UIViewController {
         
         switch registerLoginSegment.selectedSegmentIndex {
         case 0:
-            loginButton.setTitle("Register", for: .normal)
+            loginButton.setTitle("Register".localized, for: .normal)
             firstNmeLastNAmeView.isHidden = false
             forgotPasswordButton.isHidden = true
         case 1:
-            loginButton.setTitle("Login".localized, for: .normal)
+            loginButton.setTitle("Login".localized.localized, for: .normal)
             firstNmeLastNAmeView.isHidden = true
             forgotPasswordButton.isHidden = false
         default:

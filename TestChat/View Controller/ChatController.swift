@@ -28,10 +28,10 @@ class ChatController: UIViewController {
         super.viewDidLoad()
        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group", style: .plain, target: self, action: #selector(createGroupButtonClick))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group".localized, style: .plain, target: self, action: #selector(createGroupButtonClick))
         searchController = UISearchController(searchResultsController: nil);
         tableView.tableHeaderView = searchController.searchBar
-        searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.placeholder = "Search".localized
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false

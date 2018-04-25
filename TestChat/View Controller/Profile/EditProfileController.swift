@@ -17,6 +17,7 @@ import FirebaseStorage
 
 class EditProfileController: UIViewController {
 
+    @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var userImageView: UIImageView!
@@ -26,12 +27,11 @@ class EditProfileController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        saveButton.title = "Save".localized
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.sendImageMassegaButtonTapped(_:)))
         userImageView.addGestureRecognizer(tap)
         userImageView.isUserInteractionEnabled = true
         getDataFromFirebase()
-        
     }
 
     @IBAction func aboutMeButtonClick(_ sender: Any) {

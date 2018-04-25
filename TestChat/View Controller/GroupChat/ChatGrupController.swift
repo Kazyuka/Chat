@@ -109,7 +109,8 @@ class ChatGrupController: UIViewController {
         return true
     }
 
-    @objc func sendMassegaButtonTapped()  {
+    @objc func sendMassegaButtonTapped() {
+        
         let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!).child("messages").childByAutoId()
         let fromId = Auth.auth().currentUser!.uid
         let time = Int(NSDate().timeIntervalSince1970)
@@ -125,7 +126,7 @@ class ChatGrupController: UIViewController {
             let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
             refLastMessage.updateChildValues(["last-message": text])
         }
-    
+        
         view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
@@ -157,23 +158,23 @@ class ChatGrupController: UIViewController {
     
     func showActionSheet() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Make Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Make Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.camera()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Chose Photo", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Chose Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photoLibrary()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Make Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Make Video".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photo()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Chose Video", style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+        actionSheet.addAction(UIAlertAction(title: "Chose Video".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photoLibrary()
         }))
         
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel, handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Cancel".localized, style: UIAlertActionStyle.cancel, handler: nil))
         
         if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
             actionSheet.popoverPresentationController?.sourceView = self.view
@@ -540,6 +541,7 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        view.endEditing(true)
         self.dismiss(animated: true, completion: nil)
     }
 }

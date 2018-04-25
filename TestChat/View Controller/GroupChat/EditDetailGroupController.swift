@@ -17,6 +17,8 @@ import FirebaseStorage
 
 class EditDetailGroupController: UIViewController {
 
+    @IBOutlet weak var saveButton: UIBarButtonItem!
+    @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var imageGroup: UIImageView!
     weak var delegate: EditDetailGroupControllerDelegate?
@@ -26,7 +28,8 @@ class EditDetailGroupController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        saveButton.title = "save".localized
+        backButton.title = "Back".localized
         imagePicker.delegate = self
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImage(_:)))
         gesture.numberOfTapsRequired = 1

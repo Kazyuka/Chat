@@ -133,13 +133,7 @@ class ChatCollectionViewCell: UICollectionViewCell {
         return bv
     }()
     
-    lazy var activityIndicatorView: UIActivityIndicatorView = {
-        var act = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        act.translatesAutoresizingMaskIntoConstraints = false
-        act.hidesWhenStopped = true
-        return act
-    }()
-    
+ 
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -189,11 +183,7 @@ class ChatCollectionViewCell: UICollectionViewCell {
         playButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
         playButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
-        activityIndicatorView.centerXAnchor.constraint(equalTo: bubleView.centerXAnchor).isActive = true
-        activityIndicatorView.centerYAnchor.constraint(equalTo: bubleView.centerYAnchor).isActive = true
-        activityIndicatorView.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        activityIndicatorView.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        
+  
         messageImageView.leftAnchor.constraint(equalTo: bubleView.leftAnchor).isActive = true
         messageImageView.rightAnchor.constraint(equalTo: bubleView.rightAnchor).isActive = true
         messageImageView.topAnchor.constraint(equalTo: bubleView.topAnchor).isActive = true

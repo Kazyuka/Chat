@@ -153,30 +153,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qF3-83-wzg">
-                                <rect key="frame" x="0.0" y="364" width="375" height="97"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="375" id="cpQ-4J-Wvg"/>
-                                    <constraint firstAttribute="height" constant="97" id="qKY-z7-Wxh"/>
-                                </constraints>
-                                <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" id="PwU-q8-UWW">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="PwU-q8-UWW" id="aP8-pU-tKa">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.666666666666664"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <sections/>
-                                <connections>
-                                    <outlet property="dataSource" destination="Q5o-dP-u1c" id="uwu-PW-qG1"/>
-                                    <outlet property="delegate" destination="Q5o-dP-u1c" id="TNl-r7-VxL"/>
-                                </connections>
-                            </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xL-xW-WOU">
+                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xL-xW-WOU">
                                 <rect key="frame" x="136" y="556" width="102" height="30"/>
                                 <color key="backgroundColor" red="0.41099999910000001" green="0.46229905999999998" blue="0.48507760170000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
@@ -188,25 +165,48 @@
                                     <action selector="logOutButtonClick:" destination="Q5o-dP-u1c" eventType="touchUpInside" id="Ct1-89-orR"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8xl-dt-oVc">
+                                <rect key="frame" x="83" y="341" width="223" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="223" id="e4o-T1-wwz"/>
+                                    <constraint firstAttribute="height" constant="30" id="s38-fX-g4m"/>
+                                </constraints>
+                                <state key="normal" title="English"/>
+                                <connections>
+                                    <action selector="englishButtonClick:" destination="Q5o-dP-u1c" eventType="touchUpInside" id="iob-Tp-Ruh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gie-ax-fjY">
+                                <rect key="frame" x="83" y="391" width="211" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="211" id="7Xt-9D-TGN"/>
+                                    <constraint firstAttribute="height" constant="30" id="clq-cz-MHj"/>
+                                </constraints>
+                                <state key="normal" title="Русский"/>
+                                <connections>
+                                    <action selector="russiaButtonClick:" destination="Q5o-dP-u1c" eventType="touchUpInside" id="Frg-VB-cOO"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.89343070811813008" green="1" blue="0.87042533124728594" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="8xl-dt-oVc" firstAttribute="top" secondItem="Zlw-6I-cnu" secondAttribute="bottom" constant="52" id="4Qd-jL-2L9"/>
                             <constraint firstItem="Byx-AX-89b" firstAttribute="trailing" secondItem="4xL-xW-WOU" secondAttribute="trailing" constant="137" id="6fh-of-bCV"/>
                             <constraint firstItem="eQa-8X-AAf" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" constant="82" id="6fv-T8-AY7"/>
-                            <constraint firstItem="4xL-xW-WOU" firstAttribute="top" secondItem="qF3-83-wzg" secondAttribute="bottom" constant="95" id="9V8-PA-Z3K"/>
-                            <constraint firstItem="qF3-83-wzg" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" id="AZp-jv-WGe"/>
+                            <constraint firstItem="gie-ax-fjY" firstAttribute="top" secondItem="8xl-dt-oVc" secondAttribute="bottom" constant="20" id="7Xg-vb-lzc"/>
                             <constraint firstItem="Byx-AX-89b" firstAttribute="trailing" secondItem="eQa-8X-AAf" secondAttribute="trailing" constant="82" id="Czc-Z5-1t0"/>
                             <constraint firstItem="eQa-8X-AAf" firstAttribute="top" secondItem="Byx-AX-89b" secondAttribute="top" constant="95" id="RQk-8O-aF7"/>
                             <constraint firstItem="Zlw-6I-cnu" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" constant="83" id="S8s-fj-OJh"/>
                             <constraint firstItem="Byx-AX-89b" firstAttribute="trailing" secondItem="wsw-k9-ZsR" secondAttribute="trailing" constant="81" id="SKD-6r-C03"/>
                             <constraint firstItem="wsw-k9-ZsR" firstAttribute="top" secondItem="eQa-8X-AAf" secondAttribute="bottom" constant="8" id="Srn-RQ-jii"/>
-                            <constraint firstItem="qF3-83-wzg" firstAttribute="top" secondItem="Zlw-6I-cnu" secondAttribute="bottom" constant="75" id="VA3-Vc-IPg"/>
-                            <constraint firstItem="qF3-83-wzg" firstAttribute="trailing" secondItem="Byx-AX-89b" secondAttribute="trailing" id="Vab-1R-0JI"/>
-                            <constraint firstItem="4xL-xW-WOU" firstAttribute="top" secondItem="qF3-83-wzg" secondAttribute="bottom" constant="95" id="aGh-qy-NEJ"/>
                             <constraint firstItem="Byx-AX-89b" firstAttribute="trailing" secondItem="Zlw-6I-cnu" secondAttribute="trailing" constant="81" id="bo2-D0-0VF"/>
                             <constraint firstItem="Zlw-6I-cnu" firstAttribute="top" secondItem="wsw-k9-ZsR" secondAttribute="bottom" constant="8" id="d4r-SV-wHo"/>
                             <constraint firstItem="4xL-xW-WOU" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" constant="136" id="dvf-qZ-iLs"/>
+                            <constraint firstItem="Byx-AX-89b" firstAttribute="trailing" secondItem="gie-ax-fjY" secondAttribute="trailing" constant="81" id="iFg-8c-0pG"/>
+                            <constraint firstItem="Byx-AX-89b" firstAttribute="trailing" secondItem="8xl-dt-oVc" secondAttribute="trailing" constant="69" id="jCL-mG-baL"/>
+                            <constraint firstItem="8xl-dt-oVc" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" constant="83" id="oMc-AJ-nEB"/>
                             <constraint firstItem="wsw-k9-ZsR" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" constant="83" id="y1R-p8-QNZ"/>
+                            <constraint firstItem="gie-ax-fjY" firstAttribute="leading" secondItem="Byx-AX-89b" secondAttribute="leading" constant="83" id="z0Y-01-1Ee"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Byx-AX-89b"/>
                     </view>
@@ -219,10 +219,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="emailTextView" destination="eQa-8X-AAf" id="fpz-EF-kA8"/>
+                        <outlet property="logOutButton" destination="4xL-xW-WOU" id="N8R-7e-h1M"/>
                         <outlet property="passworfTextField" destination="wsw-k9-ZsR" id="I2n-tS-Ulg"/>
                         <outlet property="repeatPassword" destination="Zlw-6I-cnu" id="QNK-ZD-eWy"/>
                         <outlet property="savebutt" destination="oHb-ET-x6A" id="FQb-82-fXr"/>
-                        <outlet property="tableView" destination="qF3-83-wzg" id="rUl-oW-oYM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lA4-Fg-aL7" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -418,8 +418,10 @@
                         <viewLayoutGuide key="safeArea" id="J1Y-Yh-rG2"/>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="9qh-RH-myQ" id="Wrn-cQ-mjO"/>
                         <outlet property="groupNameTextField" destination="69x-gt-krT" id="3nG-qk-dhg"/>
                         <outlet property="imageGroup" destination="fza-rE-X1O" id="BqF-Tz-iTl"/>
+                        <outlet property="saveButton" destination="g5m-bQ-wsV" id="1Zl-z3-mk6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Per-FV-Ztd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -490,7 +492,7 @@
                         <viewLayoutGuide key="safeArea" id="GTX-AV-Pli"/>
                     </view>
                     <navigationItem key="navigationItem" id="8ib-tR-ipB">
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="1c9-9x-Lom">
+                        <barButtonItem key="rightBarButtonItem" title="Edit" id="1c9-9x-Lom">
                             <connections>
                                 <action selector="editProfileButtonClick:" destination="SAn-4G-Z8z" id="Zfn-dW-M8y"/>
                             </connections>
@@ -498,6 +500,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="aboutMETextView" destination="6fX-4f-CJU" id="GOJ-ya-lfw"/>
+                        <outlet property="aboutMeLabel" destination="d4T-KN-Ojo" id="4Ex-4A-S38"/>
+                        <outlet property="editBaButtonItem" destination="1c9-9x-Lom" id="NE5-D0-PCe"/>
                         <outlet property="editButton" destination="1c9-9x-Lom" id="0Be-mg-DlX"/>
                         <outlet property="userImage" destination="QyU-vK-lPH" id="Uc9-dh-zrH"/>
                         <outlet property="userNameLabel" destination="yiG-gz-IEh" id="HqT-EQ-VYj"/>
@@ -736,6 +740,9 @@
                         <viewLayoutGuide key="safeArea" id="f6Z-cF-oT2"/>
                     </view>
                     <connections>
+                        <outlet property="addUserButton" destination="l5O-83-7nd" id="xr8-ov-Qd7"/>
+                        <outlet property="chatButton" destination="1FR-O8-obu" id="MIf-Ug-9Qf"/>
+                        <outlet property="editButton" destination="xfY-CO-GGe" id="ajG-a7-Cco"/>
                         <outlet property="imageGroupView" destination="Y3Q-k3-V6a" id="urk-SA-deA"/>
                         <outlet property="nameGroup" destination="kXU-jz-Roi" id="FuQ-Cw-yEm"/>
                         <outlet property="tableView" destination="Gka-ZI-H9q" id="sg5-AC-HA1"/>
@@ -1000,6 +1007,7 @@
                     <connections>
                         <outlet property="firstNameTextField" destination="HQs-23-Scq" id="Xlx-qj-zEk"/>
                         <outlet property="lastNameTextField" destination="gi3-03-jgl" id="oyw-Ea-kfj"/>
+                        <outlet property="saveButton" destination="f95-UG-oCs" id="GqN-i8-7y4"/>
                         <outlet property="userImageView" destination="a5u-af-yml" id="ARa-gc-2by"/>
                     </connections>
                 </viewController>
@@ -1172,7 +1180,7 @@
         <scene sceneID="Jyo-TI-lZb">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="J0h-wS-chK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Chat" id="bCF-Oi-3LC"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="Chat" id="bCF-Oi-3LC"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VGc-4D-nKK">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
@@ -1304,7 +1312,7 @@
                         <outlet property="emailTextField" destination="K7H-k3-9ak" id="769-Cp-9vd"/>
                         <outlet property="firstNameTextField" destination="qS5-NX-WZW" id="BhG-Wd-G6P"/>
                         <outlet property="firstNmeLastNAmeView" destination="OkI-sP-d74" id="Obo-Wi-g1w"/>
-                        <outlet property="forgotPasswordButton" destination="SPh-Bb-YrN" id="ccz-rA-Agu"/>
+                        <outlet property="forgotPasswordButton" destination="SPh-Bb-YrN" id="dCT-Ka-FWN"/>
                         <outlet property="lastNameTextField" destination="a9u-MZ-OwB" id="OFe-1y-oz3"/>
                         <outlet property="loginButton" destination="McU-Oh-zcV" id="Dyp-3B-OPw"/>
                         <outlet property="passwordTextField" destination="DC9-en-DUD" id="QiP-ht-Lpx"/>
@@ -1353,7 +1361,9 @@
                         <viewLayoutGuide key="safeArea" id="Ns1-6P-tF5"/>
                     </view>
                     <connections>
+                        <outlet property="backButton" destination="jQ2-DJ-8h0" id="MMs-dL-E1N"/>
                         <outlet property="emailField" destination="7d2-Sp-5Fo" id="raF-Zu-dLi"/>
+                        <outlet property="resetPasswordButton" destination="3NO-5K-sl6" id="FSh-bc-vLB"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sP3-Qw-Uk9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1364,7 +1374,7 @@
         <scene sceneID="qeO-QO-BxN">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Oyg-a5-dfw" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profile" id="0e7-ZP-odC"/>
+                    <tabBarItem key="tabBarItem" tag="2" title="Profile" id="0e7-ZP-odC"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="aKZ-J8-BfH">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
@@ -1504,7 +1514,7 @@
         <scene sceneID="MWu-A7-6ao">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="O1t-bO-bwp" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Settings" id="uYd-ef-wtp"/>
+                    <tabBarItem key="tabBarItem" tag="3" title="Settings" id="uYd-ef-wtp"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="lIx-IO-Qxn">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
@@ -1710,6 +1720,9 @@
                         <viewLayoutGuide key="safeArea" id="uZj-kf-hhv"/>
                     </view>
                     <connections>
+                        <outlet property="addUserButton" destination="72V-Z9-pVu" id="H95-0f-tLe"/>
+                        <outlet property="chatButton" destination="OzU-KR-eq3" id="WQ3-b1-2Tb"/>
+                        <outlet property="editButton" destination="Bxu-Qp-vEI" id="aQ9-26-1d2"/>
                         <outlet property="imageGroup" destination="bOK-eu-tux" id="eBs-mP-e5K"/>
                         <outlet property="nameGroup" destination="bg6-in-756" id="FBe-gs-8zo"/>
                         <outlet property="tableView" destination="FKx-oX-Ps2" id="1X1-zw-9Hu"/>

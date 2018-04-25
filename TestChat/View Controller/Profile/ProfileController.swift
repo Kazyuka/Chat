@@ -16,11 +16,15 @@ class ProfileController: UIViewController {
     @IBOutlet weak var userNameLabel: UILabel!
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var aboutMeLabel: UILabel!
+    @IBOutlet weak var editBaButtonItem: UIBarButtonItem!
     var user: User?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationItem.title = "Profile"
+        navigationItem.title = "Profile".localized
+        editBaButtonItem.title = "Edit".localized
+        aboutMeLabel.text = "About Me".localized
         getDataWithFireBase()
         configureView()
     }

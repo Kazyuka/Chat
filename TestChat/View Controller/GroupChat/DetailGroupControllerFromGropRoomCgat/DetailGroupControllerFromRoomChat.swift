@@ -13,10 +13,13 @@ import FirebaseStorage
 
 class DetailGroupControllerFromRoomChat: UIViewController {
 
+    @IBOutlet weak var chatButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var imageGroup: UIImageView!
     @IBOutlet weak var nameGroup: UILabel!
+    @IBOutlet weak var addUserButton: UIButton!
     
+    @IBOutlet weak var editButton: UIBarButtonItem!
     var unicKyeForChatRoom: String!
     var roomChat: RoomChat?
     var group: Group?
@@ -25,6 +28,9 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        chatButton.title = "Chat".localized
+        editButton.title = "Edit".localized
+        addUserButton.setTitle("Add user".localized, for: .normal)
         getGroupFromFirebase()
     }
     
@@ -67,6 +73,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
                         if let u = snap.value as? [String: AnyObject] {
                             let use = User(dic: u)
                             self.userArray.append(use)
+                            self.userArray = Array(self.userArray.reversed())
                         }
                     })
                     
@@ -85,6 +92,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         
         let groupMC = self.storyboard?.instantiateViewController(withIdentifier: "GroupMessageController") as! GroupMessageController
         groupMC.delegate = self
+        groupMC.currentLisrUser = userArray
         self.present(groupMC, animated: true, completion: nil)
     }
     override var prefersStatusBarHidden: Bool {
@@ -114,7 +122,19 @@ class DetailGroupControllerFromRoomChat: UIViewController {
             if let meta = metadata?.downloadURL()?.absoluteString {
                 let value = ["nameGroup": self.nameGroup?.text, "groupImageUrl" : meta] as [String : Any]
                 let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom)
-                ref.updateChildValues(value)
+                ref.updateChildValues(value, withCompletionBlock: { (err, data) in
+                    
+                    if err != nil{
+                        self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
+                        return
+                    }
+                    
+                    for us in self.userArray {
+                        let ref2 = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom).child("users").childByAutoId()
+                        ref2.updateChildValues(["toId" :us.uid])
+                    }
+                    
+                })
                 self.progressHUD?.hide()
                 self.dismiss(animated: true, completion: nil)
             }
@@ -154,11 +174,8 @@ extension DetailGroupControllerFromRoomChat: UITableViewDataSource, UITableViewD
 extension DetailGroupControllerFromRoomChat: DetailGroupControllerDelegate {
     func getCheckUser(users: [User]) {
         
-        userArray.removeAll()
-        User.getCurrentUserFromFirebase { (us) in
-            self.userArray = users
+        users.forEach { (us) in
             self.userArray.append(us)
-            self.userArray = Array(self.userArray.reversed())
             self.tableView.reloadData()
         }
     }

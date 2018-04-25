@@ -11,10 +11,14 @@ import FirebaseAuth
 
 class ResetPasswordController: UIViewController {
 
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var resetPasswordButton: UIButton!
     @IBOutlet weak var emailField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
+        resetPasswordButton.setTitle("ResetPassword", for: .normal)
+        backButton.setTitle("Back", for: .normal)
     }
     
     @IBAction func backButtonClick(_ sender: Any) {

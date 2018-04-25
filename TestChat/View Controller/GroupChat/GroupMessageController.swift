@@ -13,6 +13,9 @@ class GroupMessageController: ContactsSingleMessageController {
 
     var checkUsers = [User]()
     var currentLisrUser = [User]()
+    var filterArrayUser = [User]()
+    var idUsers = [String]()
+    
     
     weak var delegate: DetailGroupControllerDelegate?
     
@@ -28,46 +31,61 @@ class GroupMessageController: ContactsSingleMessageController {
         }
     }
     
+
+    func filterUser() {
+        
+        var currentUserId = [String]()
+        self.userArray.removeAll()
+        self.currentLisrUser.forEach { (us) in
+            currentUserId.append(us.uid!)
+        }
+        
+        let differenceUser = idUsers.difference(from: currentUserId)
+        
+        for us in differenceUser {
+            
+            Database.database().reference().child("users").child(us).observeSingleEvent(of: .value, with: { (snap) in
+                
+                 if let user = snap.value as? [String: AnyObject] {
+                
+                    let u = user as! Dictionary <String, AnyObject>
+                    let user = User.init(dic: u)
+                    
+                    if Auth.auth().currentUser?.uid != user.uid {
+                        self.userArray.append(user)
+                    }
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                    self.tableView.reloadData()
+                })
+            })
+            
+        }
+        
+    }
     override func getAllUser() {
         
-        
-        Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
-            
-            print(snapshot)
-            
-            if let users = snapshot.value as? [String: AnyObject] {
+       
+            Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
                 
-            }
-        }
-       /* Database.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
-            
-            if let users = snapshot.value as? [String: AnyObject] {
-                let user = User.init(dic: users)
-                user.userId = snapshot.key
-                if Auth.auth().currentUser?.uid != user.userId {
-                    print(user)
-                    self.userArray.append(user)
+                if let users = snapshot.value as? [String: AnyObject] {
+                    
+                    for d in users {
+                        
+                        let user = User.init(dic: d.value as! Dictionary<String, AnyObject>)
+                        if Auth.auth().currentUser?.uid != user.uid {
+                            self.userArray.append(user)
+                            self.idUsers.append(user.uid!)
+                        }
+                    }
+                    
+                    if self.currentLisrUser.count > 1 {
+                        self.filterUser()
+                    } else {
+                        self.tableView.reloadData()
+                    }
                 }
             }
-            
-            
-            
-            for u in self.currentLisrUser {
-                
-               var arr = self.userArray.filter { $0.userId != u.userId }
-            }*/
-           
-           /* for u in self.userArray {
-                
-                if let idx =  self.currentLisrUser.index(of: u) {
-                    
-                    print(idx)
-                    self.userArray.remove(at: idx)
-                    
-                }
-            }*/
-           /* self.tableView.reloadData()
-        }, withCancel: nil)*/
     }
     
     @IBAction func backButtonClick(_ sender: Any) {
@@ -91,3 +109,11 @@ class GroupMessageController: ContactsSingleMessageController {
     }
 }
 
+
+extension Array where Element: Hashable {
+    func difference(from other: [Element]) -> [Element] {
+        let thisSet = Set(self)
+        let otherSet = Set(other)
+        return Array(thisSet.symmetricDifference(otherSet))
+    }
+}

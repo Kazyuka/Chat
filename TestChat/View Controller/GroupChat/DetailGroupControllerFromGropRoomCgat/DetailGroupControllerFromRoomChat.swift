@@ -25,6 +25,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     var group: Group?
     var userArray = [User]()
     var progressHUD: ProgressHUD? = nil
+    let currentUser = Auth.auth().currentUser?.uid
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,10 +59,10 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         let url = URL.init(string: (roomChat?.imageGroup)!)
         imageGroup.sd_setImage(with: url! as URL)
         nameGroup.text = roomChat?.groupName
-        
         progressHUD = ProgressHUD(text: "Please Wait")
         progressHUD?.hide()
         self.view.addSubview(progressHUD!)
+        checkOvnerGroup()
         
         if let usersChat = roomChat {
             
@@ -85,8 +86,26 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         }
     }
     
+    private func checkOvnerGroup() {
+        if currentUser == roomChat!.ovnerGroup {
+            addUserButton.isHidden = false
+            addUserButton.isEnabled = true
+            editButton.isEnabled = true
+            editButton.tintColor = nil
+        } else {
+            addUserButton.isHidden = true
+            addUserButton.isEnabled = false
+            editButton.isEnabled = false
+            editButton.tintColor = UIColor.clear
+        }
+    }
+    
     @IBAction func chatButtonClick(_ sender: Any) {
-        updateGroupIntoFirebase()
+        if currentUser == roomChat!.ovnerGroup {
+            updateGroupIntoFirebase()
+        } else {
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     @IBAction func addUserButtonClick(_ sender: Any) {
         
@@ -157,16 +176,19 @@ extension DetailGroupControllerFromRoomChat: UITableViewDataSource, UITableViewD
         return 75
     }
     
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+          let us = userArray[indexPath.row].uid
+          if us != currentUser && currentUser == roomChat!.ovnerGroup {
+            return true
+        }
+        return false
+    }
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
-        let us = userArray[indexPath.row].uid
-        
-        if us != Auth.auth().currentUser?.uid {
-            
-            if editingStyle == .delete {
-                userArray.remove(at: indexPath.row)
-                tableView.deleteRows(at: [indexPath], with: .fade)
-            }
+        if editingStyle == .delete {
+            userArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 }

@@ -19,7 +19,6 @@ class SettingsController: UIViewController {
     
     @IBOutlet weak var emailTextView: UITextField!
     
-    
     @IBOutlet weak var passworfTextField: UITextField!
     
     @IBOutlet weak var repeatPassword: UITextField!
@@ -28,7 +27,7 @@ class SettingsController: UIViewController {
     
     var currentLenguage: String = " "
     
-    private var messageVC: ChatController {
+    private var chatController: ChatController {
         let messageVc = self.storyboard?.instantiateViewController(withIdentifier: "ChatController") as! ChatController
         return messageVc
     }
@@ -70,8 +69,9 @@ class SettingsController: UIViewController {
             print(err)
         }
         
-        messageVC.Logout()
-        //self.present(loginVC, animated: true, completion: nil)
+        let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        loginVC.messagseController = chatController
+        self.present(loginVC, animated: true, completion: nil)
     }
     @IBAction func saveButtonClick(_ sender: Any) {
        

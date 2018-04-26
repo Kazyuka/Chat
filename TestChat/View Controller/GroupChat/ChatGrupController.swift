@@ -290,20 +290,35 @@ class ChatGrupController: UIViewController {
     }
     
     func setUpNotification()  {
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatGrupController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatGrupController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    @objc func animateWithKeyboard(notification: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification) {
+        hieghtConstraitForKeyword?.constant = 0
+        let userInfo = notification.userInfo!
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
+        let options = UIViewAnimationOptions(rawValue: curve << 16)
+        
+        UIView.animate(withDuration: duration, delay: 0, options: options,
+                       animations: {
+                        self.view.layoutIfNeeded()
+                        
+        },
+                       completion: nil
+        )
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
         
         let userInfo = notification.userInfo!
         let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
+        hieghtConstraitForKeyword?.constant = -keyboardHeight
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: keyboardHeight + 60, right: 0)
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
-        let moveUp = (notification.name == NSNotification.Name.UIKeyboardWillShow)
-        
-        hieghtConstraitForKeyword?.constant = moveUp ? -keyboardHeight : 0
-        
         let options = UIViewAnimationOptions(rawValue: curve << 16)
         UIView.animate(withDuration: duration, delay: 0, options: options,
                        animations: {
@@ -316,7 +331,7 @@ class ChatGrupController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }
@@ -541,7 +556,6 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        view.endEditing(true)
         self.dismiss(animated: true, completion: nil)
     }
 }

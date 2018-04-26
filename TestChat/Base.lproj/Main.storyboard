@@ -16,7 +16,7 @@
             <objects>
                 <viewController storyboardIdentifier="ChatController" id="bLg-ON-CCm" customClass="ChatController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" ambiguous="YES" id="rEt-XY-Pfz">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="mpq-pq-MMG">
@@ -113,7 +113,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="935-T8-YMa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="332" y="932.51231527093603"/>
+            <point key="canvasLocation" x="-778" y="1005"/>
         </scene>
         <!--Settings-->
         <scene sceneID="FRa-FS-8VJ">
@@ -227,22 +227,22 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lA4-Fg-aL7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="613.60000000000002" y="75.369458128078819"/>
+            <point key="canvasLocation" x="-14" y="333"/>
         </scene>
         <!--Chat Single Controller-->
         <scene sceneID="SS3-hj-IAc">
             <objects>
                 <viewController storyboardIdentifier="ChatSingleController" hidesBottomBarWhenPushed="YES" id="seB-4C-RER" customClass="ChatSingleController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CxV-Fq-wko">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="724"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="l7t-bs-u48">
-                                <rect key="frame" x="0.0" y="111" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="690"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="375" id="2Hb-uw-J5p"/>
-                                    <constraint firstAttribute="height" constant="667" id="roz-hx-DBO"/>
+                                    <constraint firstAttribute="width" constant="375" id="Bzw-Hv-jWN"/>
+                                    <constraint firstAttribute="height" constant="690" id="jqf-2s-P0k"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="gvO-1b-f8q">
                                     <size key="itemSize" width="50" height="50"/>
@@ -269,10 +269,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="l7t-bs-u48" firstAttribute="top" secondItem="CxV-Fq-wko" secondAttribute="top" id="ORC-Er-92x"/>
-                            <constraint firstItem="l7t-bs-u48" firstAttribute="leading" secondItem="oO0-gg-dVg" secondAttribute="leading" id="VHP-q7-22b"/>
-                            <constraint firstItem="l7t-bs-u48" firstAttribute="bottom" secondItem="oO0-gg-dVg" secondAttribute="bottom" id="i5u-Vn-QDn"/>
-                            <constraint firstItem="l7t-bs-u48" firstAttribute="trailing" secondItem="oO0-gg-dVg" secondAttribute="trailing" id="nfo-ba-1gg"/>
+                            <constraint firstItem="l7t-bs-u48" firstAttribute="top" secondItem="oO0-gg-dVg" secondAttribute="top" id="DWa-WH-8Ar"/>
+                            <constraint firstItem="l7t-bs-u48" firstAttribute="trailing" secondItem="oO0-gg-dVg" secondAttribute="trailing" id="akh-u2-xoo"/>
+                            <constraint firstItem="l7t-bs-u48" firstAttribute="leading" secondItem="oO0-gg-dVg" secondAttribute="leading" id="h7E-0O-uj6"/>
+                            <constraint firstItem="l7t-bs-u48" firstAttribute="bottom" secondItem="oO0-gg-dVg" secondAttribute="bottom" id="ncb-IS-un5"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="oO0-gg-dVg"/>
                     </view>
@@ -283,7 +283,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2gm-kg-jpR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2260" y="45.812807881773402"/>
+            <point key="canvasLocation" x="1905" y="47"/>
         </scene>
         <!--Chat Grup Controller-->
         <scene sceneID="2pk-vw-V2Y">
@@ -338,7 +338,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WgJ-bj-byC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2316" y="709"/>
+            <point key="canvasLocation" x="1905" y="767"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Zva-JH-iJw">
@@ -1130,7 +1130,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WhO-Ck-r0e" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="332" y="-860"/>
+            <point key="canvasLocation" x="60" y="-788"/>
         </scene>
         <!--Tab Controller-->
         <scene sceneID="nEt-fR-4Lp">
@@ -1174,15 +1174,16 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="foG-er-4Jj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-577" y="-860"/>
+            <point key="canvasLocation" x="-732" y="-788"/>
         </scene>
         <!--Chat-->
         <scene sceneID="Jyo-TI-lZb">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DlT-Tp-eBM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="J0h-wS-chK" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" tag="1" title="Chat" id="bCF-Oi-3LC"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="VGc-4D-nKK">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="VGc-4D-nKK">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1191,9 +1192,8 @@
                         <segue destination="bLg-ON-CCm" kind="relationship" relationship="rootViewController" id="v0C-CJ-lgL"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DlT-Tp-eBM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-578" y="933"/>
+            <point key="canvasLocation" x="-1623" y="1005"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="JpV-E7-U6a">
@@ -1394,7 +1394,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="p3c-Zv-ntD" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Laf-dr-K69">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="Laf-dr-K69">
                         <rect key="frame" x="0.0" y="44" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1405,7 +1405,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8rn-0U-cTy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1519.2" y="46.551724137931039"/>
+            <point key="canvasLocation" x="1018" y="46"/>
         </scene>
         <!--Other Profile Controller-->
         <scene sceneID="Rak-Y9-VOm">
@@ -1527,7 +1527,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HXk-5e-TXQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-158" y="75"/>
+            <point key="canvasLocation" x="-778" y="333"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="OwO-2f-el8">
@@ -1545,7 +1545,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PnH-Xt-7J0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1484" y="709"/>
+            <point key="canvasLocation" x="1073" y="767"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3uk-8o-YY0">

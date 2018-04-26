@@ -4,6 +4,7 @@ import FirebaseDatabase
 import FirebaseAuth
 class ContactsSingleMessageController: UIViewController {
     
+    @IBOutlet weak var searchBar: UISearchBar!
     var userArray = [User]()
     var filteredUsers = [User]()
     var messagesViewComtroller: ChatController?
@@ -15,8 +16,36 @@ class ContactsSingleMessageController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    let placeholderWidth = 200
+    var offset = UIOffset()
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+       /* self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()*/
+       /* searchBar.searchBarStyle = .minimal
+     
+        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+            
+            if let glassIconView = textfield.leftView as? UIImageView {
+                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+                glassIconView.tintColor = .white
+            }
+            textfield.textColor = UIColor.white
+            textfield.placeholder = "Search"
+            let textFieldInsideSearchBarLabel = textfield.value(forKey: "placeholderLabel") as? UILabel
+            textFieldInsideSearchBarLabel?.textColor = UIColor.white
+            
+            if let backgroundview = textfield.subviews.first {
+                backgroundview.backgroundColor = #colorLiteral(red: 0.5137254902, green: 0.8196078431, blue: 0.9490196078, alpha: 1)
+                backgroundview.layer.cornerRadius = 18
+                backgroundview.clipsToBounds = true
+            }
+        }*/
         userArray.removeAll()
         getAllUser()
     }

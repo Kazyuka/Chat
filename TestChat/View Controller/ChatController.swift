@@ -21,15 +21,22 @@ class ChatController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarPosition.any, barMetrics: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        
         observeUserMessages()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+    
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group".localized, style: .plain, target: self, action: #selector(createGroupButtonClick))
         searchController = UISearchController(searchResultsController: nil);
+        searchController.searchBar.tintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.placeholder = "Search".localized
         searchController.searchResultsUpdater = self
@@ -54,9 +61,7 @@ class ChatController: UIViewController {
                 if let val = g.usersChat {
                     if val.contains(uid) {
                         self.grouChat.append(g)
-                    } else {
-                        self.grouChat.append(g)
-                    }
+                    } 
                 }
             }
             

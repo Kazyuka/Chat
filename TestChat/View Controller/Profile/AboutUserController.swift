@@ -13,6 +13,7 @@ class AboutUserController: UIViewController {
     @IBOutlet weak var texViewAboutMe: UITextView!
  
     weak var delegate: EditProfileControllerDelegate?
+    var aboutMeText = " "
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +22,7 @@ class AboutUserController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.texViewAboutMe.becomeFirstResponder()
+        self.texViewAboutMe.text = aboutMeText
     }
     
     override func viewDidDisappear(_ animated: Bool) {

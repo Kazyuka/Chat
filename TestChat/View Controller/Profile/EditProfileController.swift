@@ -32,13 +32,18 @@ class EditProfileController: UIViewController {
         userImageView.addGestureRecognizer(tap)
         userImageView.isUserInteractionEnabled = true
         getDataFromFirebase()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(tapGesture)
     }
-
+    @objc func hideKeyboard(sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
     @IBAction func aboutMeButtonClick(_ sender: Any) {
         
         let abouttProfileVC =  self.storyboard?.instantiateViewController(withIdentifier: "AboutUserController") as! AboutUserController
         abouttProfileVC.delegate = self
-        
+        abouttProfileVC.aboutMeText = aboutMeText
         self.navigationController?.pushViewController(abouttProfileVC, animated: true)
     }
     func getDataFromFirebase() {

@@ -10,6 +10,8 @@ import UIKit
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
+import MobileCoreServices
+import AVKit
 
 protocol GroupCreateControllerDelegate: class {
     func goToDetailCreateGroup(g: Group)
@@ -30,6 +32,7 @@ class GroupCreateController: UIViewController {
         gesture.numberOfTapsRequired = 1
         photoImageGroup.isUserInteractionEnabled = true
         photoImageGroup.addGestureRecognizer(gesture)
+        photoImageGroup.image = UIImage.init(named: "user.png")
 
     }
     
@@ -38,7 +41,44 @@ class GroupCreateController: UIViewController {
     }
     
     @objc func tapToImageInsideCell(_ sender: UITapGestureRecognizer) {
-        present(imagePicker, animated: true, completion: nil)
+        showActionSheet()
+    }
+    
+    func photo() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self
+        myPickerController.sourceType = UIImagePickerControllerSourceType.camera
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func photoLibrary() {
+        let myPickerController = UIImagePickerController()
+        myPickerController.delegate = self;
+        myPickerController.mediaTypes = [kUTTypeImage as String]
+        self.present(myPickerController, animated: true, completion: nil)
+    }
+    
+    func showActionSheet() {
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Make Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            self.photo()
+        }))
+        
+        actionSheet.addAction(UIAlertAction(title: "Chose Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
+            self.photoLibrary()
+        }))
+     
+
+        actionSheet.addAction(UIAlertAction(title: "Cancel".localized, style: UIAlertActionStyle.cancel, handler: nil))
+        
+        if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
+            actionSheet.popoverPresentationController?.sourceView = self.view
+            actionSheet.popoverPresentationController?.permittedArrowDirections = UIPopoverArrowDirection()
+            actionSheet.popoverPresentationController?.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            self.present(actionSheet, animated: true, completion: nil)
+        } else {
+            self.present(actionSheet, animated: true, completion: nil)
+        }
     }
     
     @IBAction func backButtonClick(_ sender: Any) {
@@ -47,8 +87,8 @@ class GroupCreateController: UIViewController {
     
     @IBAction func saveGroup(_ sender: Any) {
         
-        if photoImageGroup.image == nil || nameTextView.text == "" {
-            self.present(self.allertControllerWithOneButton(message: "Выберите фото для группового чата или заполните название"), animated: true, completion: nil)
+        if  nameTextView.text == "" {
+            self.present(self.allertControllerWithOneButton(message: "Заполните название"), animated: true, completion: nil)
         } else {
             
             let group = Group(nameGroup: self.nameTextView.text, image: self.photoImageGroup.image!, typeGroup: false)

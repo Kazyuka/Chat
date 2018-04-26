@@ -57,7 +57,6 @@ class ChatSingleController: UIViewController {
             guard let dic = snap.value as? [String: AnyObject] else {
                 return
             }
-            
             let g = Message.init(dic: dic)
             self.arrayMessages.append(g)
             
@@ -74,7 +73,7 @@ class ChatSingleController: UIViewController {
          collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
          self.collectionView?.backgroundColor = UIColor.white
          collectionView?.alwaysBounceVertical = true
-         addImageForNavigationButton()
+         //addImageForNavigationButton()
          observerMessages()
     }
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -146,8 +145,6 @@ class ChatSingleController: UIViewController {
     }
     
     @objc func sendMassegaButtonTapped()  {
-        var lastItemIndex = NSIndexPath.init(item: self.arrayMessages.count - 1, section: 0)
-        self.collectionView?.scrollToItem(at: lastItemIndex as IndexPath, at: .bottom, animated: true)
         let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!)
         let toIdUser = user?.uid
         let fromId = Auth.auth().currentUser!.uid
@@ -295,20 +292,35 @@ class ChatSingleController: UIViewController {
     }
   
     func setUpNotification()  {
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.animateWithKeyboard), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatSingleController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
-    @objc func animateWithKeyboard(notification: NSNotification) {
+    @objc func keyboardWillHide(notification: NSNotification) {
+        hieghtConstraitForKeyword?.constant = 0
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
+        let userInfo = notification.userInfo!
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
+        let options = UIViewAnimationOptions(rawValue: curve << 16)
+        
+        UIView.animate(withDuration: duration, delay: 0, options: options,
+                       animations: {
+                        self.view.layoutIfNeeded()
+                        
+        },
+                       completion: nil
+        )
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
         
         let userInfo = notification.userInfo!
         let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
+        hieghtConstraitForKeyword?.constant = -keyboardHeight
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: keyboardHeight + 60, right: 0)
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
-        let moveUp = (notification.name == NSNotification.Name.UIKeyboardWillShow)
-        
-        hieghtConstraitForKeyword?.constant = moveUp ? -keyboardHeight : 0
-        
         let options = UIViewAnimationOptions(rawValue: curve << 16)
         UIView.animate(withDuration: duration, delay: 0, options: options,
                        animations: {
@@ -321,7 +333,7 @@ class ChatSingleController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
 }
@@ -440,8 +452,10 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
         
         if let videoUrl = info[UIImagePickerControllerMediaURL] as? NSURL {
             videoSelectedForInfo(url: videoUrl)
+
         } else {
             imageSelectedForInfo(info: info as [String : AnyObject])
+        
         }
         dismiss(animated: true, completion: nil)
     }
@@ -579,7 +593,6 @@ extension ChatSingleController: UIImagePickerControllerDelegate, UINavigationCon
         }
     }
      public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        view.endEditing(true)
         self.dismiss(animated: true, completion: nil)
     }
 }

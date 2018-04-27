@@ -5,107 +5,84 @@ import FirebaseDatabase
 
 class LoginViewController: UIViewController {
     
+    @IBOutlet weak var singUpButton: UIButton!
     
-    @IBOutlet weak var firstNmeLastNAmeView: UIView!
-    @IBOutlet weak var registerLoginSegment: UISegmentedControl!
-
     @IBOutlet weak var forgotPasswordButton: UIButton!
-    @IBOutlet weak var firstNameTextField: UITextField!
-    @IBOutlet weak var lastNameTextField: UITextField!
+    
     @IBOutlet weak var emailTextField: UITextField!
+    
     @IBOutlet weak var passwordTextField: UITextField!
+    
     @IBOutlet weak var loginButton: UIButton!
-
     
     var messagseController: ChatController?
+    
+    var isLogin = false
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.isNavigationBarHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if isLogin {
+            isLogin = false
+        } else {
+            self.navigationController?.isNavigationBarHidden = false
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.lightGray
-        forgotPasswordButton.setTitle("Forgot Password".localized, for: .normal)
+        configurationForView()
+    }
+    
+    private func configurationForView() {
+        forgotPasswordButton.setTitle("Forgot password".localized, for: .normal)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
+        loginButton.layer.cornerRadius = 24
+        loginButton.clipsToBounds = true
     }
     
-    @IBAction func changeSegmentStatment(_ sender: Any) {
-        
-        switch registerLoginSegment.selectedSegmentIndex {
-        case 0:
-            loginButton.setTitle("Register".localized, for: .normal)
-            firstNmeLastNAmeView.isHidden = false
-            forgotPasswordButton.isHidden = true
-        case 1:
-            loginButton.setTitle("Login".localized.localized, for: .normal)
-            firstNmeLastNAmeView.isHidden = true
-            forgotPasswordButton.isHidden = false
-        default:
-            break
-        }
-    }
     @IBAction func registerButtonClick(_ sender: Any) {
-        registerNewUser()
+        let registerVC =  self.storyboard?.instantiateViewController(withIdentifier: "RegisterController") as! RegisterController
+        self.navigationController?.pushViewController(registerVC, animated: true)
     }
     
     @IBAction func resretPasswordButtonClick(_ sender: Any) {
         let resetVC = self.storyboard?.instantiateViewController(withIdentifier: "ResetPasswordController") as! ResetPasswordController
-        self.present(resetVC, animated: true, completion: nil)
-    }
-    override var prefersStatusBarHidden: Bool {
-        return true
+        self.navigationController?.pushViewController(resetVC, animated: true)
     }
     
     @objc func hideKeyboard(sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
     
-    func registerNewUser() {
-         registerLoginSegment.selectedSegmentIndex == 1 ? loginUser() : registerUser()
+    @IBAction func loginUserButtonClick(_ sender: Any) {
+        self.loginUser()
     }
     
-    func loginUser() {
-        guard let email = emailTextField.text, let password = passwordTextField.text else { return  }
+    private func loginUser() {
         
+        guard let email = emailTextField.text, let password = passwordTextField.text else { return  }
         Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
             
             if err != nil {
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                 return
             }
-            self.messagseController?.isUserLogin()
-            self.dismiss(animated: true, completion: nil)
+            self.isLogin = true
+        
+            let chatVC =  self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController
+            self.navigationController?.pushViewController(chatVC, animated: true)
         }
-    }
-    
-    func registerUser() {
-        
-        guard let email = emailTextField.text, let password = passwordTextField.text, let name = firstNameTextField.text, let lastName = lastNameTextField.text else { return  }
-        
-        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
-            
-            if error != nil {
-                
-                self.present(self.allertControllerWithOneButton(message: error!.localizedDescription), animated: true, completion: nil)
-                return
-            }
-            
-            guard let uid = user?.uid else { return }
-            
-            let value = ["name": name, "email": email,"lastName" : lastName, "aboutMe": "", "uid": uid]
-            self.registerUserIntoFirebase(uid: uid, value: value as [String : AnyObject] )
-        }
-    }
-    
-    private func registerUserIntoFirebase(uid: String, value: [String: AnyObject]) {
-        
-        let ref = Database.database().reference()
-        let user = ref.child("users").child(uid)
-        user.updateChildValues(value, withCompletionBlock: { (err, dref) in
-            if err != nil {
-                return
-            }
-            let user = User(dic: value)
-            self.messagseController?.setupNAvigationBar(user: user)
-            self.dismiss(animated: true, completion: nil)
-        })
     }
 }

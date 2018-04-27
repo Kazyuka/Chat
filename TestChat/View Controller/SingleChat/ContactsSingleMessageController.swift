@@ -165,7 +165,7 @@ extension ContactsSingleMessageController: UISearchResultsUpdating {
     @available(iOS 8.0, *)
     public func updateSearchResults(for searchController: UISearchController) {
         
-        if let searchText = searchController.searchBar.text{
+        if let searchText = searchController.searchBar.text {
             filteruserByFirstName(searchText: searchText)
             tableView.reloadData()
         }

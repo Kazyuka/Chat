@@ -27,6 +27,5 @@ class TabController: UITabBarController {
                 }
             })
         }
-
     }
 }

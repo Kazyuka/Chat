@@ -11,22 +11,31 @@ import FirebaseAuth
 
 class ResetPasswordController: UIViewController {
 
-    @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var resetPasswordButton: UIButton!
+    
     @IBOutlet weak var emailField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.white
-        resetPasswordButton.setTitle("ResetPassword", for: .normal)
-        backButton.setTitle("Back", for: .normal)
-    }
-    
-    @IBAction func backButtonClick(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
+        
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationItem.title = "Forgot Password".localized
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        resetPasswordButton.layer.cornerRadius = 24
+        resetPasswordButton.clipsToBounds = true
+        resetPasswordButton.setTitle("SEND PASSWORD", for: .normal)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(tapGesture)
     }
     
     @IBAction func resetButtonClick(_ sender: Any) {
-        
         
         Auth.auth().sendPasswordReset(withEmail: emailField.text!) { (error) in
             if error != nil {
@@ -34,6 +43,12 @@ class ResetPasswordController: UIViewController {
             }
             self.present(self.allertControllerWithOneButton(message: "Для замены пароля проверьте электорнную почту!"), animated: true, completion: nil)
         }
+    }
+    @objc func hideKeyboard(sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
+    override var prefersStatusBarHidden: Bool {
+        return true
     }
 }
 

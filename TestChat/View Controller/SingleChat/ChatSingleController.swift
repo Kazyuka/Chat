@@ -66,16 +66,29 @@ class ChatSingleController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
-         super.viewDidLoad()
-         self.setupInputTextField()
-         self.setUpNotification()
-         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
-         self.collectionView?.backgroundColor = UIColor.white
-         collectionView?.alwaysBounceVertical = true
-         //addImageForNavigationButton()
-         observerMessages()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setUpNotification()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.setupInputTextField()
+        
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
+        self.collectionView?.backgroundColor = UIColor.white
+        collectionView?.alwaysBounceVertical = true
+        addImageForNavigationButton()
+        observerMessages()
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func hideKeyboard(sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
@@ -181,6 +194,7 @@ class ChatSingleController: UIViewController {
             let refToIdUser = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
             refToIdUser.updateChildValues(["toId": toIdUser])
         }
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
@@ -267,6 +281,7 @@ class ChatSingleController: UIViewController {
         self.massegeImputContainerView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
        
         textFieldInputTex.delegate = self
+        textFieldInputTex.becomeFirstResponder()
         self.massegeImputContainerView.addSubview(textFieldInputTex)
         self.massegeImputContainerView.addSubview(sendButton)
         self.massegeImputContainerView.addSubview(sendImageButton)

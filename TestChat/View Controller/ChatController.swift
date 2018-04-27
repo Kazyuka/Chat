@@ -81,7 +81,7 @@ class ChatController: UIViewController {
             Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let user = User(dic: dictionary)
-                    self.setupNAvigationBar(user: user)
+                    //self.setupNAvigationBar(user: user)
                 }
             })
         }
@@ -101,8 +101,7 @@ class ChatController: UIViewController {
         }
         
         let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-        loginVC.messagseController = self
-        self.present(loginVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(loginVC, animated: true)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -165,7 +164,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension ChatController {
+/*extension ChatController {
     
     func setupNAvigationBar(user: User) {
         self.navigationItem.title = user.name
@@ -211,7 +210,7 @@ extension ChatController {
         self.navigationItem.titleView = titleView
         titleView.isUserInteractionEnabled = true
     }
-}
+}*/
 
 extension ChatController: GroupCreateControllerDelegate {
     

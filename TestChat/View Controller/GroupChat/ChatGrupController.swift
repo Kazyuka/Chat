@@ -88,17 +88,17 @@ class ChatGrupController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        super.viewDidLoad()
         self.setupInputTextField()
-        self.setUpNotification()
-        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
+        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         self.collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
         addImageForNavigationButton()
         self.observerMessages()
-       
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setUpNotification()
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -127,8 +127,8 @@ class ChatGrupController: UIViewController {
             refLastMessage.updateChildValues(["last-message": text])
         }
         
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         view.endEditing(true)
-        heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
         textFieldInputTex.text = "Your message"
         textFieldInputTex.textColor = UIColor.lightGray
@@ -265,6 +265,7 @@ class ChatGrupController: UIViewController {
         self.massegeImputContainerView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
         textFieldInputTex.delegate = self
+        textFieldInputTex.becomeFirstResponder()
         self.massegeImputContainerView.addSubview(textFieldInputTex)
         self.massegeImputContainerView.addSubview(sendButton)
         self.massegeImputContainerView.addSubview(sendImageButton)

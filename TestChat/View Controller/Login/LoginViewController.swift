@@ -5,6 +5,8 @@ import FirebaseDatabase
 
 class LoginViewController: UIViewController {
     
+    @IBOutlet weak var buttomConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var singUpButton: UIButton!
     
     @IBOutlet weak var forgotPasswordButton: UIButton!
@@ -26,10 +28,14 @@ class LoginViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden = true
+        setUpNotification()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+       
+        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name:NSNotification.Name.UIKeyboardWillHide, object: nil)
         
         if isLogin {
             isLogin = false
@@ -40,7 +46,18 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        checkTypeDevice()
         configurationForView()
+        emailTextField.changeColor(textForPlaceHoder: "Email")
+        passwordTextField.changeColor(textForPlaceHoder: "Password")
+    }
+    
+    private func checkTypeDevice() {
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
+            buttomConstraint.constant = 300
+        } else {
+            buttomConstraint.constant = 78
+        }
     }
     
     private func configurationForView() {
@@ -68,6 +85,43 @@ class LoginViewController: UIViewController {
     
     @IBAction func loginUserButtonClick(_ sender: Any) {
         self.loginUser()
+    }
+    
+    func setUpNotification()  {
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(LoginViewController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let userInfo = notification.userInfo!
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
+        checkTypeDevice()
+        let options = UIViewAnimationOptions(rawValue: curve << 16)
+        
+        UIView.animate(withDuration: duration, delay: 0, options: options,
+                       animations: {
+                        self.view.layoutIfNeeded()
+                        
+        },
+                       completion: nil
+        )
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        let userInfo = notification.userInfo!
+        let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
+        let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
+        buttomConstraint.constant = keyboardHeight
+        let options = UIViewAnimationOptions(rawValue: curve << 16)
+        UIView.animate(withDuration: duration, delay: 0, options: options,
+                       animations: {
+                        self.view.layoutIfNeeded()
+                        
+        },
+                       completion: nil
+        )
     }
     
     private func loginUser() {

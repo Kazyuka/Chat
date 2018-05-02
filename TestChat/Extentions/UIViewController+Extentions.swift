@@ -41,3 +41,21 @@ extension UISearchBar {
         }
     }
 }
+
+
+extension UIImageView {
+    
+    func setRounded() {
+        self.layer.cornerRadius = (self.frame.width / 2) 
+        self.layer.masksToBounds = true
+    }
+}
+
+
+extension UITextField {
+   
+    func changeColor(textForPlaceHoder: String) {
+        self.attributedPlaceholder = NSAttributedString(string: textForPlaceHoder,
+                                                               attributes: [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.4274509804, green: 0.4274509804, blue: 0.4274509804, alpha: 1)])
+    }
+}

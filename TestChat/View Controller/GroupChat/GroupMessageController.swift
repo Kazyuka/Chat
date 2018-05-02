@@ -44,7 +44,7 @@ class GroupMessageController: ContactsSingleMessageController {
         
         for us in differenceUser {
             
-            Database.database().reference().child("users").child(us).observeSingleEvent(of: .value, with: { (snap) in
+        Database.database().reference().child("users").child(us).observeSingleEvent(of: .value, with: { (snap) in
                 
                  if let user = snap.value as? [String: AnyObject] {
                 
@@ -59,9 +59,7 @@ class GroupMessageController: ContactsSingleMessageController {
                     self.tableView.reloadData()
                 })
             })
-            
         }
-        
     }
     override func getAllUser() {
         

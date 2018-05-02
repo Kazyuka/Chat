@@ -14,6 +14,8 @@ class RegisterController: UIViewController {
     
     @IBOutlet weak var registerButton: UIButton!
     
+    @IBOutlet weak var scrollView: UIScrollView!
+    
     @IBOutlet weak var firstNameTextField: UITextField!
     
     @IBOutlet weak var lastNameTextField: UITextField!
@@ -42,7 +44,7 @@ class RegisterController: UIViewController {
         self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
-        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationItem.title = "SignUp"
         self.navigationController?.navigationBar.titleTextAttributes = [
@@ -52,6 +54,12 @@ class RegisterController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
+        firstNameTextField.changeColor(textForPlaceHoder: "First name")
+        lastNameTextField.changeColor(textForPlaceHoder: "Last name")
+        emailTextField.changeColor(textForPlaceHoder: "Email")
+        passwordTextField.changeColor(textForPlaceHoder: "Password")
+        passwordAgTextField.changeColor(textForPlaceHoder: "Password again")
+        checkTypeDevice()
     }
     
     @objc func hideKeyboard(sender: UITapGestureRecognizer) {
@@ -60,6 +68,19 @@ class RegisterController: UIViewController {
    
     @IBAction func registerButtoClick(_ sender: Any) {
         comparePassword()
+    }
+    
+    private func checkTypeDevice() {
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
+            self.scrollView.isScrollEnabled = false
+            self.scrollView.contentInset =  UIEdgeInsetsMake(0, 0, 0, 0)
+            self.scrollView.scrollIndicatorInsets =  UIEdgeInsetsMake(0, 0, 0, 0)
+        } else {
+            self.scrollView.isScrollEnabled = true
+            self.scrollView.contentInset =  UIEdgeInsetsMake(0, 0, 200, 0)
+          
+            self.scrollView.scrollIndicatorInsets =  UIEdgeInsetsMake(0, 0, 200, 0)
+        }
     }
     
     private func comparePassword () {

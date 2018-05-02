@@ -29,7 +29,6 @@ class UserCell: UITableViewCell {
     }
     
     func configureView() {
-        
         if let im = user.imageProfile {
             let url = NSURL.init(string: im)
             self.userPhoto.sd_setImage(with: url! as URL)
@@ -40,6 +39,11 @@ class UserCell: UITableViewCell {
         }
         
         self.userName.text = user.name + " " + user.lastName!
+    }
+    
+    override func layoutSubviews() {
+        super .layoutSubviews()
+        userPhoto.setRounded()
     }
 }
 

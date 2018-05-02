@@ -3,8 +3,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 class ContactsSingleMessageController: UIViewController {
-    
-    @IBOutlet weak var searchBar: UISearchBar!
+
     var userArray = [User]()
     var filteredUsers = [User]()
     var messagesViewComtroller: ChatController?
@@ -16,36 +15,12 @@ class ContactsSingleMessageController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let placeholderWidth = 200
     var offset = UIOffset()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-       /* self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()*/
-       /* searchBar.searchBarStyle = .minimal
-     
-        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            
-            if let glassIconView = textfield.leftView as? UIImageView {
-                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = .white
-            }
-            textfield.textColor = UIColor.white
-            textfield.placeholder = "Search"
-            let textFieldInsideSearchBarLabel = textfield.value(forKey: "placeholderLabel") as? UILabel
-            textFieldInsideSearchBarLabel?.textColor = UIColor.white
-            
-            if let backgroundview = textfield.subviews.first {
-                backgroundview.backgroundColor = #colorLiteral(red: 0.5137254902, green: 0.8196078431, blue: 0.9490196078, alpha: 1)
-                backgroundview.layer.cornerRadius = 18
-                backgroundview.clipsToBounds = true
-            }
-        }*/
+        tableView.separatorColor = UIColor.clear
+        setupNavigationBar()
         userArray.removeAll()
         getAllUser()
     }
@@ -60,6 +35,38 @@ class ContactsSingleMessageController: UIViewController {
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
+    }
+    
+    func setupNavigationBar() {
+        
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.backgroundColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+        searchController.searchBar.tintColor = .white
+        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.textAlignment = .center
+            if let glassIconView = textfield.leftView as? UIImageView {
+                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+                glassIconView.tintColor = .white
+            }
+            textfield.textColor = UIColor.white
+            textfield.placeholder = "Search"
+            let textFieldInsideSearchBarLabel = textfield.value(forKey: "placeholderLabel") as? UILabel
+            textFieldInsideSearchBarLabel?.textColor = UIColor.white
+            
+            if let backgroundview = textfield.subviews.first {
+                backgroundview.backgroundColor = #colorLiteral(red: 0.2901960784, green: 0.8235294118, blue: 0.9568627451, alpha: 1)
+                backgroundview.layer.cornerRadius = 18
+                backgroundview.clipsToBounds = true
+            }
+        }
+        offset = UIOffset(horizontal:( searchController.searchBar.frame.width / 2) - 60 , vertical: 0)
+        searchController.searchBar.setPositionAdjustment(offset, for: .search)
     }
     
     func getAllUser() {
@@ -121,7 +128,7 @@ extension ContactsSingleMessageController: UITableViewDataSource, UITableViewDel
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return 72
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -203,4 +210,14 @@ extension ContactsSingleMessageController: UISearchBarDelegate {
         searchBar.showsCancelButton = true
     }
     
+    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        let noOffset = UIOffset(horizontal: 0, vertical: 0)
+        searchBar.setPositionAdjustment(noOffset, for: .search)
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setPositionAdjustment(offset, for: .search)
+        return true
+    }
 }

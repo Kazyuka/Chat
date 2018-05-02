@@ -18,22 +18,18 @@ class ChatController: UIViewController {
     var filteredGroupChat = [RoomChat]()
     
     var searchController:UISearchController!
+    var offset = UIOffset()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarPosition.any, barMetrics: UIBarMetrics.default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        
+        setupNavigationBar()
         observeUserMessages()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut", style: .plain, target: self, action: #selector(Logout))
+       
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "L".localized, style: .plain, target: self, action: #selector(logout))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group".localized, style: .plain, target: self, action: #selector(createGroupButtonClick))
         searchController = UISearchController(searchResultsController: nil);
         searchController.searchBar.tintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
@@ -46,6 +42,37 @@ class ChatController: UIViewController {
         isUserLogin()
     }
     
+    func setupNavigationBar() {
+        
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .any, barMetrics: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.backgroundColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+        searchController.searchBar.tintColor = .white
+        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.textAlignment = .center
+            if let glassIconView = textfield.leftView as? UIImageView {
+                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+                glassIconView.tintColor = .white
+            }
+            textfield.textColor = UIColor.white
+            textfield.placeholder = "Search"
+            let textFieldInsideSearchBarLabel = textfield.value(forKey: "placeholderLabel") as? UILabel
+            textFieldInsideSearchBarLabel?.textColor = UIColor.white
+            
+            if let backgroundview = textfield.subviews.first {
+                backgroundview.backgroundColor = #colorLiteral(red: 0.2901960784, green: 0.8235294118, blue: 0.9568627451, alpha: 1)
+                backgroundview.layer.cornerRadius = 18
+                backgroundview.clipsToBounds = true
+            }
+        }
+        offset = UIOffset(horizontal:( searchController.searchBar.frame.width / 2) - 60 , vertical: 0)
+        searchController.searchBar.setPositionAdjustment(offset, for: .search)
+    }
     func observeUserMessages() {
         self.grouChat.removeAll()
         
@@ -76,7 +103,7 @@ class ChatController: UIViewController {
         let uid = Auth.auth().currentUser?.uid
         
         if uid == nil {
-            self.Logout()
+            self.logout()
         } else {
             Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
@@ -93,7 +120,7 @@ class ChatController: UIViewController {
         self.present(createGroupVC, animated: true, completion: nil)
     }
     
-    @objc func Logout() {
+    @objc func logout() {
         do {
             try   Auth.auth().signOut()
         } catch let err {
@@ -265,6 +292,17 @@ extension ChatController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
+    }
+    
+    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        let noOffset = UIOffset(horizontal: 0, vertical: 0)
+        searchBar.setPositionAdjustment(noOffset, for: .search)
+        return true
+    }
+    
+    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
+        searchBar.setPositionAdjustment(offset, for: .search)
+        return true
     }
 }
 

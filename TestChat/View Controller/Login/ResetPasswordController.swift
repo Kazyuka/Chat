@@ -17,6 +17,11 @@ class ResetPasswordController: UIViewController {
     
     @IBOutlet weak var emailField: UITextField!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.backItem?.title = ""
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         checkTypeDevice()
@@ -35,7 +40,7 @@ class ResetPasswordController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
-        emailField.changeColor(textForPlaceHoder: "Email")
+        emailField.changeColor(textForPlaceHoder: "Email", size: 16.0)
     }
     
     private func checkTypeDevice() {

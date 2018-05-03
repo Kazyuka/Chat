@@ -31,6 +31,7 @@ class ContactsSingleMessageController: UIViewController {
         searchController = UISearchController(searchResultsController: nil);
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.placeholder = "Search".localized
+        self.textByCenterSearchController(searchController: searchController, space: 50)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
@@ -60,7 +61,7 @@ class ContactsSingleMessageController: UIViewController {
             textFieldInsideSearchBarLabel?.textColor = UIColor.white
             
             if let backgroundview = textfield.subviews.first {
-                backgroundview.backgroundColor = #colorLiteral(red: 0.2901960784, green: 0.8235294118, blue: 0.9568627451, alpha: 1)
+                backgroundview.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
                 backgroundview.layer.cornerRadius = 18
                 backgroundview.clipsToBounds = true
             }
@@ -208,16 +209,5 @@ extension ContactsSingleMessageController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
-    }
-    
-    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        let noOffset = UIOffset(horizontal: 0, vertical: 0)
-        searchBar.setPositionAdjustment(noOffset, for: .search)
-        return true
-    }
-    
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.setPositionAdjustment(offset, for: .search)
-        return true
     }
 }

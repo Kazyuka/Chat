@@ -22,23 +22,25 @@ class ChatController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationItem.title = "Chats".localized
         setupNavigationBar()
         observeUserMessages()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "L".localized, style: .plain, target: self, action: #selector(logout))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Group".localized, style: .plain, target: self, action: #selector(createGroupButtonClick))
+        tableView.separatorColor = UIColor.clear
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut".localized, style: .plain, target: self, action: #selector(logout))
         searchController = UISearchController(searchResultsController: nil);
-        searchController.searchBar.tintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         tableView.tableHeaderView = searchController.searchBar
-        searchController.searchBar.placeholder = "Search".localized
+        self.tableView.backgroundColor = UIColor.white
+        searchController.searchBar.placeholder = "Search"
+        self.textByCenterSearchController(searchController: searchController, space: 50)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
+        self.tableView.separatorColor = UIColor.clear
         isUserLogin()
     }
     
@@ -65,7 +67,7 @@ class ChatController: UIViewController {
             textFieldInsideSearchBarLabel?.textColor = UIColor.white
             
             if let backgroundview = textfield.subviews.first {
-                backgroundview.backgroundColor = #colorLiteral(red: 0.2901960784, green: 0.8235294118, blue: 0.9568627451, alpha: 1)
+                backgroundview.backgroundColor = #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1)
                 backgroundview.layer.cornerRadius = 18
                 backgroundview.clipsToBounds = true
             }
@@ -88,7 +90,9 @@ class ChatController: UIViewController {
                 if let val = g.usersChat {
                     if val.contains(uid) {
                         self.grouChat.append(g)
-                    } 
+                    } else if g.ovnerGroup == uid {
+                         self.grouChat.append(g)
+                    }
                 }
             }
             
@@ -114,10 +118,10 @@ class ChatController: UIViewController {
         }
     }
 
-    @objc func createGroupButtonClick () {
+    @IBAction func createGroupButtonAction(_ sender: Any) {
         let createGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "GroupCreateController") as! GroupCreateController
         createGroupVC.delegate = self
-        self.present(createGroupVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(createGroupVC, animated: true)
     }
     
     @objc func logout() {
@@ -188,6 +192,10 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 goToGroupChat(roomChat: chatRoom)
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 76
     }
 }
 
@@ -292,17 +300,6 @@ extension ChatController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
-    }
-    
-    public func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        let noOffset = UIOffset(horizontal: 0, vertical: 0)
-        searchBar.setPositionAdjustment(noOffset, for: .search)
-        return true
-    }
-    
-    func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        searchBar.setPositionAdjustment(offset, for: .search)
-        return true
     }
 }
 

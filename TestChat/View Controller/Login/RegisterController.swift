@@ -28,6 +28,7 @@ class RegisterController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.backItem?.title = ""
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -42,7 +43,6 @@ class RegisterController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.topItem?.title = ""
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white]
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
@@ -54,11 +54,11 @@ class RegisterController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
-        firstNameTextField.changeColor(textForPlaceHoder: "First name")
-        lastNameTextField.changeColor(textForPlaceHoder: "Last name")
-        emailTextField.changeColor(textForPlaceHoder: "Email")
-        passwordTextField.changeColor(textForPlaceHoder: "Password")
-        passwordAgTextField.changeColor(textForPlaceHoder: "Password again")
+        firstNameTextField.changeColor(textForPlaceHoder: "First name", size: 16.0)
+        lastNameTextField.changeColor(textForPlaceHoder: "Last name", size: 16.0)
+        emailTextField.changeColor(textForPlaceHoder: "Email", size: 16.0)
+        passwordTextField.changeColor(textForPlaceHoder: "Password", size: 16.0)
+        passwordAgTextField.changeColor(textForPlaceHoder: "Password again", size: 16.0)
         checkTypeDevice()
     }
     

@@ -35,10 +35,29 @@ class EditProfileController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
+        
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationItem.title = "Edit Profile"
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.backItem?.title = ""
+        userImageView.setRounded()
+    }
+    
     @objc func hideKeyboard(sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
     @IBAction func aboutMeButtonClick(_ sender: Any) {
         
         let abouttProfileVC =  self.storyboard?.instantiateViewController(withIdentifier: "AboutUserController") as! AboutUserController
@@ -131,6 +150,7 @@ extension EditProfileController: UIImagePickerControllerDelegate, UINavigationCo
                     
                     let ref = Database.database().reference().child("users").child(self.user!.uid!)
                     ref.updateChildValues(value)
+                    self.navigationController?.popViewController(animated: true)
                 }
             })
         }

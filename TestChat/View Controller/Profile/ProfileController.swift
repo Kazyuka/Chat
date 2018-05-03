@@ -20,6 +20,9 @@ class ProfileController: UIViewController {
     @IBOutlet weak var editBaButtonItem: UIBarButtonItem!
     var user: User?
     
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.title = "Profile".localized
@@ -27,6 +30,20 @@ class ProfileController: UIViewController {
         aboutMeLabel.text = "About Me".localized
         getDataWithFireBase()
         configureView()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationItem.title = "Profile"
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        self.view.backgroundColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
     }
     
 
@@ -39,7 +56,7 @@ class ProfileController: UIViewController {
     }
     
     func configureView() {
-        
+        userImage.setRounded()
         if let im = user?.imageProfile {
             let url = NSURL.init(string: im)
             self.userImage.sd_setImage(with: url! as URL)

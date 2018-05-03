@@ -95,10 +95,18 @@ class ChatGrupController: UIViewController {
         collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
         addImageForNavigationButton()
         self.observerMessages()
+        
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.setUpNotification()
+        self.navigationController?.navigationBar.backItem?.title = " "
+        self.navigationController?.navigationBar.topItem?.title = " "
     }
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
@@ -202,44 +210,42 @@ class ChatGrupController: UIViewController {
     
     let sendButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named:"send"), for: .normal)
+        button.setImage(UIImage(named:"sendMess"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.contentMode = .scaleAspectFill
-        button.layer.cornerRadius = 20
-        button.layer.masksToBounds = true
         button.contentMode = .scaleAspectFill
         button.isEnabled = false
         button.addTarget(self, action: #selector(sendMassegaButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     lazy var sendImageButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(named:"stack"), for: .normal)
+        button.setImage(UIImage(named:"plus"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.contentMode = .scaleAspectFill
-        button.layer.cornerRadius = 20
+        button.frame = CGRect(x: 160, y: 100, width: 30, height: 30)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.layer.masksToBounds = true
-        button.contentMode = .scaleAspectFill
         button.addTarget(self, action: #selector(sendImageMassegaButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     let massegeImputContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = #colorLiteral(red: 0.9764705882, green: 0.9764705882, blue: 0.9764705882, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     let textFieldInputTex: UITextView = {
         let text = UITextView()
-        text.layer.cornerRadius = 20
+        text.layer.cornerRadius = 18
         text.layer.masksToBounds = true
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
-        text.text = "Your message"
+        text.text = "Message"
+        text.textAlignment = .right
         text.textColor = UIColor.lightGray
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
@@ -247,7 +253,7 @@ class ChatGrupController: UIViewController {
     
     let separateView:  UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.black
+        view.backgroundColor = #colorLiteral(red: 0.9764705882, green: 0.9764705882, blue: 0.9764705882, alpha: 1)
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -271,19 +277,19 @@ class ChatGrupController: UIViewController {
         self.massegeImputContainerView.addSubview(sendImageButton)
         
         self.sendButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
-        self.sendButton.rightAnchor.constraint(equalTo: self.massegeImputContainerView.rightAnchor, constant: -4).isActive = true
-        self.sendButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        self.sendButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        self.sendButton.rightAnchor.constraint(equalTo: self.massegeImputContainerView.rightAnchor, constant: -17).isActive = true
+        self.sendButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        self.sendButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
+        self.sendImageButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        self.sendImageButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         self.sendImageButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
-        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -4).isActive = true
-        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 1).isActive = true
-        self.sendImageButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
-        self.sendImageButton.widthAnchor.constraint(equalToConstant: 35).isActive = true
+        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -20).isActive = true
+        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 15).isActive = true
         
         self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -2).isActive = true
-        self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 2).isActive = true
-        self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -10).isActive = true
+        self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 1).isActive = true
+        self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -13).isActive = true
         
         self.separateView.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor).isActive = true
         self.separateView.widthAnchor.constraint(equalTo: self.massegeImputContainerView.widthAnchor).isActive = true
@@ -377,14 +383,14 @@ extension ChatGrupController: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text == "Your message" {
+        if textView.text == "Message" {
             textView.text = nil
             textView.textColor = UIColor.black
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text == "" {
-            textView.text = "Your message"
+            textView.text = "Message"
             textView.textColor = UIColor.lightGray
         }
     }

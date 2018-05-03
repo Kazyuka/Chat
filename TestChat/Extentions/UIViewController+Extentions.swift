@@ -51,11 +51,42 @@ extension UIImageView {
     }
 }
 
+extension UIImage {
+    class func colorForNavBar(color: UIColor) -> UIImage {
+        let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
+        UIGraphicsBeginImageContext(rect.size)
+        let context = UIGraphicsGetCurrentContext()
+        context!.setFillColor(color.cgColor)
+        context!.fill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+}
+
 
 extension UITextField {
    
-    func changeColor(textForPlaceHoder: String) {
+    func changeColor(textForPlaceHoder: String , size: CGFloat) {
         self.attributedPlaceholder = NSAttributedString(string: textForPlaceHoder,
-                                                               attributes: [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.4274509804, green: 0.4274509804, blue: 0.4274509804, alpha: 1)])
+                                                        attributes: [NSAttributedStringKey.foregroundColor: #colorLiteral(red: 0.4274509804, green: 0.4274509804, blue: 0.4274509804, alpha: 1), NSAttributedStringKey.font : UIFont(name: "Arial", size: size)!])
+    }
+}
+
+
+extension UIViewController {
+    
+    func textByCenterSearchController(searchController: UISearchController, space: CGFloat) {
+        
+        var offset = UIOffset()
+        
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone)
+        {
+            offset = UIOffset(horizontal: (searchController.searchBar.frame.width  / 2) - space , vertical: 0)
+            searchController.searchBar.setPositionAdjustment(offset, for: .search)
+        } else {
+            offset = UIOffset(horizontal: (searchController.searchBar.frame.width  / 2) + 160 , vertical: 0)
+            searchController.searchBar.setPositionAdjustment(offset, for: .search)
+        }
     }
 }

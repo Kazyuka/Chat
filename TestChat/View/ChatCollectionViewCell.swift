@@ -38,15 +38,15 @@ class ChatCollectionViewCell: UICollectionViewCell {
         }
         
         if uid == message?.fromIdUser {
-            bubleView.backgroundColor = UIColor.lightGray
-            messageText.textColor = UIColor.black
+            bubleView.backgroundColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+            messageText.textColor = UIColor.white
             
             bubleLeftAchor?.isActive = false
             bubleRightAchor?.isActive = true
             imageUser.isHidden = true
         } else {
-            bubleView.backgroundColor = UIColor.blue
-            messageText.textColor = UIColor.white
+            bubleView.backgroundColor = #colorLiteral(red: 0.9019607843, green: 0.9058823529, blue: 0.9215686275, alpha: 1)
+            messageText.textColor = UIColor.black
             bubleLeftAchor?.isActive = true
             bubleRightAchor?.isActive = false
             

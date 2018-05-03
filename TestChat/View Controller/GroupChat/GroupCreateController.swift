@@ -19,7 +19,7 @@ protocol GroupCreateControllerDelegate: class {
 class GroupCreateController: UIViewController {
     
     @IBOutlet weak var photoImageGroup: UIImageView!
-    @IBOutlet weak var nameTextView: UITextView!
+    @IBOutlet weak var nameGroupTextField: UITextField!
     
     var imageGroup = UIImage()
     let imagePicker = UIImagePickerController()
@@ -32,8 +32,21 @@ class GroupCreateController: UIViewController {
         gesture.numberOfTapsRequired = 1
         photoImageGroup.isUserInteractionEnabled = true
         photoImageGroup.addGestureRecognizer(gesture)
-        photoImageGroup.image = UIImage.init(named: "user.png")
-
+        photoImageGroup.image = UIImage.init(named: "groupImage.png")
+        photoImageGroup.setRounded()
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        nameGroupTextField.changeColor(textForPlaceHoder: "Some Name", size: 17.0)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationItem.title = "Create Group"
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -81,17 +94,13 @@ class GroupCreateController: UIViewController {
         }
     }
     
-    @IBAction func backButtonClick(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
+
     @IBAction func saveGroup(_ sender: Any) {
         
-        if  nameTextView.text == "" {
+        if  nameGroupTextField.text == "" {
             self.present(self.allertControllerWithOneButton(message: "Заполните название"), animated: true, completion: nil)
         } else {
-            
-            let group = Group(nameGroup: self.nameTextView.text, image: self.photoImageGroup.image!, typeGroup: false)
+            let group = Group(nameGroup: self.nameGroupTextField.text, image: self.photoImageGroup.image!, typeGroup: false)
             
             self.dismiss(animated: true, completion: {
                 self.delegate?.goToDetailCreateGroup(g: group)

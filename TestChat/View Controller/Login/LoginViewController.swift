@@ -28,6 +28,7 @@ class LoginViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         self.navigationController?.isNavigationBarHidden = true
+        self.navigationController?.navigationBar.backItem?.title = ""
         setUpNotification()
     }
     
@@ -48,8 +49,8 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         checkTypeDevice()
         configurationForView()
-        emailTextField.changeColor(textForPlaceHoder: "Email")
-        passwordTextField.changeColor(textForPlaceHoder: "Password")
+        emailTextField.changeColor(textForPlaceHoder: "Email", size: 16.0)
+        passwordTextField.changeColor(textForPlaceHoder: "Password", size: 16.0)
     }
     
     private func checkTypeDevice() {

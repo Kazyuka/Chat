@@ -16,6 +16,12 @@ import AVKit
 protocol GroupCreateControllerDelegate: class {
     func goToDetailCreateGroup(g: Group)
 }
+
+protocol DissmisGroupCreteDelegate: class {
+    func dissmissGroupCreteView(room: RoomChat)
+}
+
+
 class GroupCreateController: UIViewController {
     
     @IBOutlet weak var photoImageGroup: UIImageView!
@@ -24,6 +30,7 @@ class GroupCreateController: UIViewController {
     var imageGroup = UIImage()
     let imagePicker = UIImagePickerController()
     weak var delegate: GroupCreateControllerDelegate?
+    weak var delegateGoToGroupChat: GoToGroupCahatRoomDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,10 +108,10 @@ class GroupCreateController: UIViewController {
             self.present(self.allertControllerWithOneButton(message: "Заполните название"), animated: true, completion: nil)
         } else {
             let group = Group(nameGroup: self.nameGroupTextField.text, image: self.photoImageGroup.image!, typeGroup: false)
-            
-            self.dismiss(animated: true, completion: {
-                self.delegate?.goToDetailCreateGroup(g: group)
-            })
+            let detailGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailGroupController") as! DetailGroupController
+            detailGroupVC.group = group
+            detailGroupVC.delegateForDissmiss = self
+            self.navigationController?.pushViewController(detailGroupVC, animated: true)
         }
     }
 }
@@ -135,4 +142,13 @@ struct Group {
     var nameGroup: String?
     var image: UIImage?
     var typeGroup: Bool?
+}
+
+extension GroupCreateController: DissmisGroupCreteDelegate {
+    func dissmissGroupCreteView(room: RoomChat ) {
+        self.navigationController?.popViewController(animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+            self.delegateGoToGroupChat?.goToGroupChat(room: room)
+        })
+    }
 }

@@ -21,6 +21,9 @@ protocol GoToGroupCahatRoomDelegate: class {
 
 class DetailGroupController: UIViewController {
 
+    @IBOutlet weak var backButton: UIBarButtonItem!
+    @IBOutlet weak var currentUserNameLabel: UILabel!
+    @IBOutlet weak var currentUserImageView: UIImageView!
     @IBOutlet weak var addUserButton: UIButton!
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var chatButton: UIBarButtonItem!
@@ -32,18 +35,25 @@ class DetailGroupController: UIViewController {
     var group: Group?
     var keyChat: String?
     
-    weak var delegate: GoToGroupCahatRoomDelegate?
+    weak var delegateForDissmiss: DissmisGroupCreteDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        chatButton.title = "Chat".localized
-        editButton.title = "Edit".localized
-        addUserButton.setTitle("Add user", for: .normal)
+      
         configureView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        tableView.separatorColor = .clear
+        self.navigationItem.leftBarButtonItem = backButton
     }
     
     func configureView() {
@@ -51,21 +61,30 @@ class DetailGroupController: UIViewController {
         progressHUD = ProgressHUD(text: "Please Wait")
         progressHUD?.hide()
         self.view.addSubview(progressHUD!)
-        
+        self.navigationItem.title = group?.nameGroup
         nameGroup.text = group?.nameGroup
         if let im = group?.image {
             self.imageGroupView.image = im
         }
-        User.getCurrentUserFromFirebase { (us) in
-            self.userArray.append(us)
-            self.tableView.reloadData()
+        User.getCurrentUserFromFirebase { (user) in
+            if let im = user.imageProfile {
+                let url = NSURL.init(string: im)
+                self.currentUserImageView.sd_setImage(with: url! as URL)
+            } else {
+                
+                self.currentUserImageView.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userImage.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+                }, completed: nil)
+            }
+            
+            self.currentUserNameLabel.text = user.name + " " + user.lastName!
         }
+        self.currentUserImageView.setRounded()
     }
     @IBAction func addUsersButtonClick(_ sender: Any) {
         let groupMC = self.storyboard?.instantiateViewController(withIdentifier: "GroupMessageController") as! GroupMessageController
         groupMC.delegate = self
         groupMC.currentLisrUser = userArray
-        self.present(groupMC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(groupMC, animated: true)
     }
     
     func getUIDForGroup() -> String {
@@ -78,15 +97,10 @@ class DetailGroupController: UIViewController {
         return keyChat
     }
     
-    @IBAction func chatButtonClick(_ sender: Any) {
-        
-        if userArray.count != 0 {
-            registerGroupIntoFirebase()
-        } else {
-            self.present(self.allertControllerWithOneButton(message: "Add users for Group"), animated: true, completion: nil)
-        }
+    @IBAction func backButtonAction(_ sender: Any) {
+        registerGroupIntoFirebase()
     }
-    
+
     private func registerGroupIntoFirebase() {
         progressHUD?.show()
         let imageName = NSUUID().uuidString
@@ -94,32 +108,30 @@ class DetailGroupController: UIViewController {
         let uploadData = UIImagePNGRepresentation(self.group!.image!)
         keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
         
-            storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
-                if err != nil{
-                    self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
-                    return
-                }
-                if let meta = metadata?.downloadURL()?.absoluteString {
-                    let uid = Auth.auth().currentUser?.uid
-                    let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": self.keyChat!] as [String : Any]
-                    let ref = Database.database().reference().child("chat-romm").child(self.keyChat!)
+        storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
+            if err != nil{
+                self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
+                return
+            }
+            if let meta = metadata?.downloadURL()?.absoluteString {
+                let uid = Auth.auth().currentUser?.uid
+                let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": self.keyChat!] as [String : Any]
+                let ref = Database.database().reference().child("chat-romm").child(self.keyChat!)
+                ref.updateChildValues(value, withCompletionBlock: { (err, snap) in
                     
-                
-                    ref.updateChildValues(value, withCompletionBlock: { (err, snap) in
-                        
-                        if err != nil {
-                            return
-                        }
-            
-                        for us in self.userArray {
-                           let ref2 = Database.database().reference().child("chat-romm").child(self.keyChat!).child("users").childByAutoId()
-                           ref2.updateChildValues(["toId" :us.uid])
-                        }
-                    })
+                    if err != nil {
+                        return
+                    }
+                    
+                    for us in self.userArray {
+                        let ref2 = Database.database().reference().child("chat-romm").child(self.keyChat!).child("users").childByAutoId()
+                        ref2.updateChildValues(["toId" :us.uid])
+                    }
                     
                     self.getChatRommFromFirebaseDatabase()
-                }
-            })
+                })
+            }
+        })
     }
     
     
@@ -132,9 +144,8 @@ class DetailGroupController: UIViewController {
             }
             let g = RoomChat.init(dic: dic)
             self.progressHUD?.hide()
-            self.dismiss(animated: true, completion: {
-                self.delegate?.goToGroupChat(room: g)
-            })
+            self.delegateForDissmiss?.dissmissGroupCreteView(room: g)
+            self.navigationController?.popViewController(animated: true)
         }
     }
 
@@ -142,7 +153,7 @@ class DetailGroupController: UIViewController {
         let editGroup =  self.storyboard?.instantiateViewController(withIdentifier: "EditDetailGroupController") as! EditDetailGroupController
         editGroup.group = group
         editGroup.delegate = self
-        self.present(editGroup, animated: true, completion: nil)
+        self.navigationController?.pushViewController(editGroup, animated: true)
     }
     override var prefersStatusBarHidden: Bool {
         return true
@@ -161,13 +172,11 @@ extension DetailGroupController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return 51
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        
         let us = userArray[indexPath.row].uid
-        
         if us != Auth.auth().currentUser?.uid {
             
             if editingStyle == .delete {
@@ -189,8 +198,8 @@ extension DetailGroupController: EditDetailGroupControllerDelegate {
 }
 
 extension DetailGroupController: DetailGroupControllerDelegate {
+    
     func getCheckUser(users: [User]) {
-        
         users.forEach { (us) in
             self.userArray.append(us)
             self.tableView.reloadData()

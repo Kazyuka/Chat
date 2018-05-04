@@ -25,12 +25,16 @@ class SettingsController: UIViewController {
     
     private var email: String!
     
+    
+    var selectedLenguage: String?
+    
     var currentLenguage: String = " "
     
     private var chatController: ChatController {
         let messageVc = self.storyboard?.instantiateViewController(withIdentifier: "ChatController") as! ChatController
         return messageVc
     }
+    
     
     var langueages = ["English", "Русский"]
     
@@ -40,9 +44,25 @@ class SettingsController: UIViewController {
     @IBAction func englishButtonClick(_ sender: Any) {
         Language.language = Language.english
     }
+    
+    override var prefersStatusBarHidden: Bool {
+        return true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+     
+        navigationItem.title = "Settings"
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Settings".localized
         logOutButton.setTitle("LogOut".localized, for: .normal)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
@@ -50,19 +70,31 @@ class SettingsController: UIViewController {
         
         currentLenguage = Bundle.main.preferredLocalizations.first!
         
-        savebutt.title! = "save".localized
         User.getCurrentUserFromFirebase { (user) in
             self.emailTextView.text = user.email
             self.email = self.emailTextView.text!
         }
+        checkLenguage()
+        
+        logOutButton.layer.cornerRadius = 24
+        logOutButton.clipsToBounds = true
+        logOutButton.setTitle("LOGOUT", for: .normal)
     }
 
     @objc func hideKeyboard(sender: UITapGestureRecognizer) {
         view.endEditing(true)
     }
     
-    @IBAction func logOutButtonClick(_ sender: Any) {
+    func checkLenguage() {
         
+        if Locale.preferredLanguages[0] == "en" {
+            selectedLenguage = "en"
+        } else {
+            selectedLenguage = "ua"
+        }
+    }
+    
+    @IBAction func logOutButtonClick(_ sender: Any) {
         do {
             try   Auth.auth().signOut()
         } catch let err {
@@ -71,7 +103,7 @@ class SettingsController: UIViewController {
         
         let loginVC = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         loginVC.messagseController = chatController
-        self.present(loginVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(loginVC, animated: true)
     }
     @IBAction func saveButtonClick(_ sender: Any) {
        

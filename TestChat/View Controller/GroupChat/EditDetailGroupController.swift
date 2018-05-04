@@ -18,7 +18,6 @@ import FirebaseStorage
 class EditDetailGroupController: UIViewController {
 
     @IBOutlet weak var saveButton: UIBarButtonItem!
-    @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var imageGroup: UIImageView!
     weak var delegate: EditDetailGroupControllerDelegate?
@@ -28,8 +27,7 @@ class EditDetailGroupController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        saveButton.title = "save".localized
-        backButton.title = "Back".localized
+        groupNameTextField.changeColor(textForPlaceHoder: "Some Name", size: 16.0)
         imagePicker.delegate = self
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImage(_:)))
         gesture.numberOfTapsRequired = 1
@@ -37,19 +35,28 @@ class EditDetailGroupController: UIViewController {
         imageGroup.addGestureRecognizer(gesture)
         groupNameTextField.text = group?.nameGroup
         imageGroup.image = group?.image
-    }
-  
-    @IBAction func backButtonClick(_ sender: Any) {
-        
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        imageGroup.setRounded()
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationItem.title = "Edit Group"
+    }
+  
     @IBAction func saveButtonClick(_ sender: Any) {
-        
         let group = Group.init(nameGroup: groupNameTextField.text, image: imageGroup.image, typeGroup: false)
-        self.dismiss(animated: true) {
-            self.delegate?.getEditedGroup(group: group)
-        }
+       
+        self.navigationController?.popViewController(animated: true)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+             self.delegate?.getEditedGroup(group: group)
+        })
     }
     
     @objc func tapToImage(_ sender: UITapGestureRecognizer) {

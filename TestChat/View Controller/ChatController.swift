@@ -30,7 +30,6 @@ class ChatController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.separatorColor = UIColor.clear
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "LogOut".localized, style: .plain, target: self, action: #selector(logout))
         searchController = UISearchController(searchResultsController: nil);
         tableView.tableHeaderView = searchController.searchBar
         self.tableView.backgroundColor = UIColor.white
@@ -121,6 +120,7 @@ class ChatController: UIViewController {
     @IBAction func createGroupButtonAction(_ sender: Any) {
         let createGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "GroupCreateController") as! GroupCreateController
         createGroupVC.delegate = self
+        createGroupVC.delegateGoToGroupChat = self
         self.navigationController?.pushViewController(createGroupVC, animated: true)
     }
     
@@ -199,61 +199,18 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-/*extension ChatController {
-    
-    func setupNAvigationBar(user: User) {
-        self.navigationItem.title = user.name
-        let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
-        titleView.widthAnchor.constraint(equalToConstant: 100).isActive = true
-        titleView.heightAnchor.constraint(equalToConstant: 40.0).isActive = true
-        
-        let conteinerView = UIView()
-        conteinerView.translatesAutoresizingMaskIntoConstraints = false
-        titleView.addSubview(conteinerView)
-        
-        let profileImage = UIImageView()
-        profileImage.translatesAutoresizingMaskIntoConstraints = false
-        profileImage.contentMode = .scaleAspectFill
-        
-        profileImage.layer.cornerRadius = 20
-        profileImage.layer.masksToBounds = true
-        profileImage.backgroundColor = UIColor.black
-        profileImage.contentMode = .scaleAspectFill
-        
-        // let data = NSData.init(contentsOf: URL.init(string: user.imageProfile!)!)
-        // profileImage.image = UIImage(data: data as! Data)
-        conteinerView.addSubview(profileImage)
-        
-        profileImage.leftAnchor.constraint(equalTo: titleView.leftAnchor).isActive = true
-        profileImage.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
-        profileImage.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        profileImage.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        
-        let nameLabel = UILabel()
-        conteinerView.addSubview(nameLabel)
-        nameLabel.text = user.name
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        nameLabel.leftAnchor.constraint(equalTo: profileImage.rightAnchor, constant: 8).isActive = true
-        nameLabel.centerYAnchor.constraint(equalTo: profileImage.centerYAnchor).isActive = true
-        nameLabel.rightAnchor.constraint(equalTo: titleView.rightAnchor).isActive = true
-        nameLabel.heightAnchor.constraint(equalTo: profileImage.heightAnchor).isActive = true
-        
-        conteinerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
-        conteinerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
-        
-        self.navigationItem.titleView = titleView
-        titleView.isUserInteractionEnabled = true
+extension ChatController: DissmisGroupCreteDelegate {
+    func dissmissGroupCreteView(room: RoomChat) {
+        self.goToGroupChat(roomChat: room)
     }
-}*/
+}
 
 extension ChatController: GroupCreateControllerDelegate {
     
     func goToDetailCreateGroup(g: Group) {
         let detailGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailGroupController") as! DetailGroupController
         detailGroupVC.group = g
-        detailGroupVC.delegate = self
-        self.present(detailGroupVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(detailGroupVC, animated: true)
     }
 }
 

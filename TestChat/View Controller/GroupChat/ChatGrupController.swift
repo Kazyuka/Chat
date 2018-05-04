@@ -40,7 +40,7 @@ class ChatGrupController: UIViewController {
     @objc func pressToGropImageRightButton() {
        let  detailGroupControllerFromRoomChat =  self.storyboard?.instantiateViewController(withIdentifier: "DetailGroupControllerFromRoomChat") as! DetailGroupControllerFromRoomChat
         detailGroupControllerFromRoomChat.unicKyeForChatRoom = unicKyeForChatRoom
-       self.present(detailGroupControllerFromRoomChat, animated: true, completion: nil)
+       self.navigationController?.pushViewController(detailGroupControllerFromRoomChat, animated: true)
     }
     var databaseRef: DatabaseReference! {
         return Database.database().reference()

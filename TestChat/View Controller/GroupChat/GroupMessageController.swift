@@ -16,22 +16,18 @@ class GroupMessageController: ContactsSingleMessageController {
     var filterArrayUser = [User]()
     var idUsers = [String]()
     
-    
     weak var delegate: DetailGroupControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print(currentLisrUser)
-        
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationController?.navigationBar.topItem?.title = ""
     }
     @IBAction func saveButtonClick(_ sender: Any) {
-        self.dismiss(animated: true) {
-            self.delegate?.getCheckUser(users: self.checkUsers)
-        }
+        self.delegate?.getCheckUser(users: self.checkUsers)
+        self.navigationController?.popViewController(animated: true)
     }
     
-
     func filterUser() {
         
         var currentUserId = [String]()
@@ -41,13 +37,12 @@ class GroupMessageController: ContactsSingleMessageController {
         }
         
         let differenceUser = idUsers.difference(from: currentUserId)
-        
         for us in differenceUser {
             
-        Database.database().reference().child("users").child(us).observeSingleEvent(of: .value, with: { (snap) in
+            Database.database().reference().child("users").child(us).observeSingleEvent(of: .value, with: { (snap) in
                 
-                 if let user = snap.value as? [String: AnyObject] {
-                
+                if let user = snap.value as? [String: AnyObject] {
+                    
                     let u = user as! Dictionary <String, AnyObject>
                     let user = User.init(dic: u)
                     
@@ -63,38 +58,34 @@ class GroupMessageController: ContactsSingleMessageController {
     }
     override func getAllUser() {
         
-       
-            Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
-                
-                if let users = snapshot.value as? [String: AnyObject] {
+        Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
+            
+            if let users = snapshot.value as? [String: AnyObject] {
+                for d in users {
                     
-                    for d in users {
-                        
-                        let user = User.init(dic: d.value as! Dictionary<String, AnyObject>)
-                        if Auth.auth().currentUser?.uid != user.uid {
-                            self.userArray.append(user)
-                            self.idUsers.append(user.uid!)
-                        }
-                    }
-                    
-                    if self.currentLisrUser.count > 1 {
-                        self.filterUser()
-                    } else {
-                        self.tableView.reloadData()
+                    let user = User.init(dic: d.value as! Dictionary<String, AnyObject>)
+                    if Auth.auth().currentUser?.uid != user.uid {
+                        self.userArray.append(user)
+                        self.idUsers.append(user.uid!)
                     }
                 }
+                
+                if self.currentLisrUser.count > 1 {
+                    self.filterUser()
+                } else {
+                    self.tableView.reloadData()
+                }
             }
+        }
     }
     
-    @IBAction func backButtonClick(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let user = self.userArray[indexPath.row]
         
         if let cell = tableView.cellForRow(at: indexPath as IndexPath) {
+            cell.tintColor = #colorLiteral(red: 1, green: 0, blue: 0.5294117647, alpha: 1)
             if cell.accessoryType == .checkmark {
                 cell.accessoryType = .none
                 let indexToDelete = checkUsers.index(of: user)

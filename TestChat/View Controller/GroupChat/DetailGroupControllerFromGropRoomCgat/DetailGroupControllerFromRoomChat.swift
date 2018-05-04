@@ -12,14 +12,15 @@ import FirebaseAuth
 import FirebaseStorage
 
 class DetailGroupControllerFromRoomChat: UIViewController {
-
-    @IBOutlet weak var chatButton: UIBarButtonItem!
+    
+    @IBOutlet weak var addButtonUser: UIButton!
+    @IBOutlet weak var currentUserImageView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var imageGroup: UIImageView!
     @IBOutlet weak var nameGroup: UILabel!
-    @IBOutlet weak var addUserButton: UIButton!
+    @IBOutlet weak var currentUserNameLabel: UILabel!
+    @IBOutlet weak var editButtonUser: UIBarButtonItem!
     
-    @IBOutlet weak var editButton: UIBarButtonItem!
     var unicKyeForChatRoom: String!
     var roomChat: RoomChat?
     var group: Group?
@@ -27,24 +28,37 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     var progressHUD: ProgressHUD? = nil
     let currentUser = Auth.auth().currentUser?.uid
     
+    @IBOutlet weak var back: UIBarButtonItem!
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        currentUserImageView.setRounded()
+        imageGroup.setRounded()
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        tableView.separatorColor = .clear
+        self.navigationItem.leftBarButtonItem = back
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        chatButton.title = "Chat".localized
-        editButton.title = "Edit".localized
-        addUserButton.setTitle("Add user".localized, for: .normal)
         getGroupFromFirebase()
     }
     
     func getGroupFromFirebase() {
         
         let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!)
-        refChatRom.observe(.value) { (snap) in
+        refChatRom.observeSingleEvent(of: .value, with: { (snap) in
             guard let dic = snap.value as? [String: AnyObject] else {
                 return
             }
             self.roomChat = RoomChat.init(dic: dic)
             self.configureView()
-        }
+        })
     }
     
     @IBAction func editGroupButtonClick(_ sender: Any) {
@@ -52,9 +66,13 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         group = Group(nameGroup: roomChat?.groupName, image: imageGroup.image, typeGroup: roomChat?.isSingle)
         editGroup.group = group
         editGroup.delegate = self
-        self.present(editGroup, animated: true, completion: nil)
+        self.navigationController?.pushViewController(editGroup, animated: true)
     }
+    
     func configureView() {
+        
+        checkOvnerGroup()
+        getCurrentUser()
         
         let url = URL.init(string: (roomChat?.imageGroup)!)
         imageGroup.sd_setImage(with: url! as URL)
@@ -62,10 +80,8 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         progressHUD = ProgressHUD(text: "Please Wait")
         progressHUD?.hide()
         self.view.addSubview(progressHUD!)
-        checkOvnerGroup()
         
         if let usersChat = roomChat {
-            
             if usersChat.usersChat != nil {
                 for user in usersChat.usersChat! {
                     let ref = Database.database().reference().child("users").child(user)
@@ -73,8 +89,10 @@ class DetailGroupControllerFromRoomChat: UIViewController {
                         
                         if let u = snap.value as? [String: AnyObject] {
                             let use = User(dic: u)
-                            self.userArray.append(use)
-                            self.userArray = Array(self.userArray.reversed())
+                            
+                            if use.uid != self.currentUser {
+                                self.userArray.append(use)
+                            }
                         }
                     })
                     
@@ -86,25 +104,43 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         }
     }
     
+    
+    private func getCurrentUser() {
+        
+        User.getCurrentUserFromFirebase { (user) in
+            if let im = user.imageProfile {
+                let url = NSURL.init(string: im)
+                self.currentUserImageView.sd_setImage(with: url! as URL)
+            } else {
+                
+                self.currentUserImageView.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userImage.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+                }, completed: nil)
+            }
+            
+            self.currentUserNameLabel.text = user.name + " " + user.lastName!
+        }
+        self.currentUserImageView.setRounded()
+    }
+    
     private func checkOvnerGroup() {
         if currentUser == roomChat!.ovnerGroup {
-            addUserButton.isHidden = false
-            addUserButton.isEnabled = true
-            editButton.isEnabled = true
-            editButton.tintColor = nil
+            addButtonUser.isHidden = false
+            addButtonUser.isEnabled = true
+            editButtonUser.isEnabled = true
+            editButtonUser.tintColor = nil
         } else {
-            addUserButton.isHidden = true
-            addUserButton.isEnabled = false
-            editButton.isEnabled = false
-            editButton.tintColor = UIColor.clear
+            addButtonUser.isHidden = true
+            addButtonUser.isEnabled = false
+            editButtonUser.isEnabled = false
+            editButtonUser.tintColor = UIColor.clear
         }
     }
     
-    @IBAction func chatButtonClick(_ sender: Any) {
+    @IBAction func backButtonAction(_ sender: Any) {
         if currentUser == roomChat!.ovnerGroup {
             updateGroupIntoFirebase()
         } else {
-            self.dismiss(animated: true, completion: nil)
+            self.navigationController?.popViewController(animated: true)
         }
     }
     @IBAction func addUserButtonClick(_ sender: Any) {
@@ -112,7 +148,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         let groupMC = self.storyboard?.instantiateViewController(withIdentifier: "GroupMessageController") as! GroupMessageController
         groupMC.delegate = self
         groupMC.currentLisrUser = userArray
-        self.present(groupMC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(groupMC, animated: true)
     }
     override var prefersStatusBarHidden: Bool {
         return true
@@ -126,7 +162,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         let uploadData = UIImagePNGRepresentation(self.imageGroup.image!)
         let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom).child("users")
         ref.removeValue()
-       
+        
         for us in self.userArray {
             let ch = ref.childByAutoId()
             let v = ["toId" : us.userId]
@@ -139,6 +175,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
                 return
             }
             if let meta = metadata?.downloadURL()?.absoluteString {
+                
                 let value = ["nameGroup": self.nameGroup?.text, "groupImageUrl" : meta] as [String : Any]
                 let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom)
                 ref.updateChildValues(value, withCompletionBlock: { (err, data) in
@@ -153,9 +190,11 @@ class DetailGroupControllerFromRoomChat: UIViewController {
                         ref2.updateChildValues(["toId" :us.uid])
                     }
                     
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                        self.progressHUD?.hide()
+                        self.navigationController?.popViewController(animated: true)
+                    })
                 })
-                self.progressHUD?.hide()
-                self.dismiss(animated: true, completion: nil)
             }
         })
     }
@@ -173,7 +212,7 @@ extension DetailGroupControllerFromRoomChat: UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75
+        return 51
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -195,7 +234,6 @@ extension DetailGroupControllerFromRoomChat: UITableViewDataSource, UITableViewD
 
 extension DetailGroupControllerFromRoomChat: DetailGroupControllerDelegate {
     func getCheckUser(users: [User]) {
-        
         users.forEach { (us) in
             self.userArray.append(us)
             self.tableView.reloadData()

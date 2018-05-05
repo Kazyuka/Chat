@@ -41,7 +41,7 @@ class MessageCell: UserCell {
                         self.userPhoto.sd_setImage(with: url! as URL)
                     } else {
                         
-                        self.userPhoto.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+                        self.userPhoto.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userImage.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
                         }, completed: nil)
                     }
                     self.userName.text = user.name

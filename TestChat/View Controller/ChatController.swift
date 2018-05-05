@@ -111,7 +111,6 @@ class ChatController: UIViewController {
             Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
                 if let dictionary = snapshot.value as? [String: AnyObject] {
                     let user = User(dic: dictionary)
-                    //self.setupNAvigationBar(user: user)
                 }
             })
         }
@@ -195,7 +194,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 76
+        return 74
     }
 }
 

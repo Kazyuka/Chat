@@ -46,7 +46,7 @@ class RegisterController: UIViewController {
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationItem.title = "SignUp"
+        self.navigationItem.title = "SignUp".localized
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         registerButton.layer.cornerRadius = 24
@@ -54,11 +54,11 @@ class RegisterController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
-        firstNameTextField.changeColor(textForPlaceHoder: "First name", size: 16.0)
-        lastNameTextField.changeColor(textForPlaceHoder: "Last name", size: 16.0)
-        emailTextField.changeColor(textForPlaceHoder: "Email", size: 16.0)
-        passwordTextField.changeColor(textForPlaceHoder: "Password", size: 16.0)
-        passwordAgTextField.changeColor(textForPlaceHoder: "Password again", size: 16.0)
+        firstNameTextField.changeColor(textForPlaceHoder: "First name".localized, size: 16.0)
+        lastNameTextField.changeColor(textForPlaceHoder: "Last name".localized, size: 16.0)
+        emailTextField.changeColor(textForPlaceHoder: "Email".localized, size: 16.0)
+        passwordTextField.changeColor(textForPlaceHoder: "Password".localized, size: 16.0)
+        passwordAgTextField.changeColor(textForPlaceHoder: "Password again".localized, size: 16.0)
         checkTypeDevice()
     }
     

@@ -21,6 +21,7 @@ protocol GoToGroupCahatRoomDelegate: class {
 
 class DetailGroupController: UIViewController {
 
+    @IBOutlet weak var addUserLabel: UILabel!
     @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var currentUserNameLabel: UILabel!
     @IBOutlet weak var currentUserImageView: UIImageView!
@@ -54,6 +55,7 @@ class DetailGroupController: UIViewController {
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         tableView.separatorColor = .clear
         self.navigationItem.leftBarButtonItem = backButton
+        addUserLabel.text = "Add User".localized
     }
     
     func configureView() {

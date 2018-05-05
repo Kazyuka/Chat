@@ -23,26 +23,38 @@ class SettingsController: UIViewController {
     
     @IBOutlet weak var repeatPassword: UITextField!
     
+    @IBOutlet weak var englishFlagImage: UIImageView!
+    
+    @IBOutlet weak var russianFlagImage: UIImageView!
+    
+    @IBOutlet weak var mainSettingsLabel: UILabel!
+    
+    @IBOutlet weak var passwordLabel: UILabel!
+    
+    @IBOutlet weak var emailLabel: UILabel!
+    
+    @IBOutlet weak var languageLabel: UILabel!
+    
+    @IBOutlet weak var passwordAgainLabel: UILabel!
+    
     private var email: String!
     
-    
-    var selectedLenguage: String?
-    
-    var currentLenguage: String = " "
+    private var language = Languages()
     
     private var chatController: ChatController {
         let messageVc = self.storyboard?.instantiateViewController(withIdentifier: "ChatController") as! ChatController
         return messageVc
     }
     
-    
-    var langueages = ["English", "Русский"]
-    
     @IBAction func russiaButtonClick(_ sender: Any) {
-         Language.language = Language.russia
+        russianFlagImage.isHidden = false
+        englishFlagImage.isHidden = true
+        language.selectedLanguage = "ru"
     }
     @IBAction func englishButtonClick(_ sender: Any) {
-        Language.language = Language.english
+        russianFlagImage.isHidden = true
+        englishFlagImage.isHidden = false
+        language.selectedLanguage = "en"
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -51,14 +63,23 @@ class SettingsController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-     
-        navigationItem.title = "Settings"
+        englishFlagImage.isHidden = true
+        russianFlagImage.isHidden = true
+        navigationItem.title = "Settings".localized
+        mainSettingsLabel.text = "Main Settings".localized
+        emailLabel.text = "Email".localized
+        passwordLabel.text = "Password".localized
+        passwordAgainLabel.text = "Password again".localized
+        languageLabel.text = "Language".localized
+        logOutButton.setTitle("LOGOUT".localized, for: .normal)
+        
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
+        checkLenguage()
     }
     
     override func viewDidLoad() {
@@ -68,14 +89,11 @@ class SettingsController: UIViewController {
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
         
-        currentLenguage = Bundle.main.preferredLocalizations.first!
-        
         User.getCurrentUserFromFirebase { (user) in
             self.emailTextView.text = user.email
             self.email = self.emailTextView.text!
         }
-        checkLenguage()
-        
+    
         logOutButton.layer.cornerRadius = 24
         logOutButton.clipsToBounds = true
         logOutButton.setTitle("LOGOUT", for: .normal)
@@ -85,14 +103,17 @@ class SettingsController: UIViewController {
         view.endEditing(true)
     }
     
-    func checkLenguage() {
+   private func checkLenguage() {
         
-        if Locale.preferredLanguages[0] == "en" {
-            selectedLenguage = "en"
+        language.checkLanguage()
+    
+        if language.currentLanguage == "en" {
+            englishFlagImage.isHidden = false
         } else {
-            selectedLenguage = "ua"
+            russianFlagImage.isHidden = false
         }
     }
+    
     
     @IBAction func logOutButtonClick(_ sender: Any) {
         do {
@@ -106,7 +127,9 @@ class SettingsController: UIViewController {
         self.navigationController?.pushViewController(loginVC, animated: true)
     }
     @IBAction func saveButtonClick(_ sender: Any) {
-       
+        
+        language.changeLanguage()
+        
         if self.email != emailTextView.text {
             changeEmail()
             changePassword()
@@ -114,6 +137,7 @@ class SettingsController: UIViewController {
             changePassword()
         }
     }
+  
     
     private func changeEmail() {
         
@@ -148,6 +172,42 @@ class SettingsController: UIViewController {
                     return
                 }
             })
+        }
+    }
+}
+
+struct Languages {
+    
+    var currentLanguage: String {
+        return language
+    }
+    
+    private var language: String = Locale.preferredLanguages[0]
+    
+    var selectedLanguage: String {
+        
+        get {
+            return language
+        }
+        set(newLanguage) {
+            language = newLanguage
+        }
+    }
+    
+     mutating func checkLanguage() {
+        if Locale.preferredLanguages[0] == "en" {
+            language = "en"
+        } else {
+            language = "ru"
+        }
+    }
+    
+    nonmutating func changeLanguage() {
+        
+        if currentLanguage == "en" {
+            Language.language = Language.english
+        } else {
+            Language.language = Language.russia
         }
     }
 }

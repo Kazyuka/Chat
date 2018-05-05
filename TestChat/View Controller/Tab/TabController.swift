@@ -11,9 +11,18 @@ import UIKit
 class TabController: UITabBarController {
 
     @IBInspectable var defaultIndex: Int = 0
+    
+    static var isLanguageChange = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedIndex = defaultIndex
+        
+        if TabController.isLanguageChange {
+            selectedIndex = 3
+        } else {
+            selectedIndex = defaultIndex
+        }
+        
         if let items = self.tabBar.items {
             items.forEach({ (item) in
                 if item.tag == 0 {

@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icons8-добавить-группу-пользователей,-мужчины-filled-25.png",
+      "filename" : "add25x25.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-добавить-группу-пользователей,-мужчины-filled-50.png",
+      "filename" : "add50x50.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icons8-добавить-группу-пользователей,-мужчины-filled-75.png",
+      "filename" : "add75x75.png",
       "scale" : "3x"
     }
   ],

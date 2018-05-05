@@ -17,6 +17,9 @@ import FirebaseStorage
 
 class EditProfileController: UIViewController {
 
+    @IBOutlet weak var aboutMeLabel: UILabel!
+    @IBOutlet weak var firstNameLabel: UILabel!
+    @IBOutlet weak var lastNameLabel: UILabel!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
@@ -27,7 +30,11 @@ class EditProfileController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        saveButton.title = "Save".localized
+        
+        firstNameLabel.text = "First name".localized
+        lastNameLabel.text = "Last name".localized
+        aboutMeLabel.text = "About Me".localized
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.sendImageMassegaButtonTapped(_:)))
         userImageView.addGestureRecognizer(tap)
         userImageView.isUserInteractionEnabled = true
@@ -40,7 +47,7 @@ class EditProfileController: UIViewController {
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationItem.title = "Edit Profile"
+        self.navigationItem.title = "Edit Profile".localized
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
     }
@@ -85,7 +92,7 @@ class EditProfileController: UIViewController {
             self.userImageView.sd_setImage(with: url! as URL)
         } else {
             
-            self.userImageView.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+            self.userImageView.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userImage.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
             }, completed: nil)
         }
     }

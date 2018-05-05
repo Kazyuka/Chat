@@ -20,6 +20,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     @IBOutlet weak var nameGroup: UILabel!
     @IBOutlet weak var currentUserNameLabel: UILabel!
     @IBOutlet weak var editButtonUser: UIBarButtonItem!
+    @IBOutlet weak var addUserLabel: UILabel!
     
     var unicKyeForChatRoom: String!
     var roomChat: RoomChat?
@@ -42,6 +43,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         tableView.separatorColor = .clear
         self.navigationItem.leftBarButtonItem = back
+        addUserLabel.text = "Add User".localized
     }
     
     override func viewDidLoad() {

@@ -25,7 +25,7 @@ class ProfileController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationItem.title = "Profile".localized
+      
         aboutMeLabel.text = "About Me".localized
         getDataWithFireBase()
         configureView()
@@ -33,7 +33,7 @@ class ProfileController: UIViewController {
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationItem.title = "Profile"
+        self.navigationItem.title = "Profile".localized
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.navigationBar.setValue(true, forKey: "hidesShadow")
@@ -60,7 +60,7 @@ class ProfileController: UIViewController {
             self.userImage.sd_setImage(with: url! as URL)
         } else {
             
-            self.userImage.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "user.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+            self.userImage.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userImage.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
             }, completed: nil)
         }
         userNameLabel.text = user?.name

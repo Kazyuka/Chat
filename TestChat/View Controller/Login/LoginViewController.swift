@@ -17,6 +17,8 @@ class LoginViewController: UIViewController {
     
     @IBOutlet weak var loginButton: UIButton!
     
+    @IBOutlet weak var notHaveAccountLabel: UILabel!
+    
     var messagseController: ChatController?
     
     var isLogin = false
@@ -49,8 +51,11 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         checkTypeDevice()
         configurationForView()
-        emailTextField.changeColor(textForPlaceHoder: "Email", size: 16.0)
-        passwordTextField.changeColor(textForPlaceHoder: "Password", size: 16.0)
+        emailTextField.changeColor(textForPlaceHoder: "Email".localized, size: 16.0)
+        passwordTextField.changeColor(textForPlaceHoder: "Password".localized, size: 16.0)
+        loginButton.setTitle("SIGN IN".localized, for: .normal)
+        notHaveAccountLabel.text = "Do not have an account?".localized
+        singUpButton.setTitle("Sing Up!".localized, for: .normal)
     }
     
     private func checkTypeDevice() {

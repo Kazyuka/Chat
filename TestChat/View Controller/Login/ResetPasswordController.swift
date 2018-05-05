@@ -35,12 +35,12 @@ class ResetPasswordController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.white
         resetPasswordButton.layer.cornerRadius = 24
         resetPasswordButton.clipsToBounds = true
-        resetPasswordButton.setTitle("SEND PASSWORD", for: .normal)
+        resetPasswordButton.setTitle("SEND PASSWORD".localized, for: .normal)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
-        emailField.changeColor(textForPlaceHoder: "Email", size: 16.0)
+        emailField.changeColor(textForPlaceHoder: "Email".localized, size: 16.0)
     }
     
     private func checkTypeDevice() {

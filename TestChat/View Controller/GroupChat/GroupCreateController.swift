@@ -26,6 +26,7 @@ class GroupCreateController: UIViewController {
     
     @IBOutlet weak var photoImageGroup: UIImageView!
     @IBOutlet weak var nameGroupTextField: UITextField!
+    @IBOutlet weak var groupNameLabel: UILabel!
     
     var imageGroup = UIImage()
     let imagePicker = UIImagePickerController()
@@ -47,13 +48,14 @@ class GroupCreateController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         nameGroupTextField.changeColor(textForPlaceHoder: "Some Name", size: 17.0)
+        self.navigationItem.title = "Create Group".localized
+        groupNameLabel.text = "Group Name".localized
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.backItem?.title = ""
-        self.navigationItem.title = "Create Group"
     }
     
     override var prefersStatusBarHidden: Bool {

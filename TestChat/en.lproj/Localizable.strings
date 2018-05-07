@@ -19,7 +19,6 @@
 "Contacts" = "Contacts";
 "Password" = "Password";
 "Register" ="Register";
-"Forgot password" = "Forgot password";
 "Last name" ="Last name";
 "First Name" = "First Name";
 "Settings" = "Settings";
@@ -44,3 +43,6 @@
 "Do not have an account?" = "Do not have an account?";
 "Sing Up!" = "Sing Up!";
 "SignUp" = "SignUp";
+"CONTINUE" = "CONTINUE";
+"Forgot Password" = "Forgot Password";
+"Forgot password" = "Forgot password";

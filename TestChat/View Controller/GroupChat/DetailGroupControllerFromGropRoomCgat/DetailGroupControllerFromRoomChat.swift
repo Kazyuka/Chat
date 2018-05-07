@@ -10,6 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
+import NVActivityIndicatorView
 
 class DetailGroupControllerFromRoomChat: UIViewController {
     
@@ -22,11 +23,13 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     @IBOutlet weak var editButtonUser: UIBarButtonItem!
     @IBOutlet weak var addUserLabel: UILabel!
     
+    var activityIndicator: NVActivityIndicatorView?
+    
     var unicKyeForChatRoom: String!
     var roomChat: RoomChat?
     var group: Group?
     var userArray = [User]()
-    var progressHUD: ProgressHUD? = nil
+
     let currentUser = Auth.auth().currentUser?.uid
     
     @IBOutlet weak var back: UIBarButtonItem!
@@ -44,6 +47,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         tableView.separatorColor = .clear
         self.navigationItem.leftBarButtonItem = back
         addUserLabel.text = "Add User".localized
+        
     }
     
     override func viewDidLoad() {
@@ -79,9 +83,9 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         let url = URL.init(string: (roomChat?.imageGroup)!)
         imageGroup.sd_setImage(with: url! as URL)
         nameGroup.text = roomChat?.groupName
-        progressHUD = ProgressHUD(text: "Please Wait")
-        progressHUD?.hide()
-        self.view.addSubview(progressHUD!)
+        self.navigationItem.title = roomChat?.groupName
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
         
         if let usersChat = roomChat {
             if usersChat.usersChat != nil {
@@ -157,7 +161,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     }
     
     private func updateGroupIntoFirebase() {
-        progressHUD?.show()
+         self.activityIndicator?.startAnimating()
         Storage.storage().reference().child("group_images")
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
@@ -193,7 +197,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
                     }
                     
                     DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                        self.progressHUD?.hide()
+                        self.activityIndicator?.stopAnimating()
                         self.navigationController?.popViewController(animated: true)
                     })
                 })
@@ -214,7 +218,7 @@ extension DetailGroupControllerFromRoomChat: UITableViewDataSource, UITableViewD
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 51
+        return 57
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

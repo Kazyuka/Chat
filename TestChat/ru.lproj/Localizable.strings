@@ -19,7 +19,7 @@
 "Contacts" = "Контакты";
 "Password" = "Пароль";
 "Register" = "Регистрация";
-"Forgot password" = "Забыл пароль";
+"Forgot Password" = "Забыли пароль";
 "Last name" ="Фамилия";
 "First Name" = "Имя";
 "Settings" = "Настройки";
@@ -44,3 +44,5 @@
 "Do not have an account?" = "Нет аккаунта?";
 "Sing Up!" = "Регистрация!";
 "SignUp" = "Регистрация";
+"CONTINUE" = "ПРОДОЛЖИТЬ";
+"Forgot password" = "Забыли пароль";

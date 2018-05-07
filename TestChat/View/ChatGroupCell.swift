@@ -22,7 +22,10 @@ class ChatGroupCell: UICollectionViewCell {
         }
     }
     
-    func dataForCell()  {
+    func dataForCell() {
+        
+        bubleLeftAchor?.isActive = false
+        bubleRightAchor?.isActive = false
         messageText.text = messageGroup?.text
         let uid = Auth.auth().currentUser?.uid
         

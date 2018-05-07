@@ -18,9 +18,12 @@ class ChatCollectionViewCell: UICollectionViewCell {
         }
     }
     func dataForCell()  {
+        
+        bubleLeftAchor?.isActive = false
+        bubleRightAchor?.isActive = false
         messageText.text = message?.text
         let uid = Auth.auth().currentUser?.uid
-      
+        
         if message?.videoUrl != nil {
             playButton.isHidden = false
         } else {
@@ -51,14 +54,13 @@ class ChatCollectionViewCell: UICollectionViewCell {
             bubleRightAchor?.isActive = false
             
             if let fromId = message?.fromIdUser {
-               
+                
                 let refUser = Database.database().reference().child("users").child(fromId)
                 refUser.observeSingleEvent(of: .value, with: { (snap) in
                     
                     if let data = snap.value as? [String  : AnyObject] {
                         
                         let user = User.init(dic: data)
-                       
                         if let im = user.imageProfile {
                             let url = NSURL.init(string: im)
                             self.imageUser.sd_setImage(with: url! as URL)
@@ -71,13 +73,6 @@ class ChatCollectionViewCell: UICollectionViewCell {
                     }
                 })
             }
-        }
-
-        if let messageText =  message!.text {
-            let widthTextConst = (messageText.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14))) <= 40 ? 50 : (message?.text?.width(withConstrainedHeight: 2000, font: UIFont.boldSystemFont(ofSize: 14)))! + 20
-            bubleWidthAchor?.constant = widthTextConst
-        } else {
-             bubleWidthAchor?.constant = const
         }
     }
     var bubleWidthAchor: NSLayoutConstraint?
@@ -155,7 +150,6 @@ class ChatCollectionViewCell: UICollectionViewCell {
     @objc func playVideo() {
       
         if let videoUrlString = message?.videoUrl, let url = NSURL.init(string: videoUrlString){
-        
             self.delegate?.playVideo(video: url)
         }
     }

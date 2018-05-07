@@ -10,6 +10,7 @@ import UIKit
 import FirebaseDatabase
 import FirebaseStorage
 import FirebaseAuth
+import NVActivityIndicatorView
 
 @objc protocol DetailGroupControllerDelegate {
     func getCheckUser(users: [User])
@@ -31,44 +32,35 @@ class DetailGroupController: UIViewController {
     @IBOutlet weak var nameGroup: UILabel!
     @IBOutlet weak var imageGroupView: UIImageView!
     @IBOutlet weak var tableView: UITableView!
-    var progressHUD: ProgressHUD? = nil
+    var activityIndicator: NVActivityIndicatorView?
     var userArray = [User]()
     var group: Group?
     var keyChat: String?
+    var currentUser: User?
     
     weak var delegateForDissmiss: DissmisGroupCreteDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      
         configureView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.topItem?.title = ""
-        self.navigationController?.navigationBar.backItem?.title = ""
-        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
-        self.navigationController?.navigationBar.isTranslucent = false
-        self.navigationController?.navigationBar.tintColor = UIColor.white
-        self.navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
-        tableView.separatorColor = .clear
-        self.navigationItem.leftBarButtonItem = backButton
-        addUserLabel.text = "Add User".localized
+        self.navigationItem.title = group?.nameGroup
     }
     
     func configureView() {
         
-        progressHUD = ProgressHUD(text: "Please Wait")
-        progressHUD?.hide()
-        self.view.addSubview(progressHUD!)
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
         self.navigationItem.title = group?.nameGroup
         nameGroup.text = group?.nameGroup
         if let im = group?.image {
             self.imageGroupView.image = im
         }
         User.getCurrentUserFromFirebase { (user) in
+            self.currentUser = user
             if let im = user.imageProfile {
                 let url = NSURL.init(string: im)
                 self.currentUserImageView.sd_setImage(with: url! as URL)
@@ -81,6 +73,21 @@ class DetailGroupController: UIViewController {
             self.currentUserNameLabel.text = user.name + " " + user.lastName!
         }
         self.currentUserImageView.setRounded()
+        configureNavigationBar()
+    }
+    
+    func configureNavigationBar() {
+        
+        self.navigationController?.navigationBar.topItem?.title = ""
+        self.navigationController?.navigationBar.backItem?.title = ""
+        self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
+        self.navigationController?.navigationBar.isTranslucent = false
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        tableView.separatorColor = .clear
+        self.navigationItem.leftBarButtonItem = backButton
+        addUserLabel.text = "Add User".localized
     }
     @IBAction func addUsersButtonClick(_ sender: Any) {
         let groupMC = self.storyboard?.instantiateViewController(withIdentifier: "GroupMessageController") as! GroupMessageController
@@ -104,12 +111,12 @@ class DetailGroupController: UIViewController {
     }
 
     private func registerGroupIntoFirebase() {
-        progressHUD?.show()
+        self.activityIndicator?.startAnimating()
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
         let uploadData = UIImagePNGRepresentation(self.group!.image!)
         keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
-        
+        self.userArray.append(currentUser!)
         storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
             if err != nil{
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
@@ -145,7 +152,7 @@ class DetailGroupController: UIViewController {
                 return
             }
             let g = RoomChat.init(dic: dic)
-            self.progressHUD?.hide()
+            self.activityIndicator?.stopAnimating()
             self.delegateForDissmiss?.dissmissGroupCreteView(room: g)
             self.navigationController?.popViewController(animated: true)
         }
@@ -174,7 +181,7 @@ extension DetailGroupController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 51
+        return 57
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

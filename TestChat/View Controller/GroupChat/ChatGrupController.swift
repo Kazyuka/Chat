@@ -57,7 +57,7 @@ class ChatGrupController: UIViewController {
             let url = NSURL.init(string: im)
             imageUserForNavigationBar.sd_setImage(with: url! as URL)
         } else {
-            imageUserForNavigationBar.image = UIImage.init(named: "user.png")!
+            imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
         }
         self.allUsers = room.usersChat
         self.unicKyeForChatRoom = room.groupUID
@@ -65,6 +65,8 @@ class ChatGrupController: UIViewController {
         button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
         button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
         button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.clipsToBounds = true
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.rightBarButtonItem = barButton
     }
@@ -72,18 +74,20 @@ class ChatGrupController: UIViewController {
     
     func observerMessages() {
         arrayMessages.removeAll()
-        let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
-        refChatRom.observe(.childAdded) { (snap) in
-            
-            guard let dic = snap.value as? [String: AnyObject] else {
-                return
+        if let keyUnick = unicKyeForChatRoom {
+            let refChatRom = Database.database().reference().child("chat-romm").child(keyUnick).child("messages")
+            refChatRom.observe(.childAdded) { (snap) in
+                
+                guard let dic = snap.value as? [String: AnyObject] else {
+                    return
+                }
+                let g = GroupMessage.init(dic: dic)
+                self.arrayMessages.append(g)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+                    self.collectionView?.reloadData()
+                })
             }
-            let g = GroupMessage.init(dic: dic)
-            self.arrayMessages.append(g)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                self.collectionView?.reloadData()
-            })
         }
     }
     override func viewDidLoad() {
@@ -93,14 +97,18 @@ class ChatGrupController: UIViewController {
         self.collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        addImageForNavigationButton()
-        self.observerMessages()
-        
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        
+        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
+            if isConnect {
+                self.addImageForNavigationButton()
+                self.observerMessages()
+            }
+        }
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -119,22 +127,25 @@ class ChatGrupController: UIViewController {
 
     @objc func sendMassegaButtonTapped() {
         
-        let ref = databaseRef.child("chat-romm").child(unicKyeForChatRoom!).child("messages").childByAutoId()
-        let fromId = Auth.auth().currentUser!.uid
-        let time = Int(NSDate().timeIntervalSince1970)
-        let text = textFieldInputTex.text!
         
-        let value = ["text": text,"fromId" : fromId, "time": time] as [String : Any]
-        ref.updateChildValues(value) { (error, ref) in
+        if let unicKye = unicKyeForChatRoom {
+            let ref = databaseRef.child("chat-romm").child(unicKye).child("messages").childByAutoId()
+            let fromId = Auth.auth().currentUser!.uid
+            let time = Int(NSDate().timeIntervalSince1970)
+            let text = textFieldInputTex.text!
             
-            if error != nil {
-                return
+            let value = ["text": text,"fromId" : fromId, "time": time] as [String : Any]
+            ref.updateChildValues(value) { (error, ref) in
+                
+                if error != nil {
+                    return
+                }
+                
+                let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+                refLastMessage.updateChildValues(["last-message": text])
             }
-            
-            let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
-            refLastMessage.updateChildValues(["last-message": text])
         }
-        
+    
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         view.endEditing(true)
         sendButton.isEnabled = false
@@ -223,7 +234,7 @@ class ChatGrupController: UIViewController {
         button.setImage(UIImage(named:"plus"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.contentMode = .scaleAspectFill
-        button.frame = CGRect(x: 160, y: 100, width: 30, height: 30)
+        button.frame = CGRect(x: 160, y: 100, width: 28, height: 28)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(sendImageMassegaButtonTapped), for: .touchUpInside)
@@ -244,7 +255,7 @@ class ChatGrupController: UIViewController {
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
-        text.text = "Message"
+        text.text = "Your message"
         text.textAlignment = .right
         text.textColor = UIColor.lightGray
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -281,14 +292,14 @@ class ChatGrupController: UIViewController {
         self.sendButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         self.sendButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
-        self.sendImageButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        self.sendImageButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        self.sendImageButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        self.sendImageButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         self.sendImageButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
-        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -20).isActive = true
-        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 15).isActive = true
+        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -15).isActive = true
+        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 17).isActive = true
         
-        self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -2).isActive = true
-        self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 1).isActive = true
+        self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -4).isActive = true
+        self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 0.5).isActive = true
         self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -13).isActive = true
         
         self.separateView.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor).isActive = true
@@ -383,14 +394,14 @@ extension ChatGrupController: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text == "Message" {
+        if textView.text == "Your message" {
             textView.text = nil
             textView.textColor = UIColor.black
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text == "" {
-            textView.text = "Message"
+            textView.text = "Your message"
             textView.textColor = UIColor.lightGray
         }
     }
@@ -535,29 +546,34 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
     
     private func savePhotoFileInFirebase(url: String) {
         
-        let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
-        let fromId = Auth.auth().currentUser!.uid
-        let time = Int(NSDate().timeIntervalSince1970)
-        
-        let value = ["imageUrl": url,"fromId" : fromId, "time": time] as [String : Any]
-        ref.updateChildValues(value) { (error, ref) in
+        if let uicKey = self.unicKyeForChatRoom {
+            let ref = self.databaseRef.child("chat-romm").child(uicKey).child("messages").childByAutoId()
+            let fromId = Auth.auth().currentUser!.uid
+            let time = Int(NSDate().timeIntervalSince1970)
             
-            if error != nil {
-                return
+            let value = ["imageUrl": url,"fromId" : fromId, "time": time] as [String : Any]
+            ref.updateChildValues(value) { (error, ref) in
+                
+                if error != nil {
+                    return
+                }
             }
         }
     }
     private func saveVideoFileInFirebase(url: String, urlPhoto: String) {
         
-        let ref = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
-        let fromId = Auth.auth().currentUser!.uid
-        let time = Int(NSDate().timeIntervalSince1970)
-        
-        let value = ["imageUrl": urlPhoto,"fromId" : fromId, "time": time,  "videoUrl": url] as [String : Any]
-        ref.updateChildValues(value) { (error, ref) in
+        if let uicKey = self.unicKyeForChatRoom {
             
-            if error != nil {
-                return
+            let ref = self.databaseRef.child("chat-romm").child(uicKey).child("messages").childByAutoId()
+            let fromId = Auth.auth().currentUser!.uid
+            let time = Int(NSDate().timeIntervalSince1970)
+            
+            let value = ["imageUrl": urlPhoto,"fromId" : fromId, "time": time,  "videoUrl": url] as [String : Any]
+            ref.updateChildValues(value) { (error, ref) in
+                
+                if error != nil {
+                    return
+                }
             }
         }
     }

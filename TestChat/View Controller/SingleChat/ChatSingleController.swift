@@ -32,17 +32,23 @@ class ChatSingleController: UIViewController {
     }
     
     func addImageForNavigationButton() {
+        
         if let im = user?.imageProfile {
             let data = NSData.init(contentsOf: URL.init(string: im)!)
-            imageUserForNavigationBar = UIImage(data: data! as Data)!
+            if data != nil {
+                imageUserForNavigationBar = UIImage(data: data as! Data)!
+            }
+            
         } else {
-            imageUserForNavigationBar = UIImage.init(named: "user.png")!
+            imageUserForNavigationBar = UIImage.init(named: "userImage.png")!
         }
         
         let button: UIButton = UIButton(type: UIButtonType.custom)
         button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
         button.addTarget(self, action: #selector(pressToUserImageRightButton), for: UIControlEvents.touchUpInside)
         button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        button.clipsToBounds = true
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.rightBarButtonItem = barButton
         self.arrayMessages.removeAll()
@@ -50,7 +56,6 @@ class ChatSingleController: UIViewController {
     
     func observerMessages() {
       
-        arrayMessages.removeAll()
         let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
         refChatRom.observe(.childAdded) { (snap) in
             
@@ -60,7 +65,7 @@ class ChatSingleController: UIViewController {
             let g = Message.init(dic: dic)
             self.arrayMessages.append(g)
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+            DispatchQueue.main.async(execute: {
                 self.collectionView.reloadData()
             })
         }
@@ -84,11 +89,16 @@ class ChatSingleController: UIViewController {
         collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
         self.collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
-        addImageForNavigationButton()
-        observerMessages()
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
+        
+        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
+            if isConnect {
+                self.addImageForNavigationButton()
+                self.observerMessages()
+            }
+        }
     }
     
     @objc func hideKeyboard(sender: UITapGestureRecognizer) {
@@ -237,7 +247,7 @@ class ChatSingleController: UIViewController {
         button.setImage(UIImage(named:"plus"), for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.contentMode = .scaleAspectFill
-        button.frame = CGRect(x: 160, y: 100, width: 30, height: 30)
+        button.frame = CGRect(x: 160, y: 100, width: 28, height: 28)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(sendImageMassegaButtonTapped), for: .touchUpInside)
@@ -258,7 +268,7 @@ class ChatSingleController: UIViewController {
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
-        text.text = "Message"
+        text.text = "Your message"
         text.textAlignment = .right
         text.textColor = UIColor.lightGray
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -295,14 +305,14 @@ class ChatSingleController: UIViewController {
         self.sendButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
         self.sendButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
         
-        self.sendImageButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        self.sendImageButton.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        self.sendImageButton.heightAnchor.constraint(equalToConstant: 28).isActive = true
+        self.sendImageButton.widthAnchor.constraint(equalToConstant: 28).isActive = true
         self.sendImageButton.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 4).isActive = true
-        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -20).isActive = true
-        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 15).isActive = true
+        self.sendImageButton.rightAnchor.constraint(equalTo: self.textFieldInputTex.leftAnchor, constant: -15).isActive = true
+        self.sendImageButton.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 17).isActive = true
         
-        self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -2).isActive = true
-        self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 1).isActive = true
+        self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -4).isActive = true
+        self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 0.5).isActive = true
         self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -13).isActive = true
         
         self.separateView.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor).isActive = true
@@ -367,6 +377,15 @@ extension ChatSingleController: UICollectionViewDelegate, UICollectionViewDataSo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as? ChatCollectionViewCell
         cell?.delegate = self
         cell?.message = arrayMessages[indexPath.item]
+        
+        let uid = Auth.auth().currentUser?.uid
+        
+        if let text = arrayMessages[indexPath.item].text {
+             cell?.bubleWidthAchor?.constant = estimateFrameForText(text: text).width + 32
+        } else {
+              cell?.bubleWidthAchor?.constant = 200
+        }
+   
         return cell!
     }
     
@@ -376,11 +395,21 @@ extension ChatSingleController: UICollectionViewDelegateFlowLayout {
    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let text = arrayMessages[indexPath.item].text
-        
+        var height: CGFloat = 80
+       
         if let messageText = text {
-            return CGSize(width: UIScreen.main.bounds.width, height: (messageText.height(withConstrainedWidth: 200, font: UIFont.boldSystemFont(ofSize: 14))) + 20)
+            height = estimateFrameForText(text: messageText).height + 20
+        } else {
+            height = 200
         }
-        return CGSize(width: UIScreen.main.bounds.width, height: 200 )
+        return CGSize(width: UIScreen.main.bounds.width, height: height )
+    }
+    
+    private func estimateFrameForText(text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString.init(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
+        
     }
 }
 
@@ -452,14 +481,14 @@ extension ChatSingleController: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text == "Message" {
+        if textView.text == "Your message" {
             textView.text = nil
             textView.textColor = UIColor.black
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text == "" {
-            textView.text = "Message"
+            textView.text = "Your message"
             textView.textColor = UIColor.lightGray
         }
     }
@@ -630,5 +659,20 @@ extension UIImage {
         UIGraphicsEndImageContext()
         
         return newImage!
+    }
+}
+
+
+struct FirebaseInternetConnection {
+    
+    static func isConnectedToInternet(isConnect:@escaping (Bool)->()) {
+        let connectedRef = Database.database().reference(withPath: ".info/connected")
+        connectedRef.observe(.value, with: { snapshot in
+            if let connected = snapshot.value as? Bool, connected {
+               isConnect(true)
+            } else {
+               isConnect(false)
+            }
+        })
     }
 }

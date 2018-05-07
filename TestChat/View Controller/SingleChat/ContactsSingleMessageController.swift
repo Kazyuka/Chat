@@ -2,11 +2,14 @@
 import UIKit
 import FirebaseDatabase
 import FirebaseAuth
+import NVActivityIndicatorView
+
 class ContactsSingleMessageController: UIViewController {
 
     var userArray = [User]()
     var filteredUsers = [User]()
     var messagesViewComtroller: ChatController?
+    var activityIndicator: NVActivityIndicatorView?
     var searchController:UISearchController!
     
     private var currentUserUid: String! {
@@ -21,8 +24,6 @@ class ContactsSingleMessageController: UIViewController {
         super.viewWillAppear(animated)
         tableView.separatorColor = UIColor.clear
         setupNavigationBar()
-        userArray.removeAll()
-        getAllUser()
     }
     
     override func viewDidLoad() {
@@ -36,6 +37,15 @@ class ContactsSingleMessageController: UIViewController {
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
+        
+        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
+            self.activityIndicator?.startAnimating()
+            if isConnect {
+                  self.getAllUser()
+            }
+        }
     }
     
     func setupNavigationBar() {
@@ -71,8 +81,9 @@ class ContactsSingleMessageController: UIViewController {
     }
     
     func getAllUser() {
-        Database.database().reference().child("users").observe(.childAdded, with: { (snapshot) in
-            
+        userArray.removeAll()
+        let ref = Database.database().reference().child("users")
+        ref .observe(.childAdded, with: { (snapshot) in
             if let users = snapshot.value as? [String: AnyObject] {
                 let user = User.init(dic: users)
                 user.userId = snapshot.key
@@ -80,6 +91,7 @@ class ContactsSingleMessageController: UIViewController {
                      self.userArray.append(user)
                 }
             }
+            self.activityIndicator?.stopAnimating()
             self.tableView.reloadData()
         }, withCancel: nil)
     }
@@ -118,7 +130,7 @@ extension ContactsSingleMessageController: UITableViewDataSource, UITableViewDel
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! UserCell
-        
+        cell.selectionStyle = .none
         if searchController.isActive && searchController.searchBar.text != "" {
             cell.user = filteredUsers[indexPath.row]
         } else {

@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
+import NVActivityIndicatorView
 
 class ChatController: UIViewController {
     
@@ -18,13 +19,14 @@ class ChatController: UIViewController {
     var filteredGroupChat = [RoomChat]()
     
     var searchController:UISearchController!
+    var activityIndicator: NVActivityIndicatorView?
+    
     var offset = UIOffset()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.title = "Chats".localized
-        setupNavigationBar()
-        observeUserMessages()
+        self.setupNavigationBar()
     }
     
     override func viewDidLoad() {
@@ -41,6 +43,16 @@ class ChatController: UIViewController {
         searchController.searchBar.delegate = self
         self.tableView.separatorColor = UIColor.clear
         isUserLogin()
+        
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
+        
+        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
+            self.activityIndicator?.startAnimating()
+            if isConnect {
+                self.observeUserMessages()
+            }
+        }
     }
     
     func setupNavigationBar() {
@@ -76,7 +88,6 @@ class ChatController: UIViewController {
     }
     func observeUserMessages() {
         self.grouChat.removeAll()
-        
         let refChatRom = Database.database().reference().child("chat-romm")
         refChatRom.observe(.childAdded) { (snap) in
             
@@ -94,9 +105,9 @@ class ChatController: UIViewController {
                     }
                 }
             }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                 self.tableView.reloadData()
+                self.activityIndicator?.stopAnimating()
             })
         }
     }
@@ -167,7 +178,7 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! MessageCell
-        
+        cell.selectionStyle = .none
         if searchController.isActive && searchController.searchBar.text != "" {
             cell.chat = filteredGroupChat[indexPath.row]
         } else {
@@ -175,7 +186,6 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
                 cell.chat = grouChat[indexPath.row]
             }
         }
-        
         return cell
     }
     
@@ -214,7 +224,7 @@ extension ChatController: GroupCreateControllerDelegate {
 }
 
 extension ChatController: GoToGroupCahatRoomDelegate {
-   
+    
     func goToGroupChat(room: RoomChat) {
         self.goToGroupChat(roomChat: room)
     }

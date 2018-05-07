@@ -10,5 +10,6 @@ target ‘TestChat’ do
  pod 'Firebase/Storage'
  pod 'Firebase/Database'
  pod 'SDWebImage', '~> 4.0'
+ pod 'NVActivityIndicatorView'
 
 end

@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
+import NVActivityIndicatorView
 
 class RegisterController: UIViewController {
     
@@ -25,6 +26,8 @@ class RegisterController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     
     @IBOutlet weak var passwordAgTextField: UITextField!
+    
+    var activityIndicator: NVActivityIndicatorView?
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -59,6 +62,11 @@ class RegisterController: UIViewController {
         emailTextField.changeColor(textForPlaceHoder: "Email".localized, size: 16.0)
         passwordTextField.changeColor(textForPlaceHoder: "Password".localized, size: 16.0)
         passwordAgTextField.changeColor(textForPlaceHoder: "Password again".localized, size: 16.0)
+        registerButton.setTitle("CONTINUE".localized, for: .normal)
+        
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
+        
         checkTypeDevice()
     }
     
@@ -95,14 +103,16 @@ class RegisterController: UIViewController {
     }
     
     private func registerUser() {
-        
+        activityIndicator?.startAnimating()
         guard let email = emailTextField.text, let password = passwordTextField.text, let name = firstNameTextField.text, let lastName = lastNameTextField.text else {
+            self.activityIndicator?.stopAnimating()
             self.present(self.allertControllerWithOneButton(message: "Заполните все поля!!"), animated: true, completion: nil)
             return  }
         
         Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
             
             if error != nil {
+                self.activityIndicator?.stopAnimating()
                 self.present(self.allertControllerWithOneButton(message: error!.localizedDescription), animated: true, completion: nil)
                 return
             }
@@ -120,10 +130,11 @@ class RegisterController: UIViewController {
         let user = ref.child("users").child(uid)
         user.updateChildValues(value, withCompletionBlock: { (err, dref) in
             if err != nil {
+                self.activityIndicator?.stopAnimating()
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                 return
             }
-            let user = User(dic: value)
+            self.activityIndicator?.stopAnimating()
             let chatVC =  self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController
             self.navigationController?.pushViewController(chatVC, animated: true)
         })

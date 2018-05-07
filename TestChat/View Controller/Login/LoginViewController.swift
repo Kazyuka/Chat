@@ -2,10 +2,13 @@
 import UIKit
 import FirebaseAuth
 import FirebaseDatabase
+import NVActivityIndicatorView
 
 class LoginViewController: UIViewController {
     
     @IBOutlet weak var buttomConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var singUplabel: UILabel!
     
     @IBOutlet weak var singUpButton: UIButton!
     
@@ -20,6 +23,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var notHaveAccountLabel: UILabel!
     
     var messagseController: ChatController?
+    
+    var activityIndicator: NVActivityIndicatorView?
     
     var isLogin = false
     
@@ -49,6 +54,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         checkTypeDevice()
         configurationForView()
         emailTextField.changeColor(textForPlaceHoder: "Email".localized, size: 16.0)
@@ -56,6 +62,9 @@ class LoginViewController: UIViewController {
         loginButton.setTitle("SIGN IN".localized, for: .normal)
         notHaveAccountLabel.text = "Do not have an account?".localized
         singUpButton.setTitle("Sing Up!".localized, for: .normal)
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
+
     }
     
     private func checkTypeDevice() {
@@ -131,16 +140,20 @@ class LoginViewController: UIViewController {
     }
     
     private func loginUser() {
-        
-        guard let email = emailTextField.text, let password = passwordTextField.text else { return  }
+        activityIndicator?.startAnimating()
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            self.activityIndicator?.stopAnimating()
+            return
+        }
         Auth.auth().signIn(withEmail: email, password: password) { (user, err) in
             
             if err != nil {
+                self.activityIndicator?.stopAnimating()
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                 return
             }
             self.isLogin = true
-        
+            self.activityIndicator?.stopAnimating()
             let chatVC =  self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController
             self.navigationController?.pushViewController(chatVC, animated: true)
         }

@@ -13,7 +13,7 @@
         <!--Chats-->
         <scene sceneID="4y5-wW-g6s">
             <objects>
-                <viewController storyboardIdentifier="ChatController" id="bLg-ON-CCm" customClass="ChatController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatController" id="bLg-ON-CCm" customClass="ChatController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="rEt-XY-Pfz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -26,7 +26,7 @@
                                     <constraint firstAttribute="width" constant="375" id="SRw-px-R26"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="76" id="Hpk-lX-3fi" customClass="MessageCell" customModule="TestChat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="76" id="Hpk-lX-3fi" customClass="MessageCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="76"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Hpk-lX-3fi" id="9nL-II-TpO">
@@ -124,7 +124,7 @@
         <!--Settings-->
         <scene sceneID="FRa-FS-8VJ">
             <objects>
-                <viewController storyboardIdentifier="SettingsController" id="Q5o-dP-u1c" customClass="SettingsController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsController" id="Q5o-dP-u1c" customClass="SettingsController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vgd-af-aIz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -526,7 +526,7 @@
         <!--Chat Single Controller-->
         <scene sceneID="SS3-hj-IAc">
             <objects>
-                <viewController storyboardIdentifier="ChatSingleController" hidesBottomBarWhenPushed="YES" id="seB-4C-RER" customClass="ChatSingleController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatSingleController" hidesBottomBarWhenPushed="YES" id="seB-4C-RER" customClass="ChatSingleController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="CxV-Fq-wko">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -545,7 +545,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="vh9-Zm-gBa" customClass="ChatCollectionViewCell" customModule="TestChat" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="vh9-Zm-gBa" customClass="ChatCollectionViewCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -582,7 +582,7 @@
         <!--Chat Grup Controller-->
         <scene sceneID="2pk-vw-V2Y">
             <objects>
-                <viewController storyboardIdentifier="ChatGrupController" hidesBottomBarWhenPushed="YES" id="jFN-fv-FQi" customClass="ChatGrupController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ChatGrupController" hidesBottomBarWhenPushed="YES" id="jFN-fv-FQi" customClass="ChatGrupController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5fB-V3-goq">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -597,7 +597,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="M4M-Jn-q0F" customClass="ChatGroupCell" customModule="TestChat" customModuleProvider="target">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="M4M-Jn-q0F" customClass="ChatGroupCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
@@ -633,7 +633,7 @@
         <!--Edit Detail Group Controller-->
         <scene sceneID="drV-BU-Zyy">
             <objects>
-                <viewController storyboardIdentifier="EditDetailGroupController" id="tff-CM-cyg" customClass="EditDetailGroupController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditDetailGroupController" id="tff-CM-cyg" customClass="EditDetailGroupController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="sQb-K2-mqr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -731,7 +731,7 @@
         <!--Profile Controller-->
         <scene sceneID="Sdp-pd-PBQ">
             <objects>
-                <viewController id="SAn-4G-Z8z" customClass="ProfileController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="SAn-4G-Z8z" customClass="ProfileController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="HN9-55-Q11">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -812,7 +812,7 @@
         <!--Group Create Controller-->
         <scene sceneID="4iJ-sH-o29">
             <objects>
-                <viewController storyboardIdentifier="GroupCreateController" hidesBottomBarWhenPushed="YES" id="2hl-dE-yfl" customClass="GroupCreateController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GroupCreateController" hidesBottomBarWhenPushed="YES" id="2hl-dE-yfl" customClass="GroupCreateController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EKw-9O-WL7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -912,7 +912,7 @@
         <!--Detail Group Controller-->
         <scene sceneID="vNf-BE-vCY">
             <objects>
-                <viewController storyboardIdentifier="DetailGroupController" id="q7m-V4-XFF" customClass="DetailGroupController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailGroupController" id="q7m-V4-XFF" customClass="DetailGroupController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="S3i-ad-tYu">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -921,7 +921,7 @@
                                 <rect key="frame" x="0.0" y="279" width="375" height="388"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="57" id="pL6-eP-r40" customClass="UserCell" customModule="TestChat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="57" id="pL6-eP-r40" customClass="UserCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="57"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="pL6-eP-r40" id="zwD-1X-xNn">
@@ -1158,7 +1158,7 @@
         <!--Group Message Controller-->
         <scene sceneID="g75-0l-sTZ">
             <objects>
-                <viewController storyboardIdentifier="GroupMessageController" id="Pro-PS-b9m" customClass="GroupMessageController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GroupMessageController" id="Pro-PS-b9m" customClass="GroupMessageController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Xj4-Y9-bbn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1167,7 +1167,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="72" id="Fdg-an-zIM" customClass="UserCell" customModule="TestChat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="72" id="Fdg-an-zIM" customClass="UserCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="72"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Fdg-an-zIM" id="YRJ-qh-j1E">
@@ -1250,7 +1250,7 @@
         <!--Edit Profile Controller-->
         <scene sceneID="6Zo-mv-Ux2">
             <objects>
-                <viewController storyboardIdentifier="EditProfileController" hidesBottomBarWhenPushed="YES" id="te1-WG-W6r" customClass="EditProfileController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EditProfileController" hidesBottomBarWhenPushed="YES" id="te1-WG-W6r" customClass="EditProfileController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8Oy-yU-iBb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1461,7 +1461,7 @@
         <!--About Me-->
         <scene sceneID="vFS-Gr-f7h">
             <objects>
-                <viewController storyboardIdentifier="AboutUserController" hidesBottomBarWhenPushed="YES" id="Xwu-cJ-PaJ" customClass="AboutUserController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AboutUserController" hidesBottomBarWhenPushed="YES" id="Xwu-cJ-PaJ" customClass="AboutUserController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XzD-H2-vs6">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1497,7 +1497,7 @@
         <!--Contacts-->
         <scene sceneID="FVu-sp-bEs">
             <objects>
-                <viewController id="WTg-wO-4gS" customClass="ContactsSingleMessageController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="WTg-wO-4gS" customClass="ContactsSingleMessageController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="fEn-1W-AMn">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1510,7 +1510,7 @@
                                     <constraint firstAttribute="height" constant="667" id="PHx-Jo-OcD"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="72" id="VRV-Zf-Wj1" customClass="UserCell" customModule="TestChat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="72" id="VRV-Zf-Wj1" customClass="UserCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="72"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VRV-Zf-Wj1" id="FGd-5U-bMD">
@@ -1525,7 +1525,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GlQ-zM-OTk">
-                                                    <rect key="frame" x="71" y="29.5" width="265" height="19.5"/>
+                                                    <rect key="frame" x="71" y="19.5" width="265" height="19.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="19.5" id="mpi-kT-zvk"/>
                                                     </constraints>
@@ -1545,7 +1545,7 @@
                                                 <constraint firstItem="R4p-yk-YFw" firstAttribute="leading" secondItem="FGd-5U-bMD" secondAttribute="leading" constant="28" id="EI2-Cc-q8a"/>
                                                 <constraint firstAttribute="trailing" secondItem="R4p-yk-YFw" secondAttribute="trailing" constant="29" id="MZY-Fu-7fK"/>
                                                 <constraint firstItem="R4p-yk-YFw" firstAttribute="top" secondItem="pbQ-ip-Vga" secondAttribute="bottom" constant="14.5" id="a5T-Kw-di5"/>
-                                                <constraint firstItem="GlQ-zM-OTk" firstAttribute="top" secondItem="FGd-5U-bMD" secondAttribute="top" constant="29.5" id="d4V-gT-oY8"/>
+                                                <constraint firstItem="GlQ-zM-OTk" firstAttribute="top" secondItem="FGd-5U-bMD" secondAttribute="top" constant="19.5" id="d4V-gT-oY8"/>
                                                 <constraint firstAttribute="trailing" secondItem="GlQ-zM-OTk" secondAttribute="trailing" constant="39" id="eRT-bF-XWa"/>
                                                 <constraint firstItem="pbQ-ip-Vga" firstAttribute="leading" secondItem="FGd-5U-bMD" secondAttribute="leading" constant="15" id="iL6-cT-gi5"/>
                                                 <constraint firstAttribute="bottom" secondItem="R4p-yk-YFw" secondAttribute="bottom" id="jXI-Kj-QoX"/>
@@ -1586,7 +1586,7 @@
         <!--Tab Controller-->
         <scene sceneID="nEt-fR-4Lp">
             <objects>
-                <tabBarController storyboardIdentifier="TabController" id="PtX-Jg-QJp" customClass="TabController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabController" id="PtX-Jg-QJp" customClass="TabController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleAspectFill" insetsLayoutMarginsFromSafeArea="NO" id="5Lj-jA-BTf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1661,7 +1661,7 @@
         <!--Login View Controller-->
         <scene sceneID="PrI-Fq-Yo2">
             <objects>
-                <viewController storyboardIdentifier="LoginViewController" hidesBottomBarWhenPushed="YES" id="c78-gc-kx0" customClass="LoginViewController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="LoginViewController" hidesBottomBarWhenPushed="YES" id="c78-gc-kx0" customClass="LoginViewController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UES-bA-nLr">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1898,7 +1898,7 @@
         <!--Register Controller-->
         <scene sceneID="9Dv-hS-XBm">
             <objects>
-                <viewController storyboardIdentifier="RegisterController" hidesBottomBarWhenPushed="YES" id="GTH-9B-ylE" customClass="RegisterController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RegisterController" hidesBottomBarWhenPushed="YES" id="GTH-9B-ylE" customClass="RegisterController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0qP-2a-Be2">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2234,7 +2234,7 @@
         <!--Reset Password Controller-->
         <scene sceneID="ehh-WQ-A11">
             <objects>
-                <viewController storyboardIdentifier="ResetPasswordController" hidesBottomBarWhenPushed="YES" id="t7r-j9-HS7" customClass="ResetPasswordController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ResetPasswordController" hidesBottomBarWhenPushed="YES" id="t7r-j9-HS7" customClass="ResetPasswordController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="f8o-2g-dqh">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2402,7 +2402,7 @@
         <!--Other Profile Controller-->
         <scene sceneID="Rak-Y9-VOm">
             <objects>
-                <viewController storyboardIdentifier="OtherProfileController" id="EOR-TX-1bP" customClass="OtherProfileController" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="OtherProfileController" id="EOR-TX-1bP" customClass="OtherProfileController" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="WrK-zg-UQZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2693,7 +2693,7 @@
         <!--Detail Group Controller From Room Chat-->
         <scene sceneID="x6t-Mj-5Q2">
             <objects>
-                <viewController storyboardIdentifier="DetailGroupControllerFromRoomChat" id="doa-6F-Ht3" customClass="DetailGroupControllerFromRoomChat" customModule="TestChat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DetailGroupControllerFromRoomChat" id="doa-6F-Ht3" customClass="DetailGroupControllerFromRoomChat" customModule="TalkerChat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Ctk-Rd-iBW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -2702,7 +2702,7 @@
                                 <rect key="frame" x="0.0" y="279" width="375" height="388"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="57" id="ywa-dq-ct3" customClass="UserCell" customModule="TestChat" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="57" id="ywa-dq-ct3" customClass="UserCell" customModule="TalkerChat" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="57"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ywa-dq-ct3" id="KTB-Hv-l0c">

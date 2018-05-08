@@ -90,13 +90,18 @@ class ContactsSingleMessageController: UIViewController {
                 let user = User.init(dic: users)
                 user.userId = snapshot.key
                 if Auth.auth().currentUser?.uid != user.userId {
-                     self.userArray.append(user)
+                    self.userArray.append(user)
                 }
             }
-            self.tableView.reloadData()
+            DispatchQueue.main.async(execute: {
+                self.activityIndicator?.stopAnimating()
+                self.tableView.reloadData()
+            })
         }, withCancel: nil)
         
-        self.activityIndicator?.stopAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+            self.activityIndicator?.stopAnimating()
+        })
     }
     
     @objc func closeConreoller() {

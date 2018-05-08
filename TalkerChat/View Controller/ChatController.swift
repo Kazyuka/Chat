@@ -25,6 +25,7 @@ class ChatController: UIViewController {
     var searchController:UISearchController!
     var activityIndicator: NVActivityIndicatorView?
     
+    
     var offset = UIOffset()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,6 +47,7 @@ class ChatController: UIViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
         self.tableView.separatorColor = UIColor.clear
+        self.tabBarController?.delegate = self
         isUserLogin()
         
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
@@ -107,15 +109,20 @@ class ChatController: UIViewController {
                     if val.contains(uid) {
                         self.grouChat.append(g)
                     } else if g.ovnerGroup == uid {
-                         self.grouChat.append(g)
+                        self.grouChat.append(g)
                     }
                 }
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
+            
+            DispatchQueue.main.async(execute: {
+                self.activityIndicator?.stopAnimating()
                 self.tableView.reloadData()
             })
         }
-         self.activityIndicator?.stopAnimating()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+            self.activityIndicator?.stopAnimating()
+        })
     }
     
     func isUserLogin() {
@@ -280,6 +287,18 @@ extension ChatController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.showsCancelButton = true
+    }
+}
+
+
+extension ChatController: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        let tabBarIndex = tabBarController.selectedIndex
+        if tabBarIndex == 1 {
+            
+            observeUserMessages()
+        }
     }
 }
 

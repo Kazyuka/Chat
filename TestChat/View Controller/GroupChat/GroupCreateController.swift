@@ -40,7 +40,7 @@ class GroupCreateController: UIViewController {
         gesture.numberOfTapsRequired = 1
         photoImageGroup.isUserInteractionEnabled = true
         photoImageGroup.addGestureRecognizer(gesture)
-        photoImageGroup.image = UIImage.init(named: "groupImage.png")
+        photoImageGroup.image = UIImage.init(named: "groupL.png")
         photoImageGroup.setRounded()
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false

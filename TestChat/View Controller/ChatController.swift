@@ -11,6 +11,10 @@ import FirebaseAuth
 import FirebaseDatabase
 import NVActivityIndicatorView
 
+protocol ChatControllerDelegate: class {
+    func observeChangedMessageInsideChatRoom()
+}
+
 class ChatController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
@@ -152,6 +156,7 @@ class ChatController: UIViewController {
     func goToGroupChat(roomChat: RoomChat) {
         let chatLogGroupController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatGrupController") as! ChatGrupController
         chatLogGroupController.room = roomChat
+        chatLogGroupController.delegate = self
         self.navigationController?.pushViewController(chatLogGroupController, animated: true)
     }
     func gotoSingleChat(roomChat: RoomChat) {
@@ -160,6 +165,7 @@ class ChatController: UIViewController {
         RoomChat.getCurrentUserFromSingleMessage(chatRoom: roomChat) { (us) in
             chatLogController.user = us
             chatLogController.unicKyeForChatRoom = roomChat.groupUID
+            chatLogController.delegate = self
             self.navigationController?.pushViewController(chatLogController, animated: true)
         }
     }
@@ -211,6 +217,12 @@ extension ChatController: UITableViewDelegate, UITableViewDataSource {
 extension ChatController: DissmisGroupCreteDelegate {
     func dissmissGroupCreteView(room: RoomChat) {
         self.goToGroupChat(roomChat: room)
+    }
+}
+
+extension ChatController: ChatControllerDelegate {
+    func observeChangedMessageInsideChatRoom() {
+        observeUserMessages()
     }
 }
 

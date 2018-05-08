@@ -49,7 +49,7 @@ class OtherProfileController: UIViewController {
             self.userImage.sd_setImage(with: url! as URL)
             
         } else {
-            self.userImage.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userImage.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
+            self.userImage.sd_setImage(with: NSURL() as URL, placeholderImage: UIImage.init(named: "userL.png"), options: .cacheMemoryOnly, progress: { (y, r, ur) in
             }, completed: nil)
         }
         userNameLabel.text = user?.name

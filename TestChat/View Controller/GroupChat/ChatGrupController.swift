@@ -12,11 +12,13 @@ import FirebaseAuth
 import FirebaseStorage
 import MobileCoreServices
 import AVKit
+import NVActivityIndicatorView
 
 class ChatGrupController: UIViewController {
   
     @IBOutlet weak var collectionView: UICollectionView!
-
+    
+    var activityIndicator: NVActivityIndicatorView?
     var idUsersWhoGetMessage = [String]()
     var allIdUserInString = " "
     let cellIdentifier = "Cell"
@@ -29,6 +31,8 @@ class ChatGrupController: UIViewController {
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
     var unicKyeForChatRoom: String?
+    
+    weak var delegate: ChatControllerDelegate?
     
     var room: RoomChat! {
         
@@ -62,9 +66,15 @@ class ChatGrupController: UIViewController {
         self.allUsers = room.usersChat
         self.unicKyeForChatRoom = room.groupUID
         let button: UIButton = UIButton(type: UIButtonType.custom)
-        button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize.init(width: 30, height: 30)), for: UIControlState.normal)
+        
+        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
+             button.setImage(imageUserForNavigationBar.image, for: UIControlState.normal)
+        } else {
+            button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize(width: 25, height: 25)), for: UIControlState.normal)
+        }
+      
         button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
-        button.frame = CGRect.init(x: 0, y: 0, width: 30, height: 30)
+        button.frame = CGRect.init(x: 0, y: 0, width: 25, height: 25)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.clipsToBounds = true
         let barButton = UIBarButtonItem(customView: button)
@@ -83,9 +93,11 @@ class ChatGrupController: UIViewController {
                 }
                 let g = GroupMessage.init(dic: dic)
                 self.arrayMessages.append(g)
-                
+                self.activityIndicator?.stopAnimating()
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                     self.collectionView?.reloadData()
+                    let indexPath  = IndexPath(item: self.arrayMessages.count - 1, section: 0)
+                    self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                 })
             }
         }
@@ -102,6 +114,8 @@ class ChatGrupController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
         
         FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
             if isConnect {
@@ -117,6 +131,14 @@ class ChatGrupController: UIViewController {
         self.navigationController?.navigationBar.topItem?.title = " "
     }
     
+    override func didMove(toParentViewController parent: UIViewController?) {
+        super.didMove(toParentViewController: parent)
+        
+        if parent == nil {
+            self.delegate?.observeChangedMessageInsideChatRoom()
+        }
+    }
+    
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
@@ -126,8 +148,7 @@ class ChatGrupController: UIViewController {
     }
 
     @objc func sendMassegaButtonTapped() {
-        
-        
+
         if let unicKye = unicKyeForChatRoom {
             let ref = databaseRef.child("chat-romm").child(unicKye).child("messages").childByAutoId()
             let fromId = Auth.auth().currentUser!.uid
@@ -312,6 +333,13 @@ class ChatGrupController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(ChatGrupController.keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    
+    private func messegeTextFieldUp() {
+        if self.arrayMessages.count > 1 {
+            let indexPath  = IndexPath(item: self.arrayMessages.count - 1, section: 0)
+            self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+        }
+    }
     @objc func keyboardWillHide(notification: NSNotification) {
         hieghtConstraitForKeyword?.constant = 0
         let userInfo = notification.userInfo!
@@ -338,6 +366,7 @@ class ChatGrupController: UIViewController {
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let options = UIViewAnimationOptions(rawValue: curve << 16)
+        self.messegeTextFieldUp()
         UIView.animate(withDuration: duration, delay: 0, options: options,
                        animations: {
                         self.view.layoutIfNeeded()
@@ -474,6 +503,7 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     private func videoSelectedForInfo(url: NSURL) {
+        self.activityIndicator?.startAnimating()
         let fileName = NSUUID().uuidString + ".mov"
         let uploadTask =  Storage.storage().reference().child("message_movies").child(fileName).putFile(from: url as URL, metadata: nil, completion: { (metadata, error) in
             
@@ -530,6 +560,7 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
     }
     
     func uploadImageToFirebase(image: UIImage, completion: @escaping (String) -> ()) {
+        self.activityIndicator?.startAnimating()
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("message_images").child("\(imageName).png")
         if let uploadData = UIImageJPEGRepresentation(image, 0.3) {
@@ -557,6 +588,8 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
                 if error != nil {
                     return
                 }
+                
+                 self.activityIndicator?.stopAnimating()
             }
         }
     }
@@ -574,6 +607,7 @@ extension ChatGrupController: UIImagePickerControllerDelegate, UINavigationContr
                 if error != nil {
                     return
                 }
+                 self.activityIndicator?.stopAnimating()
             }
         }
     }

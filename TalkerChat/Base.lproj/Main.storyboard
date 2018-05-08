@@ -1525,7 +1525,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GlQ-zM-OTk">
-                                                    <rect key="frame" x="71" y="19.5" width="265" height="19.5"/>
+                                                    <rect key="frame" x="71" y="24.5" width="265" height="19.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="19.5" id="mpi-kT-zvk"/>
                                                     </constraints>
@@ -1545,7 +1545,7 @@
                                                 <constraint firstItem="R4p-yk-YFw" firstAttribute="leading" secondItem="FGd-5U-bMD" secondAttribute="leading" constant="28" id="EI2-Cc-q8a"/>
                                                 <constraint firstAttribute="trailing" secondItem="R4p-yk-YFw" secondAttribute="trailing" constant="29" id="MZY-Fu-7fK"/>
                                                 <constraint firstItem="R4p-yk-YFw" firstAttribute="top" secondItem="pbQ-ip-Vga" secondAttribute="bottom" constant="14.5" id="a5T-Kw-di5"/>
-                                                <constraint firstItem="GlQ-zM-OTk" firstAttribute="top" secondItem="FGd-5U-bMD" secondAttribute="top" constant="19.5" id="d4V-gT-oY8"/>
+                                                <constraint firstItem="GlQ-zM-OTk" firstAttribute="top" secondItem="FGd-5U-bMD" secondAttribute="top" constant="24.5" id="d4V-gT-oY8"/>
                                                 <constraint firstAttribute="trailing" secondItem="GlQ-zM-OTk" secondAttribute="trailing" constant="39" id="eRT-bF-XWa"/>
                                                 <constraint firstItem="pbQ-ip-Vga" firstAttribute="leading" secondItem="FGd-5U-bMD" secondAttribute="leading" constant="15" id="iL6-cT-gi5"/>
                                                 <constraint firstAttribute="bottom" secondItem="R4p-yk-YFw" secondAttribute="bottom" id="jXI-Kj-QoX"/>

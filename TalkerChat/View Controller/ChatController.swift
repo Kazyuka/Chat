@@ -55,6 +55,8 @@ class ChatController: UIViewController {
             self.activityIndicator?.startAnimating()
             if isConnect {
                 self.observeUserMessages()
+            } else {
+                self.activityIndicator?.stopAnimating()
             }
         }
     }
@@ -111,9 +113,9 @@ class ChatController: UIViewController {
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
                 self.tableView.reloadData()
-                self.activityIndicator?.stopAnimating()
             })
         }
+         self.activityIndicator?.stopAnimating()
     }
     
     func isUserLogin() {

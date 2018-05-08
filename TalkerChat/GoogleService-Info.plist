@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>752522816357-hlfulc3aeb8smaj6rgm9ev55mauonk6c.apps.googleusercontent.com</string>
+	<string>773319270160-4ui7grublcdaivron9qf77odemj5gmlj.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.752522816357-hlfulc3aeb8smaj6rgm9ev55mauonk6c</string>
+	<string>com.googleusercontent.apps.773319270160-4ui7grublcdaivron9qf77odemj5gmlj</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDGSRywTYNzndVQL7e6ilfNtJt4uqEPVu8</string>
+	<string>AIzaSyDVDiqHkvcVREcXBcKn6RtwYzulDPWt_E8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>752522816357</string>
+	<string>773319270160</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>app.TestChat</string>
+	<string>app.TalkerChat</string>
 	<key>PROJECT_ID</key>
-	<string>chattest-6e5b2</string>
+	<string>talkerchat-35710</string>
 	<key>STORAGE_BUCKET</key>
-	<string>chattest-6e5b2.appspot.com</string>
+	<string>talkerchat-35710.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:752522816357:ios:79691e3c2d29884a</string>
+	<string>1:773319270160:ios:dfcaf30f356739c5</string>
 	<key>DATABASE_URL</key>
-	<string>https://chattest-6e5b2.firebaseio.com</string>
+	<string>https://talkerchat-35710.firebaseio.com</string>
 </dict>
 </plist>

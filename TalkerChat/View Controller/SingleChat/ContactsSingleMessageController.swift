@@ -25,7 +25,7 @@ class ContactsSingleMessageController: UIViewController {
         tableView.separatorColor = UIColor.clear
         setupNavigationBar()
     }
-    
+  
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Contacts".localized
@@ -44,6 +44,8 @@ class ContactsSingleMessageController: UIViewController {
             self.activityIndicator?.startAnimating()
             if isConnect {
                   self.getAllUser()
+            } else {
+                  self.activityIndicator?.stopAnimating()
             }
         }
     }
@@ -91,9 +93,10 @@ class ContactsSingleMessageController: UIViewController {
                      self.userArray.append(user)
                 }
             }
-            self.activityIndicator?.stopAnimating()
             self.tableView.reloadData()
         }, withCancel: nil)
+        
+        self.activityIndicator?.stopAnimating()
     }
     
     @objc func closeConreoller() {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4408100920A1E6C500CC53E7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4408100820A1E6C500CC53E7 /* GoogleService-Info.plist */; };
 		441FFC24203477C6000F8E99 /* ContactsSingleMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */; };
 		441FFC2620347AD4000F8E99 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441FFC2520347AD4000F8E99 /* User.swift */; };
 		442AF4F62080E46600E10C25 /* ChatGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 442AF4F52080E46600E10C25 /* ChatGroupCell.swift */; };
@@ -28,7 +29,6 @@
 		44B51CCF202DE7A500881EB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44B51CCE202DE7A500881EB5 /* Assets.xcassets */; };
 		44B51CD2202DE7A500881EB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44B51CD0202DE7A500881EB5 /* LaunchScreen.storyboard */; };
 		44B51CDA202DE7CC00881EB5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B51CD9202DE7CC00881EB5 /* LoginViewController.swift */; };
-		44B51CDE202DE86B00881EB5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 44B51CDD202DE86B00881EB5 /* GoogleService-Info.plist */; };
 		44B751C8208A04340036198E /* EditDetailGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B751C7208A04340036198E /* EditDetailGroupController.swift */; };
 		44B77D96207F5FC300963656 /* GroupMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B77D95207F5FC300963656 /* GroupMessageController.swift */; };
 		44B77D9A207F6A4600963656 /* ChatGrupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44B77D99207F6A4600963656 /* ChatGrupController.swift */; };
@@ -45,11 +45,13 @@
 		44FE62D5208754AC00F734E0 /* DetailGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D4208754AC00F734E0 /* DetailGroupController.swift */; };
 		44FE62D720877D1B00F734E0 /* RoomChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D620877D1B00F734E0 /* RoomChat.swift */; };
 		44FE62DA20878F4C00F734E0 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D920878F4C00F734E0 /* SettingsController.swift */; };
+		964B67152F91D6A2233FDE59 /* Pods_TalkerChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF7785DFD70A41EF2548C10 /* Pods_TalkerChat.framework */; };
 		AC465896F28AAF84EB9418AC /* Pods_TestChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4408100820A1E6C500CC53E7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSingleMessageController.swift; sourceTree = "<group>"; };
 		441FFC2520347AD4000F8E99 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		442AF4F52080E46600E10C25 /* ChatGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGroupCell.swift; sourceTree = "<group>"; };
@@ -67,7 +69,7 @@
 		44A34A942084E1CE0083A4F1 /* String+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extentions.swift"; sourceTree = "<group>"; };
 		44B3F0AC204577030096911B /* PresentAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimation.swift; sourceTree = "<group>"; };
 		44B3F0AE2045794A0096911B /* AnimationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
-		44B51CC4202DE7A500881EB5 /* TestChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		44B51CC4202DE7A500881EB5 /* TalkerChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TalkerChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44B51CC7202DE7A500881EB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44B51CC9202DE7A500881EB5 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		44B51CCC202DE7A500881EB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -75,9 +77,7 @@
 		44B51CD1202DE7A500881EB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		44B51CD3202DE7A500881EB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		44B51CD9202DE7CC00881EB5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		44B51CDD202DE86B00881EB5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		44B751C7208A04340036198E /* EditDetailGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDetailGroupController.swift; sourceTree = "<group>"; };
-		44B77D94207F56C000963656 /* TestChat.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TestChat.entitlements; sourceTree = "<group>"; };
 		44B77D95207F5FC300963656 /* GroupMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMessageController.swift; sourceTree = "<group>"; };
 		44B77D99207F6A4600963656 /* ChatGrupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGrupController.swift; sourceTree = "<group>"; };
 		44B77D9B207F859000963656 /* GroupMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupMessage.swift; sourceTree = "<group>"; };
@@ -97,7 +97,10 @@
 		44FE62D4208754AC00F734E0 /* DetailGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupController.swift; sourceTree = "<group>"; };
 		44FE62D620877D1B00F734E0 /* RoomChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomChat.swift; sourceTree = "<group>"; };
 		44FE62D920878F4C00F734E0 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		60BE9E4806AED210574D8DD4 /* Pods-TalkerChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TalkerChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat.debug.xcconfig"; sourceTree = "<group>"; };
+		8BF7785DFD70A41EF2548C10 /* Pods_TalkerChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TalkerChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAC1371A2BC8DFB6B8E46945 /* Pods-TestChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-TestChat/Pods-TestChat.release.xcconfig"; sourceTree = "<group>"; };
+		E1D224CFB0E74B26D8CC6CD7 /* Pods-TalkerChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TalkerChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat.release.xcconfig"; sourceTree = "<group>"; };
 		E35FD9F327CD75A808887F1F /* Pods-TestChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TestChat/Pods-TestChat.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +110,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AC465896F28AAF84EB9418AC /* Pods_TestChat.framework in Frameworks */,
+				964B67152F91D6A2233FDE59 /* Pods_TalkerChat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +122,8 @@
 			children = (
 				E35FD9F327CD75A808887F1F /* Pods-TestChat.debug.xcconfig */,
 				DAC1371A2BC8DFB6B8E46945 /* Pods-TestChat.release.xcconfig */,
+				60BE9E4806AED210574D8DD4 /* Pods-TalkerChat.debug.xcconfig */,
+				E1D224CFB0E74B26D8CC6CD7 /* Pods-TalkerChat.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -184,7 +190,7 @@
 		44B51CBB202DE7A500881EB5 = {
 			isa = PBXGroup;
 			children = (
-				44B51CC6202DE7A500881EB5 /* TestChat */,
+				44B51CC6202DE7A500881EB5 /* TalkerChat */,
 				44B51CC5202DE7A500881EB5 /* Products */,
 				428BA6AEC0727E381D2698C5 /* Pods */,
 				9FEE0E7F3189911755B32B8D /* Frameworks */,
@@ -194,15 +200,14 @@
 		44B51CC5202DE7A500881EB5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				44B51CC4202DE7A500881EB5 /* TestChat.app */,
+				44B51CC4202DE7A500881EB5 /* TalkerChat.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		44B51CC6202DE7A500881EB5 /* TestChat */ = {
+		44B51CC6202DE7A500881EB5 /* TalkerChat */ = {
 			isa = PBXGroup;
 			children = (
-				44B77D94207F56C000963656 /* TestChat.entitlements */,
 				44B51CC7202DE7A500881EB5 /* AppDelegate.swift */,
 				44CF202E208F7E2B00781EE0 /* Localizable.swift */,
 				44CF202C208F7DF300781EE0 /* Localizable.strings */,
@@ -211,12 +216,12 @@
 				441FFC2720347ADE000F8E99 /* Model */,
 				44B51CDF202DED8900881EB5 /* View Controller */,
 				44B51CCB202DE7A500881EB5 /* Main.storyboard */,
+				4408100820A1E6C500CC53E7 /* GoogleService-Info.plist */,
 				44B51CCE202DE7A500881EB5 /* Assets.xcassets */,
 				44B51CD0202DE7A500881EB5 /* LaunchScreen.storyboard */,
-				44B51CDD202DE86B00881EB5 /* GoogleService-Info.plist */,
 				44B51CD3202DE7A500881EB5 /* Info.plist */,
 			);
-			path = TestChat;
+			path = TalkerChat;
 			sourceTree = "<group>";
 		};
 		44B51CDF202DED8900881EB5 /* View Controller */ = {
@@ -279,6 +284,7 @@
 			isa = PBXGroup;
 			children = (
 				2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */,
+				8BF7785DFD70A41EF2548C10 /* Pods_TalkerChat.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -286,9 +292,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		44B51CC3202DE7A500881EB5 /* TestChat */ = {
+		44B51CC3202DE7A500881EB5 /* TalkerChat */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "TestChat" */;
+			buildConfigurationList = 44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "TalkerChat" */;
 			buildPhases = (
 				097EAC9D285241955583CDCD /* [CP] Check Pods Manifest.lock */,
 				44B51CC0202DE7A500881EB5 /* Sources */,
@@ -301,9 +307,9 @@
 			);
 			dependencies = (
 			);
-			name = TestChat;
+			name = TalkerChat;
 			productName = TestChat;
-			productReference = 44B51CC4202DE7A500881EB5 /* TestChat.app */;
+			productReference = 44B51CC4202DE7A500881EB5 /* TalkerChat.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -327,7 +333,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "TestChat" */;
+			buildConfigurationList = 44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "TalkerChat" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -341,7 +347,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				44B51CC3202DE7A500881EB5 /* TestChat */,
+				44B51CC3202DE7A500881EB5 /* TalkerChat */,
 			);
 		};
 /* End PBXProject section */
@@ -353,7 +359,7 @@
 			files = (
 				44CF202A208F7DF300781EE0 /* Localizable.strings in Resources */,
 				44B51CD2202DE7A500881EB5 /* LaunchScreen.storyboard in Resources */,
-				44B51CDE202DE86B00881EB5 /* GoogleService-Info.plist in Resources */,
+				4408100920A1E6C500CC53E7 /* GoogleService-Info.plist in Resources */,
 				44B51CCF202DE7A500881EB5 /* Assets.xcassets in Resources */,
 				44B51CCD202DE7A500881EB5 /* Main.storyboard in Resources */,
 			);
@@ -373,7 +379,7 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TestChat-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-TalkerChat-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -386,7 +392,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-TestChat/Pods-TestChat-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
@@ -405,7 +411,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestChat/Pods-TestChat-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8C016F01604CAFBE4D98925E /* [CP] Copy Pods Resources */ = {
@@ -420,7 +426,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TestChat/Pods-TestChat-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -613,16 +619,16 @@
 		};
 		44B51CD7202DE7A500881EB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E35FD9F327CD75A808887F1F /* Pods-TestChat.debug.xcconfig */;
+			baseConfigurationReference = 60BE9E4806AED210574D8DD4 /* Pods-TalkerChat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = TestChat/TestChat.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = F848SS3H8U;
-				INFOPLIST_FILE = TestChat/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/TalkerChat/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = app.TestChat;
+				PRODUCT_BUNDLE_IDENTIFIER = app.TalkerChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -631,16 +637,16 @@
 		};
 		44B51CD8202DE7A500881EB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DAC1371A2BC8DFB6B8E46945 /* Pods-TestChat.release.xcconfig */;
+			baseConfigurationReference = E1D224CFB0E74B26D8CC6CD7 /* Pods-TalkerChat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = TestChat/TestChat.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = F848SS3H8U;
-				INFOPLIST_FILE = TestChat/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/TalkerChat/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = app.TestChat;
+				PRODUCT_BUNDLE_IDENTIFIER = app.TalkerChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -650,7 +656,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "TestChat" */ = {
+		44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "TalkerChat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44B51CD4202DE7A500881EB5 /* Debug */,
@@ -659,7 +665,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "TestChat" */ = {
+		44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "TalkerChat" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44B51CD7202DE7A500881EB5 /* Debug */,

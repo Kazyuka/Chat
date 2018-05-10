@@ -29,6 +29,8 @@ class UserCell: UITableViewCell {
     }
     
     func configureView() {
+        self.userPhoto.image = nil
+        self.userName.text = nil
         userPhoto.setRounded()
         if let im = user.imageProfile {
             let url = NSURL.init(string: im)

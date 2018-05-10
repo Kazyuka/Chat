@@ -65,21 +65,19 @@ class ChatGrupController: UIViewController {
         }
         self.allUsers = room.usersChat
         self.unicKyeForChatRoom = room.groupUID
-        let button: UIButton = UIButton(type: UIButtonType.custom)
+    
+        let viewImage = UIView()
+        let imageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
         
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
-             button.setImage(imageUserForNavigationBar.image, for: UIControlState.normal)
-        } else {
-             button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize.init(width: 25, height: 25)), for: UIControlState.normal)
-        }
-        
-        button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
-        button.frame = CGRect.init(x: 0, y: 0, width: 25, height: 25)
-        button.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.clipsToBounds = true
-        let barButton = UIBarButtonItem(customView: button)
-        self.navigationItem.rightBarButtonItem = barButton
+        let gesture = UITapGestureRecognizer(target: self, action: #selector(self.pressToGropImageRightButton))
+        gesture.numberOfTapsRequired = 1
+        imageView.isUserInteractionEnabled = true
+        imageView.addGestureRecognizer(gesture)
+        imageView.setRounded()
+        imageView.image = self.imageUserForNavigationBar.image
+        viewImage.addSubview(imageView)
+        viewImage.frame = imageView.bounds
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
     }
     
 
@@ -117,6 +115,10 @@ class ChatGrupController: UIViewController {
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
         self.view.addSubview(activityIndicator!)
+       
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        tapGesture.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(tapGesture)
         
         FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
             if isConnect {
@@ -149,6 +151,9 @@ class ChatGrupController: UIViewController {
         return true
     }
 
+    @objc func hideKeyboard(sender: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
     @objc func sendMassegaButtonTapped() {
 
         if let unicKye = unicKyeForChatRoom {
@@ -168,9 +173,9 @@ class ChatGrupController: UIViewController {
                 refLastMessage.updateChildValues(["last-message": text])
             }
         }
-    
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         view.endEditing(true)
+        heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
         textFieldInputTex.text = "Your message".localized
         textFieldInputTex.textColor = UIColor.lightGray
@@ -201,15 +206,16 @@ class ChatGrupController: UIViewController {
     func showActionSheet() {
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Make Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            self.camera()
+            self.photo()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Chose Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photoLibrary()
+            
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Make Video".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
-            self.photo()
+            self.camera()
         }))
         
         actionSheet.addAction(UIAlertAction(title: "Chose Video".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
@@ -273,6 +279,7 @@ class ChatGrupController: UIViewController {
     
     let textFieldInputTex: UITextView = {
         let text = UITextView()
+        text.font = UIFont.systemFont(ofSize: 14)
         text.layer.cornerRadius = 18
         text.layer.masksToBounds = true
         text.layer.borderWidth = 1.0
@@ -453,8 +460,8 @@ extension ChatGrupController: ChatCollectionViewCellDelegate {
         
         startingFrame = gesture.superview?.convert(gesture.frame, to: nil)
         let zoomingImage = UIImageView(frame: startingFrame!)
+        zoomingImage.contentMode = .scaleAspectFill
         zoomingImage.image = gesture.image
-        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageZoomBack(_:)))
         zoomingImage.isUserInteractionEnabled = true
         gesture.numberOfTapsRequired = 1
@@ -469,7 +476,7 @@ extension ChatGrupController: ChatCollectionViewCellDelegate {
             
             keyWindow.addSubview(zoomingImage)
             
-            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                 self.blackView?.alpha = 1
                 zoomingImage.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: self.startingFrame!.height)
                 zoomingImage.center = keyWindow.center

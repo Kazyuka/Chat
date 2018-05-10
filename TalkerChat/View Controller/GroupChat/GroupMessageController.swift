@@ -57,7 +57,7 @@ class GroupMessageController: ContactsSingleMessageController {
         }
     }
     override func getAllUser() {
-        
+        self.userArray.removeAll()
         Database.database().reference().child("users").observeSingleEvent(of: .value) { (snapshot) in
             self.activityIndicator?.stopAnimating()
             if let users = snapshot.value as? [String: AnyObject] {

@@ -104,6 +104,15 @@ class ChatGroupCell: UICollectionViewCell {
     }()
     
     
+    @objc func tapToImageInsideCell(_ sender: UITapGestureRecognizer) {
+        
+        if messageGroup?.videoUrl != nil {
+            return
+        }
+        let view = sender.view as? UIImageView
+        self.delegate?.tapToImage(gesture: view!)
+    }
+    
     @objc func playVideo() {
         
         if let videoUrlString = messageGroup?.videoUrl, let url = NSURL.init(string: videoUrlString){
@@ -153,11 +162,7 @@ class ChatGroupCell: UICollectionViewCell {
         super.init(frame: frame)
         configureCell()
     }
-    @objc func tapToImageInsideCell(_ sender: UITapGestureRecognizer) {
-        //let view = sender.view as? UIImageView
-        //self.delegate?.tapToImage(gesture: view!)
-    }
-    
+  
     required init?(coder aDecoder: NSCoder) {
         fatalError("Shat user")
     }

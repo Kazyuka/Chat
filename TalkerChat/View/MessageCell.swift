@@ -22,7 +22,6 @@ class MessageCell: UserCell {
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -30,6 +29,10 @@ class MessageCell: UserCell {
     }
     
     override func configureView() {
+        
+        self.userPhoto.image = nil
+        self.userName.text = nil
+        self.messageText.text = nil
         
         if let isSingleOptional = chat.isSingle {
             

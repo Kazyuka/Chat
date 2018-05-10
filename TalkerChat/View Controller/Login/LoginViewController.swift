@@ -154,8 +154,9 @@ class LoginViewController: UIViewController {
             }
             self.isLogin = true
             self.activityIndicator?.stopAnimating()
-            let chatVC =  self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController
-            self.navigationController?.pushViewController(chatVC, animated: true)
+            let chatVC = self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController
+    
+            self.present(chatVC, animated: true, completion: nil)
         }
     }
 }

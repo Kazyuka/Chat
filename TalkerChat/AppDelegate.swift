@@ -8,7 +8,7 @@
 
 import UIKit
 import FirebaseCore
-
+import FirebaseAuth
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -22,6 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().unselectedItemTintColor = UIColor.white
         UITabBar.appearance().backgroundImage = UIImage.colorForNavBar(color: #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1))
         UITabBar.appearance().shadowImage = UIImage.colorForNavBar(color: .white)
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let tabController = storyboard.instantiateViewController(withIdentifier: "TabController") as! TabController
+        let loginController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        
+        let uid = Auth.auth().currentUser?.uid
+        
+        if uid == nil {
+            window?.rootViewController = loginController
+        } else {
+            window?.rootViewController = tabController
+        }
         
         return true
     }

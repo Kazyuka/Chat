@@ -137,8 +137,7 @@ class SettingsController: UIViewController {
             changePassword()
         }
     }
-  
-    
+
     private func changeEmail() {
         
         let email = emailTextView.text

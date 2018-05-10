@@ -37,31 +37,33 @@ class ChatSingleController: UIViewController {
     
     func addImageForNavigationButton() {
         
-        if let im = user?.imageProfile {
-            let data = NSData.init(contentsOf: URL.init(string: im)!)
-            if data != nil {
-                imageUserForNavigationBar = UIImage(data: data as! Data)!
+        DispatchQueue.global().async {
+            if let im = self.user?.imageProfile {
+                let data = NSData.init(contentsOf: URL.init(string: im)!)
+                if data != nil {
+                    self.imageUserForNavigationBar = UIImage(data: data as! Data)!
+                }
+                
+            } else {
+                self.imageUserForNavigationBar = UIImage.init(named: "userImage.png")!
             }
             
-        } else {
-            imageUserForNavigationBar = UIImage.init(named: "userImage.png")!
+            DispatchQueue.main.async(execute: {
+                let viewImage = UIView()
+                let imageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
+                
+                let gesture = UITapGestureRecognizer(target: self, action: #selector(self.pressToUserImageRightButton))
+                gesture.numberOfTapsRequired = 1
+                imageView.isUserInteractionEnabled = true
+                imageView.addGestureRecognizer(gesture)
+                imageView.setRounded()
+                imageView.image = self.imageUserForNavigationBar
+                viewImage.addSubview(imageView)
+                viewImage.frame = imageView.bounds
+
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
+            })
         }
-        
-        let button: UIButton = UIButton(type: UIButtonType.custom)
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
-            button.setImage(imageUserForNavigationBar, for: UIControlState.normal)
-        } else {
-            button.setImage(imageUserForNavigationBar.resizeImage(targetSize: CGSize(width: 25, height: 25)), for: UIControlState.normal)
-        }
-        
-        button.addTarget(self, action: #selector(pressToUserImageRightButton), for: UIControlEvents.touchUpInside)
-        button.frame = CGRect.init(x: 0, y: 0, width: 25, height: 25)
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
-        button.clipsToBounds = true
-        button.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
-        let barButton = UIBarButtonItem(customView: button)
-        self.navigationItem.rightBarButtonItem = barButton
-        self.arrayMessages.removeAll()
     }
     
     func observerMessages() {
@@ -88,6 +90,11 @@ class ChatSingleController: UIViewController {
         self.setUpNotification()
         self.navigationController?.navigationBar.backItem?.title = " "
         self.navigationController?.navigationBar.topItem?.title = " "
+        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
+            if isConnect {
+                self.addImageForNavigationButton()
+            }
+        }
     }
     override func didMove(toParentViewController parent: UIViewController?) {
         super.didMove(toParentViewController: parent)
@@ -113,10 +120,9 @@ class ChatSingleController: UIViewController {
         self.view.addGestureRecognizer(tapGesture)
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
         self.view.addSubview(activityIndicator!)
-        
+        self.arrayMessages.removeAll()
         FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
             if isConnect {
-                
                 self.observerMessages()
                 self.addImageForNavigationButton()
             }
@@ -285,6 +291,7 @@ class ChatSingleController: UIViewController {
     
     let textFieldInputTex: UITextView = {
         let text = UITextView()
+        text.font = UIFont.systemFont(ofSize: 14)
         text.layer.cornerRadius = 18
         text.layer.masksToBounds = true
         text.layer.borderWidth = 1.0
@@ -460,8 +467,8 @@ extension ChatSingleController: ChatCollectionViewCellDelegate {
         
         startingFrame = gesture.superview?.convert(gesture.frame, to: nil)
         let zoomingImage = UIImageView(frame: startingFrame!)
+        zoomingImage.contentMode = .scaleAspectFill
         zoomingImage.image = gesture.image
-        
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImageZoomBack(_:)))
         zoomingImage.isUserInteractionEnabled = true
         gesture.numberOfTapsRequired = 1
@@ -476,7 +483,7 @@ extension ChatSingleController: ChatCollectionViewCellDelegate {
             
             keyWindow.addSubview(zoomingImage)
             
-            UIView.animate(withDuration: 0.6, delay: 0, options: .curveEaseIn, animations: {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                 self.blackView?.alpha = 1
                 zoomingImage.frame = CGRect(x: 0, y: 0, width: keyWindow.frame.width, height: self.startingFrame!.height)
                 zoomingImage.center = keyWindow.center
@@ -487,7 +494,6 @@ extension ChatSingleController: ChatCollectionViewCellDelegate {
     @objc func tapToImageZoomBack(_ sender: UITapGestureRecognizer) {
         
         if let zoomOut = sender.view {
-            
             UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
                 self.blackView?.alpha = 0
                 zoomOut.frame = self.startingFrame!

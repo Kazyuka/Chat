@@ -36,6 +36,7 @@ class ChatController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.tableView.isHidden = true
         tableView.separatorColor = UIColor.clear
         searchController = UISearchController(searchResultsController: nil);
         tableView.tableHeaderView = searchController.searchBar
@@ -96,6 +97,7 @@ class ChatController: UIViewController {
     }
     func observeUserMessages() {
         self.grouChat.removeAll()
+        self.tableView.isHidden = false
         let refChatRom = Database.database().reference().child("chat-romm")
         refChatRom.observe(.childAdded) { (snap) in
             
@@ -114,10 +116,11 @@ class ChatController: UIViewController {
                 }
             }
             
-            DispatchQueue.main.async(execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.activityIndicator?.stopAnimating()
+                self.tableView.isHidden = false
                 self.tableView.reloadData()
-            })
+            }
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
@@ -133,9 +136,6 @@ class ChatController: UIViewController {
             self.logout()
         } else {
             Database.database().reference().child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
-                if let dictionary = snapshot.value as? [String: AnyObject] {
-                    let user = User(dic: dictionary)
-                }
             })
         }
     }
@@ -231,7 +231,12 @@ extension ChatController: DissmisGroupCreteDelegate {
 
 extension ChatController: ChatControllerDelegate {
     func observeChangedMessageInsideChatRoom() {
-        observeUserMessages()
+        self.tableView.isHidden = true
+        activityIndicator?.startAnimating()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.activityIndicator?.stopAnimating()
+            self.observeUserMessages()
+        }
     }
 }
 
@@ -297,7 +302,11 @@ extension ChatController: UITabBarControllerDelegate {
         let tabBarIndex = tabBarController.selectedIndex
         if tabBarIndex == 1 {
             
-            observeUserMessages()
+            FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
+                if isConnect {
+                    self.observeUserMessages()
+                }
+            }
         }
     }
 }

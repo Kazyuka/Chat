@@ -47,7 +47,7 @@ class GroupCreateController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
-        nameGroupTextField.changeColor(textForPlaceHoder: "Some Name", size: 17.0)
+        nameGroupTextField.changeColor(textForPlaceHoder: "Some Name".localized, size: 17.0)
         self.navigationItem.title = "Create Group".localized
         groupNameLabel.text = "Group Name".localized
     }

@@ -70,18 +70,19 @@ class ChatGrupController: UIViewController {
         if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad) {
              button.setImage(imageUserForNavigationBar.image, for: UIControlState.normal)
         } else {
-            button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize(width: 25, height: 25)), for: UIControlState.normal)
+             button.setImage(imageUserForNavigationBar.image?.resizeImage(targetSize: CGSize.init(width: 25, height: 25)), for: UIControlState.normal)
         }
-      
+        
         button.addTarget(self, action: #selector(pressToGropImageRightButton), for: UIControlEvents.touchUpInside)
         button.frame = CGRect.init(x: 0, y: 0, width: 25, height: 25)
+        button.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.clipsToBounds = true
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.rightBarButtonItem = barButton
     }
     
-    
+
     func observerMessages() {
         arrayMessages.removeAll()
         if let keyUnick = unicKyeForChatRoom {
@@ -129,6 +130,7 @@ class ChatGrupController: UIViewController {
         self.setUpNotification()
         self.navigationController?.navigationBar.backItem?.title = " "
         self.navigationController?.navigationBar.topItem?.title = " "
+        self.navigationItem.title = room?.groupName
     }
     
     override func didMove(toParentViewController parent: UIViewController?) {
@@ -170,7 +172,7 @@ class ChatGrupController: UIViewController {
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         view.endEditing(true)
         sendButton.isEnabled = false
-        textFieldInputTex.text = "Your message"
+        textFieldInputTex.text = "Your message".localized
         textFieldInputTex.textColor = UIColor.lightGray
     }
     
@@ -276,7 +278,7 @@ class ChatGrupController: UIViewController {
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
-        text.text = "Your message"
+        text.text = "Your message".localized
         text.textAlignment = .right
         text.textColor = UIColor.lightGray
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -423,14 +425,14 @@ extension ChatGrupController: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text == "Your message" {
+        if textView.text == "Your message".localized {
             textView.text = nil
             textView.textColor = UIColor.black
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text == "" {
-            textView.text = "Your message"
+            textView.text = "Your message".localized
             textView.textColor = UIColor.lightGray
         }
     }

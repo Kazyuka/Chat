@@ -45,10 +45,11 @@
 		44FE62D5208754AC00F734E0 /* DetailGroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D4208754AC00F734E0 /* DetailGroupController.swift */; };
 		44FE62D720877D1B00F734E0 /* RoomChat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D620877D1B00F734E0 /* RoomChat.swift */; };
 		44FE62DA20878F4C00F734E0 /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FE62D920878F4C00F734E0 /* SettingsController.swift */; };
-		964B67152F91D6A2233FDE59 /* Pods_TalkerChat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BF7785DFD70A41EF2548C10 /* Pods_TalkerChat.framework */; };
+		EE231E7AFEEA5768F14E91EA /* Pods_Conversation_Street.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01740931BD52CC6BBFAB56B2 /* Pods_Conversation_Street.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01740931BD52CC6BBFAB56B2 /* Pods_Conversation_Street.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Conversation_Street.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4408100820A1E6C500CC53E7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		441FFC23203477C6000F8E99 /* ContactsSingleMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsSingleMessageController.swift; sourceTree = "<group>"; };
@@ -56,6 +57,7 @@
 		442AF4F52080E46600E10C25 /* ChatGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatGroupCell.swift; sourceTree = "<group>"; };
 		44495F26208FAD97009CCF7F /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		44495F28208FADE9009CCF7F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		4460770920A451E500379667 /* Conversation Street.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Conversation Street.entitlements"; sourceTree = "<group>"; };
 		4479B12B208DD785001FA3EB /* DetailGroupControllerFromRoomChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupControllerFromRoomChat.swift; sourceTree = "<group>"; };
 		447E1A422086014D00F327BA /* GroupCreateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupCreateController.swift; sourceTree = "<group>"; };
 		447E1A452086315300F327BA /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
@@ -68,7 +70,7 @@
 		44A34A942084E1CE0083A4F1 /* String+Extentions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extentions.swift"; sourceTree = "<group>"; };
 		44B3F0AC204577030096911B /* PresentAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentAnimation.swift; sourceTree = "<group>"; };
 		44B3F0AE2045794A0096911B /* AnimationHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimationHelper.swift; sourceTree = "<group>"; };
-		44B51CC4202DE7A500881EB5 /* TalkerChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TalkerChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		44B51CC4202DE7A500881EB5 /* Conversation Street.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Conversation Street.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		44B51CC7202DE7A500881EB5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44B51CC9202DE7A500881EB5 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		44B51CCC202DE7A500881EB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -96,9 +98,11 @@
 		44FE62D4208754AC00F734E0 /* DetailGroupController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailGroupController.swift; sourceTree = "<group>"; };
 		44FE62D620877D1B00F734E0 /* RoomChat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoomChat.swift; sourceTree = "<group>"; };
 		44FE62D920878F4C00F734E0 /* SettingsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
+		4C6BD4555034B63211DA435F /* Pods-Conversation Street.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Conversation Street.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Conversation Street/Pods-Conversation Street.debug.xcconfig"; sourceTree = "<group>"; };
 		60BE9E4806AED210574D8DD4 /* Pods-TalkerChat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TalkerChat.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat.debug.xcconfig"; sourceTree = "<group>"; };
 		8BF7785DFD70A41EF2548C10 /* Pods_TalkerChat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TalkerChat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1D224CFB0E74B26D8CC6CD7 /* Pods-TalkerChat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TalkerChat.release.xcconfig"; path = "Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat.release.xcconfig"; sourceTree = "<group>"; };
+		E930B2458AD4D63F30E07BD9 /* Pods-Conversation Street.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Conversation Street.release.xcconfig"; path = "Pods/Target Support Files/Pods-Conversation Street/Pods-Conversation Street.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,7 +110,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				964B67152F91D6A2233FDE59 /* Pods_TalkerChat.framework in Frameworks */,
+				EE231E7AFEEA5768F14E91EA /* Pods_Conversation_Street.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +122,8 @@
 			children = (
 				60BE9E4806AED210574D8DD4 /* Pods-TalkerChat.debug.xcconfig */,
 				E1D224CFB0E74B26D8CC6CD7 /* Pods-TalkerChat.release.xcconfig */,
+				4C6BD4555034B63211DA435F /* Pods-Conversation Street.debug.xcconfig */,
+				E930B2458AD4D63F30E07BD9 /* Pods-Conversation Street.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -185,6 +191,7 @@
 		44B51CBB202DE7A500881EB5 = {
 			isa = PBXGroup;
 			children = (
+				4460770920A451E500379667 /* Conversation Street.entitlements */,
 				44B51CC6202DE7A500881EB5 /* TalkerChat */,
 				44B51CC5202DE7A500881EB5 /* Products */,
 				428BA6AEC0727E381D2698C5 /* Pods */,
@@ -195,7 +202,7 @@
 		44B51CC5202DE7A500881EB5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				44B51CC4202DE7A500881EB5 /* TalkerChat.app */,
+				44B51CC4202DE7A500881EB5 /* Conversation Street.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -279,6 +286,7 @@
 			children = (
 				2BB480A7F66B6C34C4AF49CD /* Pods_TestChat.framework */,
 				8BF7785DFD70A41EF2548C10 /* Pods_TalkerChat.framework */,
+				01740931BD52CC6BBFAB56B2 /* Pods_Conversation_Street.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -286,9 +294,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		44B51CC3202DE7A500881EB5 /* TalkerChat */ = {
+		44B51CC3202DE7A500881EB5 /* Conversation Street */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "TalkerChat" */;
+			buildConfigurationList = 44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "Conversation Street" */;
 			buildPhases = (
 				097EAC9D285241955583CDCD /* [CP] Check Pods Manifest.lock */,
 				44B51CC0202DE7A500881EB5 /* Sources */,
@@ -301,9 +309,9 @@
 			);
 			dependencies = (
 			);
-			name = TalkerChat;
+			name = "Conversation Street";
 			productName = TestChat;
-			productReference = 44B51CC4202DE7A500881EB5 /* TalkerChat.app */;
+			productReference = 44B51CC4202DE7A500881EB5 /* Conversation Street.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -327,7 +335,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "TalkerChat" */;
+			buildConfigurationList = 44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "Conversation Street" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -341,7 +349,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				44B51CC3202DE7A500881EB5 /* TalkerChat */,
+				44B51CC3202DE7A500881EB5 /* Conversation Street */,
 			);
 		};
 /* End PBXProject section */
@@ -373,11 +381,11 @@
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-TalkerChat-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Conversation Street-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8B33C819C7F2F2FA296A1746 /* [CP] Embed Pods Frameworks */ = {
@@ -386,7 +394,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat-frameworks.sh",
+				"${SRCROOT}/Pods/Target Support Files/Pods-Conversation Street/Pods-Conversation Street-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/NVActivityIndicatorView/NVActivityIndicatorView.framework",
@@ -405,7 +413,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Conversation Street/Pods-Conversation Street-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8C016F01604CAFBE4D98925E /* [CP] Copy Pods Resources */ = {
@@ -420,7 +428,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TalkerChat/Pods-TalkerChat-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Conversation Street/Pods-Conversation Street-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -613,12 +621,12 @@
 		};
 		44B51CD7202DE7A500881EB5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 60BE9E4806AED210574D8DD4 /* Pods-TalkerChat.debug.xcconfig */;
+			baseConfigurationReference = 4C6BD4555034B63211DA435F /* Pods-Conversation Street.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = "Conversation Street.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = F848SS3H8U;
 				INFOPLIST_FILE = "$(SRCROOT)/TalkerChat/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -631,12 +639,12 @@
 		};
 		44B51CD8202DE7A500881EB5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E1D224CFB0E74B26D8CC6CD7 /* Pods-TalkerChat.release.xcconfig */;
+			baseConfigurationReference = E930B2458AD4D63F30E07BD9 /* Pods-Conversation Street.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = "Conversation Street.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = F848SS3H8U;
 				INFOPLIST_FILE = "$(SRCROOT)/TalkerChat/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -650,7 +658,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "TalkerChat" */ = {
+		44B51CBF202DE7A500881EB5 /* Build configuration list for PBXProject "Conversation Street" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44B51CD4202DE7A500881EB5 /* Debug */,
@@ -659,7 +667,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "TalkerChat" */ = {
+		44B51CD6202DE7A500881EB5 /* Build configuration list for PBXNativeTarget "Conversation Street" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				44B51CD7202DE7A500881EB5 /* Debug */,

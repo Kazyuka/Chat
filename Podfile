@@ -3,7 +3,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, ‘8.0’
 use_frameworks!
 
-target ‘TalkerChat’ do
+target ‘Conversation Street’ do
   
  pod 'Firebase/Core'
  pod 'Firebase/Auth'

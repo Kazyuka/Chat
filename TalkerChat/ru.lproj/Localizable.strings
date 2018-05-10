@@ -46,3 +46,11 @@
 "SignUp" = "Регистрация";
 "CONTINUE" = "ПРОДОЛЖИТЬ";
 "Forgot password" = "Забыли пароль";
+"First name" = "Имя";
+"Some Name" = "Название";
+"Your message" = "Ваше сообщение";
+"Passwords do not match" = "Пароли не совпадают";
+"Field name must be filled in" = "Поле фамилия нужно заполнить";
+"Fill in all the fields!!" = "Заполните все поля!!";
+"To change the password, check the e-mail!" = "Для замены пароля проверьте электорнную почту!";
+"Edit Group" = "Редактировать Группу";

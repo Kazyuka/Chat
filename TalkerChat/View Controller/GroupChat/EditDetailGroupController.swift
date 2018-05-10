@@ -17,6 +17,7 @@ import FirebaseStorage
 
 class EditDetailGroupController: UIViewController {
 
+    @IBOutlet weak var groupNameLabel: UILabel!
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var imageGroup: UIImageView!
@@ -27,7 +28,8 @@ class EditDetailGroupController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        groupNameTextField.changeColor(textForPlaceHoder: "Some Name", size: 16.0)
+        groupNameTextField.changeColor(textForPlaceHoder: "Some Name".localized, size: 16.0)
+        groupNameLabel.text = "Group Name".localized
         imagePicker.delegate = self
         let gesture = UITapGestureRecognizer(target: self, action: #selector(tapToImage(_:)))
         gesture.numberOfTapsRequired = 1
@@ -47,7 +49,7 @@ class EditDetailGroupController: UIViewController {
         imageGroup.setRounded()
         self.navigationController?.navigationBar.topItem?.title = ""
         self.navigationController?.navigationBar.backItem?.title = ""
-        self.navigationItem.title = "Edit Group"
+        self.navigationItem.title = "Edit Group".localized
     }
   
     @IBAction func saveButtonClick(_ sender: Any) {

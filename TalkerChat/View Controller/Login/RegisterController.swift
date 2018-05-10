@@ -94,9 +94,9 @@ class RegisterController: UIViewController {
     private func comparePassword () {
         
         if passwordTextField.text != passwordAgTextField.text {
-            self.present(self.allertControllerWithOneButton(message: "Пароли не совпадают"), animated: true, completion: nil)
+            self.present(self.allertControllerWithOneButton(message: "Passwords do not match".localized), animated: true, completion: nil)
         } else if lastNameTextField.text == "" {
-            self.present(self.allertControllerWithOneButton(message: "Поле фамилия нужно заполнить"), animated: true, completion: nil)
+            self.present(self.allertControllerWithOneButton(message: "Field name must be filled in".localized), animated: true, completion: nil)
         } else {
             registerUser()
         }
@@ -106,7 +106,7 @@ class RegisterController: UIViewController {
         activityIndicator?.startAnimating()
         guard let email = emailTextField.text, let password = passwordTextField.text, let name = firstNameTextField.text, let lastName = lastNameTextField.text else {
             self.activityIndicator?.stopAnimating()
-            self.present(self.allertControllerWithOneButton(message: "Заполните все поля!!"), animated: true, completion: nil)
+            self.present(self.allertControllerWithOneButton(message: "Fill in all the fields!!".localized), animated: true, completion: nil)
             return  }
         
         Auth.auth().createUser(withEmail: email, password: password) { (user, error) in

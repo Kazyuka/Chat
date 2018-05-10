@@ -57,7 +57,7 @@ class ResetPasswordController: UIViewController {
             if error != nil {
                 self.present(self.allertControllerWithOneButton(message: error!.localizedDescription), animated: true, completion: nil)
             }
-            self.present(self.allertControllerWithOneButton(message: "Для замены пароля проверьте электорнную почту!"), animated: true, completion: nil)
+            self.present(self.allertControllerWithOneButton(message: "To change the password, check the e-mail!".localized), animated: true, completion: nil)
         }
     }
     @objc func hideKeyboard(sender: UITapGestureRecognizer) {

@@ -58,6 +58,7 @@ class ChatSingleController: UIViewController {
         button.frame = CGRect.init(x: 0, y: 0, width: 25, height: 25)
         button.layer.cornerRadius = 0.5 * button.bounds.size.width
         button.clipsToBounds = true
+        button.backgroundColor = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
         let barButton = UIBarButtonItem(customView: button)
         self.navigationItem.rightBarButtonItem = barButton
         self.arrayMessages.removeAll()
@@ -115,8 +116,9 @@ class ChatSingleController: UIViewController {
         
         FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
             if isConnect {
-                self.addImageForNavigationButton()
+                
                 self.observerMessages()
+                self.addImageForNavigationButton()
             }
         }
     }
@@ -234,7 +236,7 @@ class ChatSingleController: UIViewController {
         view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
-        textFieldInputTex.text = "Your message"
+        textFieldInputTex.text = "Your message".localized
         textFieldInputTex.textColor = UIColor.lightGray
     }
    @objc func sendImageMassegaButtonTapped () {
@@ -288,7 +290,7 @@ class ChatSingleController: UIViewController {
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
-        text.text = "Your message"
+        text.text = "Your message".localized
         text.textAlignment = .right
         text.textColor = UIColor.lightGray
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -510,14 +512,14 @@ extension ChatSingleController: UITextViewDelegate {
     
     public func textViewDidBeginEditing(_ textView: UITextView) {
         
-        if textView.text == "Your message" {
+        if textView.text == "Your message".localized {
             textView.text = nil
             textView.textColor = UIColor.black
         }
     }
     public func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text == "" {
-            textView.text = "Your message"
+            textView.text = "Your message".localized
             textView.textColor = UIColor.lightGray
         }
     }

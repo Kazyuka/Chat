@@ -46,3 +46,10 @@
 "CONTINUE" = "CONTINUE";
 "Forgot Password" = "Forgot Password";
 "Forgot password" = "Forgot password";
+"Some Name" = "Some Name";
+"Your message" = "Your message";
+"Passwords do not match" = "Passwords do not match";
+"Field name must be filled in" = "Field name must be filled in";
+"Fill in all the fields!!" = "Fill in all the fields!!";
+"To change the password, check the e-mail!" = "To change the password, check the e-mail!";
+"Edit Group" = "Edit Group";

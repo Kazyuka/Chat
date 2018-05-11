@@ -152,6 +152,15 @@ class LoginViewController: UIViewController {
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                 return
             }
+            
+            guard let uid = Auth.auth().currentUser?.uid else {
+                return
+            }
+            
+            let value = ["deviceId": AppDelegate.DEVICEID] as? [String: AnyObject]
+            let ref = Database.database().reference().child("users").child(uid)
+            ref.updateChildValues(value!)
+            
             self.isLogin = true
             self.activityIndicator?.stopAnimating()
             let chatVC = self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController

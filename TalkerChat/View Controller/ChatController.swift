@@ -31,6 +31,7 @@ class ChatController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationItem.title = "Chats".localized
+        UIApplication.shared.applicationIconBadgeNumber = 0
         self.setupNavigationBar()
     }
     
@@ -53,15 +54,7 @@ class ChatController: UIViewController {
         
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
         self.view.addSubview(activityIndicator!)
-        
-        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
-            self.activityIndicator?.startAnimating()
-            if isConnect {
-                self.observeUserMessages()
-            } else {
-                self.activityIndicator?.stopAnimating()
-            }
-        }
+        self.observeUserMessages()
     }
     
     func setupNavigationBar() {
@@ -96,6 +89,7 @@ class ChatController: UIViewController {
         searchController.searchBar.setPositionAdjustment(offset, for: .search)
     }
     func observeUserMessages() {
+        self.activityIndicator?.startAnimating()
         self.grouChat.removeAll()
         self.tableView.isHidden = false
         let refChatRom = Database.database().reference().child("chat-romm")
@@ -123,7 +117,7 @@ class ChatController: UIViewController {
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(0), execute: {
             self.activityIndicator?.stopAnimating()
         })
     }
@@ -131,7 +125,6 @@ class ChatController: UIViewController {
     func isUserLogin() {
         
         let uid = Auth.auth().currentUser?.uid
-        
         if uid == nil {
             self.logout()
         } else {
@@ -234,7 +227,6 @@ extension ChatController: ChatControllerDelegate {
         self.tableView.isHidden = true
         activityIndicator?.startAnimating()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.activityIndicator?.stopAnimating()
             self.observeUserMessages()
         }
     }
@@ -301,12 +293,8 @@ extension ChatController: UITabBarControllerDelegate {
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         let tabBarIndex = tabBarController.selectedIndex
         if tabBarIndex == 1 {
-            
-            FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
-                if isConnect {
-                    self.observeUserMessages()
-                }
-            }
+            self.grouChat.removeAll()
+            self.observeUserMessages()
         }
     }
 }

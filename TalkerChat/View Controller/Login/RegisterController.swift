@@ -119,7 +119,7 @@ class RegisterController: UIViewController {
             
             guard let uid = user?.uid else { return }
             
-            let value = ["name": name, "email": email,"lastName" : lastName, "aboutMe": "", "uid": uid]
+            let value = ["name": name, "email": email,"lastName" : lastName, "aboutMe": "", "uid": uid, "deviceId": AppDelegate.DEVICEID]
             self.registerUserIntoFirebase(uid: uid, value: value as [String : AnyObject] )
         }
     }

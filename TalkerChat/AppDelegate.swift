@@ -9,15 +9,22 @@
 import UIKit
 import FirebaseCore
 import FirebaseAuth
+import UserNotifications
+import FirebaseMessaging
+import FirebaseInstanceID
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    
+    static let NOTIFICATION_URL = "https://fcm.googleapis.com/fcm/send"
+    static var DEVICEID = String()
+    static let SERVERCEY = "AAAAtA1rnxA:APA91bE3DLt8fiJSsVguz_yZn2LPKNXYndNEMlCmIoalRrF9r3r_zXmJjshrJRlMNVsTS_IRgrj6s2WBrOKa7WQLdHevFRtVKhxqs94LYjFmUF3tCp4mo0oKttipj3bCXva3xWawkyzH"
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
+        firebaseNotificationSetUp(application: application)
         UITabBar.appearance().tintColor = UIColor.white
         UITabBar.appearance().unselectedItemTintColor = UIColor.white
         UITabBar.appearance().backgroundImage = UIImage.colorForNavBar(color: #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1))
@@ -34,32 +41,108 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         } else {
             window?.rootViewController = tabController
         }
-        
         return true
     }
 
+    func firebaseNotificationSetUp(application: UIApplication) {
+        Messaging.messaging().delegate = self
+        
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: {_, _ in })
+        } else {
+            let settings: UIUserNotificationSettings =
+                UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
+            application.registerUserNotificationSettings(settings)
+        }
+        
+        application.registerForRemoteNotifications()
+        UIApplication.shared.applicationIconBadgeNumber = 0
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+
+        completionHandler(UIBackgroundFetchResult.newData)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Unable to register for remote notifications: \(error.localizedDescription)")
+    }
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        
+        guard let tocken = InstanceID.instanceID().token() else {
+            return
+        }
+        AppDelegate.DEVICEID = tocken
+        Messaging.messaging().shouldEstablishDirectChannel = true
+    }
+
     func applicationWillResignActive(_ application: UIApplication) {
-        // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-        // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
+        
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-        // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+
     }
+}
 
+// [START ios_10_message_handling]
+@available(iOS 10, *)
+extension AppDelegate : UNUserNotificationCenterDelegate {
+    
+    // Receive displayed notifications for iOS 10 devices.
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        let userInfo = notification.request.content.userInfo
+        
+        print(userInfo)
+        
+        completionHandler([])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+        let userInfo = response.notification.request.content.userInfo
+      
+        
+        completionHandler()
+    }
+}
 
+extension AppDelegate : MessagingDelegate {
+    // [START refresh_token]
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String) {
+        guard let newTocken = InstanceID.instanceID().token() else {
+            return
+        }
+        AppDelegate.DEVICEID = newTocken
+        Messaging.messaging().shouldEstablishDirectChannel = true
+        func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
+            print("Received data message: \(remoteMessage.appData)")
+        }
+    }
 }
 

@@ -8,8 +8,10 @@ target ‘Conversation Street’ do
  pod 'Firebase/Core'
  pod 'Firebase/Auth'
  pod 'Firebase/Storage'
+ pod 'Firebase/Messaging'
  pod 'Firebase/Database'
  pod 'SDWebImage', '~> 4.0'
+ pod 'Alamofire'
  pod 'NVActivityIndicatorView'
 
 end

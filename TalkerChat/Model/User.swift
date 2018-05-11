@@ -19,6 +19,7 @@ class User: NSObject {
     var lastName: String?
     var aboutMe: String?
     var uid: String?
+    var idDevice: String?
     
     init(dic: [String: AnyObject]) {
         self.name = dic["name"] as! String
@@ -30,6 +31,10 @@ class User: NSObject {
         self.aboutMe = dic["aboutMe"] as? String
         if let id = dic["uid"] as? String {
             self.uid = id
+        }
+        
+        if let deviceId = dic["deviceId"] as? String {
+            idDevice = deviceId
         }
     }
     

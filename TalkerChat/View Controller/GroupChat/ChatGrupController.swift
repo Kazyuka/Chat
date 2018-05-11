@@ -13,6 +13,7 @@ import FirebaseStorage
 import MobileCoreServices
 import AVKit
 import NVActivityIndicatorView
+import Alamofire
 
 class ChatGrupController: UIViewController {
   
@@ -171,6 +172,7 @@ class ChatGrupController: UIViewController {
                 
                 let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
                 refLastMessage.updateChildValues(["last-message": text])
+                self.featchMessages(chatId: self.unicKyeForChatRoom!, textMessage: text)
             }
         }
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
@@ -179,6 +181,55 @@ class ChatGrupController: UIViewController {
         sendButton.isEnabled = false
         textFieldInputTex.text = "Your message".localized
         textFieldInputTex.textColor = UIColor.lightGray
+    }
+    
+    private func featchMessages(chatId: String, textMessage: String) {
+        let ref = Database.database().reference().child("chat-romm").child(chatId).child("users")
+        ref.observeSingleEvent(of: .value) { (snap) in
+            
+            guard let dic = snap.value  as? [String: AnyObject] else {
+                return
+            }
+            
+            let toIdDevice = dic["deviceId"] as? String
+            
+            dic.forEach({ (value, key) in
+                
+                guard let uid = Auth.auth().currentUser?.uid else {
+                    return
+                }
+        
+                let id = key["toId"] as? String
+                if id != uid {
+                    self.fetchUserForPush(toId: id!, textMessage: textMessage)
+                }
+            })
+        }
+    }
+    
+    private func fetchUserForPush(toId: String, textMessage: String) {
+        let ref = Database.database().reference().child("users").child(toId)
+        ref.observeSingleEvent(of: .value) { (snap) in
+            
+            guard let dic = snap.value  as? [String: AnyObject] else {
+                return
+            }
+            
+            let toIdDevice = dic["deviceId"] as? String
+            self.sendPushNotificationToUser(idUser: toIdDevice!, textMessage: textMessage )
+        }
+    }
+    
+    
+    private func sendPushNotificationToUser(idUser: String, textMessage: String) {
+        var headers: HTTPHeaders = HTTPHeaders()
+        headers = ["Content-Type": "application/json", "Authorization": "key=\(AppDelegate.SERVERCEY)"]
+        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " ","badge":1,"sound":"default"]] as [String: AnyObject]
+        Alamofire.request(AppDelegate.NOTIFICATION_URL as URLConvertible, method: .post as HTTPMethod, parameters: notificatios, encoding: JSONEncoding.default, headers: headers).responseJSON { (response) in
+            
+            
+            print(response)
+        }
     }
     
     func camera() {

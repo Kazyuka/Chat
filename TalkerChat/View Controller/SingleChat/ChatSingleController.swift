@@ -8,6 +8,7 @@ import FirebaseStorage
 import MobileCoreServices
 import AVKit
 import NVActivityIndicatorView
+import Alamofire
 
 class ChatSingleController: UIViewController {
    
@@ -215,7 +216,7 @@ class ChatSingleController: UIViewController {
             }
             
             let ref1 =  self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!).child("messages").childByAutoId()
-            let value2 =  ["text": text, "fromId": fromId, "toId": toIdUser, "time": time] as [String : Any]
+            let value2 =  ["text": text, "fromId": fromId, "toId": toIdUser, "time": time, "deviceId": AppDelegate.DEVICEID] as [String : Any]
             
             ref1.updateChildValues(value2) { (err, data) in
                 if err != nil {
@@ -237,6 +238,7 @@ class ChatSingleController: UIViewController {
             refLastMessage.updateChildValues(["last-message": text])
             let refToIdUser = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
             refToIdUser.updateChildValues(["toId": toIdUser])
+            self.featchMessages(toId: toIdUser!, textMessage: text!)
         }
         collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         view.endEditing(true)
@@ -244,6 +246,29 @@ class ChatSingleController: UIViewController {
         sendButton.isEnabled = false
         textFieldInputTex.text = "Your message".localized
         textFieldInputTex.textColor = UIColor.lightGray
+    }
+    
+    
+    private func featchMessages(toId: String, textMessage: String) {
+        let ref = Database.database().reference().child("users").child(toId)
+        ref.observeSingleEvent(of: .value) { (snap) in
+            
+            guard let dic = snap.value  as? [String: AnyObject] else {
+                return
+            }
+            
+            let toIdDevice = dic["deviceId"] as? String
+            self.sendPushNotificationToUser(idUser: toIdDevice!, textMessage: textMessage )
+        }
+    }
+    
+    private func sendPushNotificationToUser(idUser: String, textMessage: String) {
+        
+        var headers: HTTPHeaders = HTTPHeaders()
+        headers = ["Content-Type": "application/json", "Authorization": "key=\(AppDelegate.SERVERCEY)"]
+        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " ","badge":1,"sound":"default"]] as [String: AnyObject]
+        Alamofire.request(AppDelegate.NOTIFICATION_URL as URLConvertible, method: .post as HTTPMethod, parameters: notificatios, encoding: JSONEncoding.default, headers: headers).responseJSON { (response) in
+        }
     }
    @objc func sendImageMassegaButtonTapped () {
         showActionSheet()

@@ -10,7 +10,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseDatabase
 
-struct RoomChat {
+class RoomChat {
     
     var groupName: String?
     var groupUID: String?
@@ -21,6 +21,7 @@ struct RoomChat {
     var message: [Message]?
     var lastMessage: String?
     var toId: String?
+    var searchUser: String?
     
     init(dic: [String : AnyObject]) {
         
@@ -45,6 +46,9 @@ struct RoomChat {
         }
         if let toID = dic["toId"] as? String {
             toId = toID
+            getUserNameById(idUser: toID, userName: { (user)  in
+                self.searchUser = user
+            })
         }
         
         if let mes = dic["messages"] as? Dictionary<String, AnyObject> {
@@ -52,7 +56,18 @@ struct RoomChat {
         }
     }
     
-    
+    func getUserNameById(idUser: String, userName: @escaping (String) ->() ) {
+        
+        let ref = Database.database().reference().child("users").child(idUser)
+        ref.observeSingleEvent(of: .value, with: { (snap) in
+            
+            if let u = snap.value as? [String: AnyObject] {
+                let user = User(dic: u)
+                userName(user.name + " " + user.lastName!)
+            }
+        })
+    }
+
     func getUsersForChat(dic: Dictionary<String, AnyObject>) -> [String] {
         
         var arrayUsers = [String]()
@@ -90,8 +105,6 @@ struct RoomChat {
                 }
             })
         }
-        
-       
     }
     
     func getMessageChat(dic: Dictionary<String, AnyObject>) -> [Message] {

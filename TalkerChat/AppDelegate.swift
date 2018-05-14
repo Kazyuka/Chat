@@ -37,9 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let uid = Auth.auth().currentUser?.uid
         
         if uid == nil {
-            window?.rootViewController = loginController
+            window?.rootViewController? = UINavigationController(rootViewController: loginController)
         } else {
-            window?.rootViewController = tabController
+            window?.rootViewController =  tabController
         }
         return true
     }
@@ -103,6 +103,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
 
+    }
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
 }
 

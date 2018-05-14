@@ -105,7 +105,7 @@ class ChatGrupController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInputTextField()
-        collectionView?.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 60, right: 0)
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 40, right: 0)
         self.collectionView?.backgroundColor = UIColor.white
         collectionView?.alwaysBounceVertical = true
         collectionView?.register(ChatGroupCell.self, forCellWithReuseIdentifier: cellIdentifier)
@@ -114,7 +114,8 @@ class ChatGrupController: UIViewController {
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
-        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2 - 10, y: self.view.frame.height/2 - 60 , width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator?.center = self.view.center
         self.view.addSubview(activityIndicator!)
        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
@@ -175,12 +176,10 @@ class ChatGrupController: UIViewController {
                 self.featchMessages(chatId: self.unicKyeForChatRoom!, textMessage: text)
             }
         }
-        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
-        view.endEditing(true)
         heightConstraintForConteinerViewForMessage?.constant = 40
         sendButton.isEnabled = false
-        textFieldInputTex.text = "Your message".localized
-        textFieldInputTex.textColor = UIColor.lightGray
+        textFieldInputTex.text = " "
+        self.plceholderLabel.isHidden = false
     }
     
     private func featchMessages(chatId: String, textMessage: String) {
@@ -192,7 +191,7 @@ class ChatGrupController: UIViewController {
             }
             
             let toIdDevice = dic["deviceId"] as? String
-            
+
             dic.forEach({ (value, key) in
                 
                 guard let uid = Auth.auth().currentUser?.uid else {
@@ -328,6 +327,16 @@ class ChatGrupController: UIViewController {
         return view
     }()
     
+    let plceholderLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.text = "Your message".localized
+        label.textAlignment = .left
+        label.textColor = UIColor.lightGray
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     let textFieldInputTex: UITextView = {
         let text = UITextView()
         text.font = UIFont.systemFont(ofSize: 14)
@@ -336,9 +345,8 @@ class ChatGrupController: UIViewController {
         text.layer.borderWidth = 1.0
         text.layer.borderColor = UIColor.lightGray.cgColor
         text.isScrollEnabled = false
-        text.text = "Your message".localized
-        text.textAlignment = .right
-        text.textColor = UIColor.lightGray
+        text.textAlignment = .left
+        text.textColor = UIColor.black
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
@@ -363,7 +371,7 @@ class ChatGrupController: UIViewController {
         self.massegeImputContainerView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
         textFieldInputTex.delegate = self
-        textFieldInputTex.becomeFirstResponder()
+        
         self.massegeImputContainerView.addSubview(textFieldInputTex)
         self.massegeImputContainerView.addSubview(sendButton)
         self.massegeImputContainerView.addSubview(sendImageButton)
@@ -382,6 +390,11 @@ class ChatGrupController: UIViewController {
         self.textFieldInputTex.bottomAnchor.constraint(equalTo: self.massegeImputContainerView.bottomAnchor, constant: -4).isActive = true
         self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 0.5).isActive = true
         self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -13).isActive = true
+        
+        self.textFieldInputTex.addSubview(plceholderLabel)
+        self.plceholderLabel.rightAnchor.constraint(equalTo: self.massegeImputContainerView.rightAnchor, constant: 65).isActive = true
+        self.plceholderLabel.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 8).isActive = true
+        self.plceholderLabel.widthAnchor.constraint(equalTo: self.massegeImputContainerView.widthAnchor).isActive = true
         
         self.separateView.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor).isActive = true
         self.separateView.widthAnchor.constraint(equalTo: self.massegeImputContainerView.widthAnchor).isActive = true
@@ -402,10 +415,10 @@ class ChatGrupController: UIViewController {
     }
     @objc func keyboardWillHide(notification: NSNotification) {
         hieghtConstraitForKeyword?.constant = 0
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 40, right: 0)
         let userInfo = notification.userInfo!
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
-        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 60, right: 0)
         let options = UIViewAnimationOptions(rawValue: curve << 16)
         
         UIView.animate(withDuration: duration, delay: 0, options: options,
@@ -422,10 +435,10 @@ class ChatGrupController: UIViewController {
         let userInfo = notification.userInfo!
         let keyboardHeight = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue.height
         hieghtConstraitForKeyword?.constant = -keyboardHeight
-        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: keyboardHeight + 60, right: 0)
         let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as! UInt
         let options = UIViewAnimationOptions(rawValue: curve << 16)
+        collectionView?.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: keyboardHeight + 40, right: 0)
         self.messegeTextFieldUp()
         UIView.animate(withDuration: duration, delay: 0, options: options,
                        animations: {
@@ -471,7 +484,7 @@ extension ChatGrupController: UICollectionViewDelegateFlowLayout {
 extension ChatGrupController: UITextViewDelegate {
     
     public func textViewDidChange(_ textView: UITextView) {
-        
+        self.plceholderLabel.isHidden = !textView.text.isEmpty
         let fixedWidth = textView.frame.size.width
         textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
         let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
@@ -479,20 +492,6 @@ extension ChatGrupController: UITextViewDelegate {
         newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
         heightConstraintForConteinerViewForMessage?.constant = newFrame.size.height + 10
         textInsideTextFeld = textView.text
-    }
-    
-    public func textViewDidBeginEditing(_ textView: UITextView) {
-        
-        if textView.text == "Your message".localized {
-            textView.text = nil
-            textView.textColor = UIColor.black
-        }
-    }
-    public func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text == "" {
-            textView.text = "Your message".localized
-            textView.textColor = UIColor.lightGray
-        }
     }
 }
 

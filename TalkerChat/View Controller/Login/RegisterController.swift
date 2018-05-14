@@ -65,6 +65,7 @@ class RegisterController: UIViewController {
         registerButton.setTitle("CONTINUE".localized, for: .normal)
         
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator?.center = self.view.center
         self.view.addSubview(activityIndicator!)
         
         checkTypeDevice()

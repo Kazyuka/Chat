@@ -73,20 +73,3 @@ extension UITextField {
     }
 }
 
-
-extension UIViewController {
-    
-    func textByCenterSearchController(searchController: UISearchController, space: CGFloat) {
-        
-        var offset = UIOffset()
-        
-        if (UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.phone)
-        {
-            offset = UIOffset(horizontal: (searchController.searchBar.frame.width  / 2) - space , vertical: 0)
-            searchController.searchBar.setPositionAdjustment(offset, for: .search)
-        } else {
-            offset = UIOffset(horizontal: (searchController.searchBar.frame.width  / 2) + 160 , vertical: 0)
-            searchController.searchBar.setPositionAdjustment(offset, for: .search)
-        }
-    }
-}

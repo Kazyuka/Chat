@@ -33,6 +33,7 @@ class ChatController: UIViewController {
         navigationItem.title = "Chats".localized
         UIApplication.shared.applicationIconBadgeNumber = 0
         self.setupNavigationBar()
+        self.tabBarController?.delegate = self
     }
     
     override func viewDidLoad() {
@@ -43,22 +44,20 @@ class ChatController: UIViewController {
         tableView.tableHeaderView = searchController.searchBar
         self.tableView.backgroundColor = UIColor.white
         searchController.searchBar.placeholder = "Search"
-        self.textByCenterSearchController(searchController: searchController, space: 50)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
         self.tableView.separatorColor = UIColor.clear
-        self.tabBarController?.delegate = self
         isUserLogin()
         
-        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2 - 10, y: self.view.frame.height/2 - 60 , width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        
         self.view.addSubview(activityIndicator!)
         self.observeUserMessages()
     }
     
     func setupNavigationBar() {
-        
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.titleTextAttributes = [
@@ -85,9 +84,8 @@ class ChatController: UIViewController {
                 backgroundview.clipsToBounds = true
             }
         }
-        offset = UIOffset(horizontal:( searchController.searchBar.frame.width / 2) - 60 , vertical: 0)
-        searchController.searchBar.setPositionAdjustment(offset, for: .search)
     }
+    
     func observeUserMessages() {
         self.activityIndicator?.startAnimating()
         self.grouChat.removeAll()
@@ -263,7 +261,8 @@ extension ChatController: UISearchResultsUpdating {
         filteredGroupChat = grouChat.filter({ (room) -> Bool in
     
             if room.groupName == nil {
-                let name = room.usersChat!.first?.range(of: searchText, options: NSString.CompareOptions.caseInsensitive, range: nil, locale: nil)
+                
+                let name = room.searchUser!.range(of: searchText, options: NSString.CompareOptions.caseInsensitive, range: nil, locale: nil)
                 return name != nil
             } else {
                 let name = room.groupName?.range(of: searchText, options: NSString.CompareOptions.caseInsensitive, range: nil, locale: nil)
@@ -286,7 +285,6 @@ extension ChatController: UISearchBarDelegate {
         searchBar.showsCancelButton = true
     }
 }
-
 
 extension ChatController: UITabBarControllerDelegate {
     

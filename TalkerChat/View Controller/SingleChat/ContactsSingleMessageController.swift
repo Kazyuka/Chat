@@ -24,20 +24,20 @@ class ContactsSingleMessageController: UIViewController {
         super.viewWillAppear(animated)
         tableView.separatorColor = UIColor.clear
         setupNavigationBar()
+        self.navigationItem.title = "Contacts".localized
     }
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Contacts".localized
+
         searchController = UISearchController(searchResultsController: nil);
         tableView.tableHeaderView = searchController.searchBar
         searchController.searchBar.placeholder = "Search".localized
-        self.textByCenterSearchController(searchController: searchController, space: 50)
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
-        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2 - 10, y: self.view.frame.height/2 - 60 , width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
         self.view.addSubview(activityIndicator!)
         self.getAllUser()
     }
@@ -70,8 +70,6 @@ class ContactsSingleMessageController: UIViewController {
                 backgroundview.clipsToBounds = true
             }
         }
-        offset = UIOffset(horizontal:( searchController.searchBar.frame.width / 2) - 60 , vertical: 0)
-        searchController.searchBar.setPositionAdjustment(offset, for: .search)
     }
     
     func getAllUser() {
@@ -142,7 +140,7 @@ extension ContactsSingleMessageController: UITableViewDataSource, UITableViewDel
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 72
+        return 74
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -224,3 +222,4 @@ extension ContactsSingleMessageController: UISearchBarDelegate {
         searchBar.showsCancelButton = true
     }
 }
+

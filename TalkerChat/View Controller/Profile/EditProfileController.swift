@@ -10,6 +10,7 @@ import UIKit
 import FirebaseAuth
 import FirebaseDatabase
 import FirebaseStorage
+import NVActivityIndicatorView
 
 @objc protocol EditProfileControllerDelegate {
     func getAboutMeText(text: String)
@@ -24,6 +25,8 @@ class EditProfileController: UIViewController {
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var userImageView: UIImageView!
+    var activityIndicator: NVActivityIndicatorView?
+    
     var aboutMeText = ""
     
     var user: User?
@@ -50,6 +53,9 @@ class EditProfileController: UIViewController {
         self.navigationItem.title = "Edit Profile".localized
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
+        
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        self.view.addSubview(activityIndicator!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -99,8 +105,9 @@ class EditProfileController: UIViewController {
 
     @IBAction func saveButtonClick(_ sender: Any) {
     
-        
+        activityIndicator?.startAnimating()
         if lastNameTextField.text == "" || firstNameTextField.text == "" {
+            activityIndicator?.stopAnimating()
             self.present(self.allertControllerWithOneButton(message: "Заполните пустые поля"), animated: true, completion: nil)
         } else {
             
@@ -157,6 +164,7 @@ extension EditProfileController: UIImagePickerControllerDelegate, UINavigationCo
                     
                     let ref = Database.database().reference().child("users").child(self.user!.uid!)
                     ref.updateChildValues(value)
+                    self.activityIndicator?.stopAnimating()
                     self.navigationController?.popViewController(animated: true)
                 }
             })

@@ -72,7 +72,10 @@ class SettingsController: UIViewController {
         passwordAgainLabel.text = "Password again".localized
         languageLabel.text = "Language".localized
         logOutButton.setTitle("LOGOUT".localized, for: .normal)
-        
+        User.getCurrentUserFromFirebase { (user) in
+            self.emailTextView.text = user.email
+            self.email = self.emailTextView.text!
+        }
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
@@ -85,15 +88,10 @@ class SettingsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         logOutButton.setTitle("LogOut".localized, for: .normal)
+        logOutButton.backgroundColor = #colorLiteral(red: 1, green: 0.2582280998, blue: 0.305868388, alpha: 1)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
-        
-        User.getCurrentUserFromFirebase { (user) in
-            self.emailTextView.text = user.email
-            self.email = self.emailTextView.text!
-        }
-    
         logOutButton.layer.cornerRadius = 24
         logOutButton.clipsToBounds = true
         logOutButton.setTitle("LOGOUT", for: .normal)
@@ -161,9 +159,9 @@ class SettingsController: UIViewController {
         let user = Auth.auth().currentUser
         
         if password == "" || rPassword == "" {
-            return
+            self.present(self.allertControllerWithOneButton(message: "Данные сохранены".localized), animated: true, completion: nil)
         } else if  password != rPassword {
-            self.present(self.allertControllerWithOneButton(message: "Пароли не совпадают"), animated: true, completion: nil)
+            self.present(self.allertControllerWithOneButton(message: "Пароли не совпадают".localized), animated: true, completion: nil)
         } else {
             user?.updatePassword(to:password!, completion: { (err) in
                 if err != nil {

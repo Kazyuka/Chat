@@ -137,11 +137,18 @@ class ChatGrupController: UIViewController {
         self.navigationItem.title = room?.groupName
     }
     
-    override func didMove(toParentViewController parent: UIViewController?) {
-        super.didMove(toParentViewController: parent)
+   
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
         
-        if parent == nil {
-            self.delegate?.observeChangedMessageInsideChatRoom()
+        if (self.isMovingFromParentViewController || self.isBeingDismissed) {
+
+            if self.navigationController!.viewControllers.count == 2 {
+                self.navigationController!.viewControllers.remove(at: 1)
+                NotificationCenter.default.post(name: .REMOVE_GROUP, object: nil)
+            } else {
+                self.delegate?.observeChangedMessageInsideChatRoom()
+            }
         }
     }
     
@@ -226,8 +233,6 @@ class ChatGrupController: UIViewController {
         let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " ","badge":1,"sound":"default"]] as [String: AnyObject]
         Alamofire.request(AppDelegate.NOTIFICATION_URL as URLConvertible, method: .post as HTTPMethod, parameters: notificatios, encoding: JSONEncoding.default, headers: headers).responseJSON { (response) in
             
-            
-            print(response)
         }
     }
     

@@ -37,6 +37,7 @@ class DetailGroupController: UIViewController {
     var group: Group?
     var keyChat: String?
     var currentUser: User?
+    var roomChat: RoomChat?
     
     weak var delegateForDissmiss: DissmisGroupCreteDelegate?
     
@@ -52,7 +53,7 @@ class DetailGroupController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationItem.title = group?.nameGroup
+        self.navigationItem.title = roomChat?.groupName
     }
     
     func configureView() {
@@ -60,10 +61,11 @@ class DetailGroupController: UIViewController {
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
         activityIndicator?.center  = self.view.center
         self.view.addSubview(activityIndicator!)
-        self.navigationItem.title = group?.nameGroup
-        nameGroup.text = group?.nameGroup
-        if let im = group?.image {
-            self.imageGroupView.image = im
+        self.navigationItem.title = roomChat?.groupName
+        nameGroup.text = roomChat?.groupName
+        if let im = roomChat?.imageGroup {
+            let url = NSURL.init(string: im)
+            self.imageGroupView.sd_setImage(with: url! as URL)
         }
         User.getCurrentUserFromFirebase { (user) in
             self.currentUser = user
@@ -92,6 +94,7 @@ class DetailGroupController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         tableView.separatorColor = .clear
+        
         self.navigationItem.leftBarButtonItem = backButton
         addUserLabel.text = "Add User".localized
     }
@@ -102,70 +105,77 @@ class DetailGroupController: UIViewController {
         self.navigationController?.pushViewController(groupMC, animated: true)
     }
     
-    func getUIDForGroup() -> String {
-        
-        var users = [String]()
-        for us in userArray {
-            users.append(us.uid!)
-        }
-        let keyChat = users.joined(separator: " ")
-        return keyChat
-    }
-    
+   
     @IBAction func backButtonAction(_ sender: Any) {
-        registerGroupIntoFirebase()
+        updateGroupIntoFirebase()
     }
 
-    private func registerGroupIntoFirebase() {
+    private func updateGroupIntoFirebase() {
         self.activityIndicator?.startAnimating()
+        Storage.storage().reference().child("group_images")
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
-        let uploadData = UIImagePNGRepresentation(self.group!.image!)
-        keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
-        self.userArray.append(currentUser!)
+        let uploadData = UIImagePNGRepresentation(self.imageGroupView.image!)
+        let ref = Database.database().reference().child("chat-romm").child(self.roomChat!.groupUID!).child("users")
+        ref.removeValue()
+        
+        for us in self.userArray {
+            let ch = ref.childByAutoId()
+            let v = ["toId" : us.userId]
+            ch.updateChildValues(v)
+        }
         storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
             if err != nil{
+                
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                 return
             }
             if let meta = metadata?.downloadURL()?.absoluteString {
-                let uid = Auth.auth().currentUser?.uid
-                let value = ["nameGroup": self.group?.nameGroup, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": self.keyChat!] as [String : Any]
-                let ref = Database.database().reference().child("chat-romm").child(self.keyChat!)
-                ref.updateChildValues(value, withCompletionBlock: { (err, snap) in
+                
+                let value = ["nameGroup": self.nameGroup?.text, "groupImageUrl" : meta] as [String : Any]
+                let ref = Database.database().reference().child("chat-romm").child(self.roomChat!.groupUID!)
+                ref.updateChildValues(value, withCompletionBlock: { (err, data) in
                     
-                    if err != nil {
+                    if err != nil{
+                        self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
                         return
                     }
-
+                    
                     for us in self.userArray {
-                        let ref2 = Database.database().reference().child("chat-romm").child(self.keyChat!).child("users").childByAutoId()
+                        let ref2 = Database.database().reference().child("chat-romm").child(self.roomChat!.groupUID!).child("users").childByAutoId()
                         ref2.updateChildValues(["toId" :us.uid])
                     }
-                    self.getChatRommFromFirebaseDatabase()
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                        self.getChatRommFromFirebaseDatabase()
+                    })
                 })
             }
         })
     }
     
     
-    func getChatRommFromFirebaseDatabase() {
-    
-        let refChatRom = Database.database().reference().child("chat-romm").child(self.keyChat!)
-        refChatRom.observe(.value) { (snap) in
+    private func getChatRommFromFirebaseDatabase() {
+        
+        let refChatRom = Database.database().reference().child("chat-romm").child(self.roomChat!.groupUID!)
+        
+        refChatRom.observeSingleEvent(of: .value) { (snap) in
             guard let dic = snap.value as? [String: AnyObject] else {
                 return
             }
-            let g = RoomChat.init(dic: dic)
+            let roomChat = RoomChat.init(dic: dic)
+            self.activityIndicator?.stopAnimating()
             self.navigationController?.viewControllers.remove(at: 1)
             let chatLogGroupController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatGrupController") as! ChatGrupController
-            chatLogGroupController.room = g
+            chatLogGroupController.room = roomChat
+            chatLogGroupController.delegate = self.chatController
             self.navigationController?.pushViewController(chatLogGroupController, animated: true)
         }
     }
 
     @IBAction func editButtonClick(_ sender: Any) {
         let editGroup =  self.storyboard?.instantiateViewController(withIdentifier: "EditDetailGroupController") as! EditDetailGroupController
+        group = Group(idGroup: roomChat?.groupUID, nameGroup: nameGroup.text, image: imageGroupView.image, typeGroup: roomChat?.isSingle)
         editGroup.group = group
         editGroup.delegate = self
         self.navigationController?.pushViewController(editGroup, animated: true)

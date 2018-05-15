@@ -34,6 +34,12 @@ class ChatController: UIViewController {
         UIApplication.shared.applicationIconBadgeNumber = 0
         self.setupNavigationBar()
         self.tabBarController?.delegate = self
+        NotificationCenter.default.addObserver(self, selector: #selector(removeGroupObserver(notification:)), name: .REMOVE_GROUP, object: nil)
+    }
+    
+    @objc func removeGroupObserver(notification: NSNotification) {
+        self.observeUserMessages()
+        NotificationCenter.default.removeObserver(self, name: .REMOVE_GROUP, object: nil)
     }
     
     override func viewDidLoad() {
@@ -55,6 +61,7 @@ class ChatController: UIViewController {
         
         self.view.addSubview(activityIndicator!)
         self.observeUserMessages()
+        
     }
     
     func setupNavigationBar() {
@@ -134,7 +141,6 @@ class ChatController: UIViewController {
     @IBAction func createGroupButtonAction(_ sender: Any) {
         let createGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "GroupCreateController") as! GroupCreateController
         createGroupVC.delegate = self
-        createGroupVC.delegateGoToGroupChat = self
         self.navigationController?.pushViewController(createGroupVC, animated: true)
     }
     
@@ -295,5 +301,11 @@ extension ChatController: UITabBarControllerDelegate {
             self.observeUserMessages()
         }
     }
+}
+
+
+extension Notification.Name {
+    static let REMOVE_GROUP = Notification.Name("REMOVE_GROUP")
+    static let argentina = Notification.Name("argentina")
 }
 

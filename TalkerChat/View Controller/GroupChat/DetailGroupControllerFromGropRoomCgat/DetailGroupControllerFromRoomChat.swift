@@ -69,7 +69,8 @@ class DetailGroupControllerFromRoomChat: UIViewController {
     
     @IBAction func editGroupButtonClick(_ sender: Any) {
         let editGroup =  self.storyboard?.instantiateViewController(withIdentifier: "EditDetailGroupController") as! EditDetailGroupController
-        group = Group(nameGroup: roomChat?.groupName, image: imageGroup.image, typeGroup: roomChat?.isSingle)
+       
+        group =  Group(idGroup: roomChat?.groupUID, nameGroup: roomChat?.groupName, image: imageGroup.image, typeGroup: roomChat?.isSingle)
         editGroup.group = group
         editGroup.delegate = self
         self.navigationController?.pushViewController(editGroup, animated: true)

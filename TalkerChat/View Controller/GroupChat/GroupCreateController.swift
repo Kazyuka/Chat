@@ -12,6 +12,7 @@ import FirebaseStorage
 import FirebaseAuth
 import MobileCoreServices
 import AVKit
+import NVActivityIndicatorView
 
 protocol GroupCreateControllerDelegate: class {
     func goToDetailCreateGroup(g: Group)
@@ -27,12 +28,13 @@ class GroupCreateController: UIViewController {
     @IBOutlet weak var photoImageGroup: UIImageView!
     @IBOutlet weak var nameGroupTextField: UITextField!
     @IBOutlet weak var groupNameLabel: UILabel!
+    var activityIndicator: NVActivityIndicatorView?
     
     var imageGroup = UIImage()
     let imagePicker = UIImagePickerController()
+    var keyChat: String?
     weak var delegate: GroupCreateControllerDelegate?
-    weak var delegateGoToGroupChat: GoToGroupCahatRoomDelegate?
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         imagePicker.delegate = self
@@ -50,6 +52,10 @@ class GroupCreateController: UIViewController {
         nameGroupTextField.changeColor(textForPlaceHoder: "Some Name".localized, size: 17.0)
         self.navigationItem.title = "Create Group".localized
         groupNameLabel.text = "Group Name".localized
+        
+        activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator?.center  = self.view.center
+        self.view.addSubview(activityIndicator!)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -89,8 +95,7 @@ class GroupCreateController: UIViewController {
         actionSheet.addAction(UIAlertAction(title: "Chose Photo".localized, style: UIAlertActionStyle.default, handler: { (alert:UIAlertAction!) -> Void in
             self.photoLibrary()
         }))
-     
-
+    
         actionSheet.addAction(UIAlertAction(title: "Cancel".localized, style: UIAlertActionStyle.cancel, handler: nil))
         
         if UIScreen.main.traitCollection.userInterfaceIdiom == .pad {
@@ -105,14 +110,57 @@ class GroupCreateController: UIViewController {
     
 
     @IBAction func saveGroup(_ sender: Any) {
-        
+    
         if  nameGroupTextField.text == "" {
             self.present(self.allertControllerWithOneButton(message: "Заполните название"), animated: true, completion: nil)
         } else {
-            let group = Group(nameGroup: self.nameGroupTextField.text, image: self.photoImageGroup.image!, typeGroup: false)
+            registerGroupIntoFirebase()
+        }
+    }
+    
+    
+    private func registerGroupIntoFirebase() {
+        self.activityIndicator?.startAnimating()
+        let imageName = NSUUID().uuidString
+        let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
+        let uploadData = UIImagePNGRepresentation(photoImageGroup.image!)
+        keyChat = Database.database().reference().child("chat-romm").childByAutoId().key
+        storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
+            if err != nil{
+                self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
+                return
+            }
+            if let meta = metadata?.downloadURL()?.absoluteString {
+                let uid = Auth.auth().currentUser?.uid
+                let value = ["nameGroup": self.nameGroupTextField.text, "groupImageUrl" : meta, "ovnerGroup": uid, "isSingle": 0, "uidGroup": self.keyChat!] as [String : Any]
+                let ref = Database.database().reference().child("chat-romm").child(self.keyChat!)
+                ref.updateChildValues(value, withCompletionBlock: { (err, snap) in
+                    
+                    if err != nil {
+                        return
+                    }
+                    
+                    let ref2 = Database.database().reference().child("chat-romm").child(self.keyChat!).child("users").childByAutoId()
+                    ref2.updateChildValues(["toId" : Auth.auth().currentUser?.uid])
+                    
+                    self.getChatRommFromFirebaseDatabase()
+                })
+            }
+        })
+    }
+    
+    
+    func getChatRommFromFirebaseDatabase() {
+        
+        let refChatRom = Database.database().reference().child("chat-romm").child(self.keyChat!)
+        refChatRom.observeSingleEvent(of: .value) { (snap) in
+            guard let dic = snap.value as? [String: AnyObject] else {
+                return
+            }
+            self.activityIndicator?.stopAnimating()
+            let roomChat = RoomChat.init(dic: dic)
             let detailGroupVC = self.storyboard?.instantiateViewController(withIdentifier: "DetailGroupController") as! DetailGroupController
-            detailGroupVC.group = group
-            detailGroupVC.delegateForDissmiss = self
+            detailGroupVC.roomChat = roomChat
             self.navigationController?.pushViewController(detailGroupVC, animated: true)
         }
     }
@@ -141,16 +189,9 @@ extension GroupCreateController: UIImagePickerControllerDelegate, UINavigationCo
 }
 
 struct Group {
+    var idGroup: String?
     var nameGroup: String?
     var image: UIImage?
     var typeGroup: Bool?
 }
 
-extension GroupCreateController: DissmisGroupCreteDelegate {
-    func dissmissGroupCreteView(room: RoomChat ) {
-        self.navigationController?.popViewController(animated: true)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-            self.delegateGoToGroupChat?.goToGroupChat(room: room)
-        })
-    }
-}

@@ -21,6 +21,7 @@ class EditDetailGroupController: UIViewController {
     @IBOutlet weak var saveButton: UIBarButtonItem!
     @IBOutlet weak var groupNameTextField: UITextField!
     @IBOutlet weak var imageGroup: UIImageView!
+    @IBOutlet weak var removeGroupButton: UIButton!
     weak var delegate: EditDetailGroupControllerDelegate?
     
     var group: Group?
@@ -37,6 +38,10 @@ class EditDetailGroupController: UIViewController {
         imageGroup.addGestureRecognizer(gesture)
         groupNameTextField.text = group?.nameGroup
         imageGroup.image = group?.image
+        removeGroupButton.backgroundColor = #colorLiteral(red: 1, green: 0.2582280998, blue: 0.305868388, alpha: 1)
+        removeGroupButton.layer.cornerRadius = 24
+        removeGroupButton.clipsToBounds = true
+        removeGroupButton.setTitle("REMOVE GROUP".localized, for: .normal)
         self.navigationController?.navigationBar.barTintColor = #colorLiteral(red: 0.3019607843, green: 0.7411764706, blue: 0.9294117647, alpha: 1)
         self.navigationController?.navigationBar.isTranslucent = false
         self.navigationController?.navigationBar.tintColor = UIColor.white
@@ -51,10 +56,27 @@ class EditDetailGroupController: UIViewController {
         self.navigationController?.navigationBar.backItem?.title = ""
         self.navigationItem.title = "Edit Group".localized
     }
-  
+    
+    @IBAction func removeGroupButtonClick(_ sender: Any) {
+        
+        let ref = Database.database().reference().child("chat-romm").child(group!.idGroup!)
+        ref.removeValue()
+        
+        for nav in self.navigationController!.viewControllers {
+        
+            if navigationController?.viewControllers != nil {
+                self.navigationController?.viewControllers.remove(at: 1)
+            }
+        }
+        
+        NotificationCenter.default.post(name: .REMOVE_GROUP, object: nil)
+        let tabController =  self.storyboard?.instantiateViewController(withIdentifier: "TabController") as! TabController
+        self.navigationController?.pushViewController(tabController, animated: true)
+    }
+    
     @IBAction func saveButtonClick(_ sender: Any) {
-        let group = Group.init(nameGroup: groupNameTextField.text, image: imageGroup.image, typeGroup: false)
-       
+        
+        let group = Group(idGroup: self.group?.idGroup, nameGroup:  groupNameTextField.text, image: imageGroup.image, typeGroup: false)
         self.navigationController?.popViewController(animated: true)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
              self.delegate?.getEditedGroup(group: group)

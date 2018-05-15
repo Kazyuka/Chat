@@ -265,7 +265,7 @@ class ChatSingleController: UIViewController {
         
         var headers: HTTPHeaders = HTTPHeaders()
         headers = ["Content-Type": "application/json", "Authorization": "key=\(AppDelegate.SERVERCEY)"]
-        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " ","badge":1,"sound":"default"]] as [String: AnyObject]
+        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " " ,"badge":1,"sound":"default","idRoom": self.unicKyeForChatRoom!]] as [String: AnyObject]
         Alamofire.request(AppDelegate.NOTIFICATION_URL as URLConvertible, method: .post as HTTPMethod, parameters: notificatios, encoding: JSONEncoding.default, headers: headers).responseJSON { (response) in
     
         }

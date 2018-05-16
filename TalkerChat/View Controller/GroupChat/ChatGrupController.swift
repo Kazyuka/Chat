@@ -390,7 +390,6 @@ class ChatGrupController: UIViewController {
         self.massegeImputContainerView.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
         
         textFieldInputTex.delegate = self
-        
         self.massegeImputContainerView.addSubview(textFieldInputTex)
         self.massegeImputContainerView.addSubview(sendButton)
         self.massegeImputContainerView.addSubview(sendImageButton)
@@ -410,8 +409,9 @@ class ChatGrupController: UIViewController {
         self.textFieldInputTex.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 0.5).isActive = true
         self.textFieldInputTex.rightAnchor.constraint(equalTo: self.sendButton.leftAnchor, constant: -13).isActive = true
         
+        
         self.textFieldInputTex.addSubview(plceholderLabel)
-        self.plceholderLabel.rightAnchor.constraint(equalTo: self.massegeImputContainerView.rightAnchor, constant: 65).isActive = true
+        self.plceholderLabel.leftAnchor.constraint(equalTo: self.massegeImputContainerView.leftAnchor, constant: 65).isActive = true
         self.plceholderLabel.topAnchor.constraint(equalTo: self.massegeImputContainerView.topAnchor, constant: 8).isActive = true
         self.plceholderLabel.widthAnchor.constraint(equalTo: self.massegeImputContainerView.widthAnchor).isActive = true
         

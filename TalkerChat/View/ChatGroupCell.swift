@@ -24,12 +24,13 @@ class ChatGroupCell: UICollectionViewCell {
     
     func dataForCell() {
         
+        messageImageView.image = nil
+        messageText.text = nil
         bubleLeftAchor?.isActive = false
         bubleRightAchor?.isActive = false
         messageText.text = messageGroup?.text
         let uid = Auth.auth().currentUser?.uid
-        
-        
+
         if messageGroup?.videoUrl != nil {
             playButton.isHidden = false
         } else {

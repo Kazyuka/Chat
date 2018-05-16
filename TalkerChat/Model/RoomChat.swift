@@ -22,6 +22,7 @@ class RoomChat {
     var lastMessage: String?
     var toId: String?
     var searchUser: String?
+    var time: Int?
     
     init(dic: [String : AnyObject]) {
         
@@ -53,6 +54,10 @@ class RoomChat {
         
         if let mes = dic["messages"] as? Dictionary<String, AnyObject> {
             message = getMessageChat(dic: mes)
+        }
+        
+        if let _time = dic["time"] as? Int {
+            time = _time
         }
     }
     
@@ -107,6 +112,19 @@ class RoomChat {
         }
     }
     
+    
+    static func getChatRoombyId(id: String, room:@escaping (RoomChat) ->()) {
+        
+        let refChatRom = Database.database().reference().child("chat-romm").child(id)
+        
+        refChatRom.observeSingleEvent(of: .value) { (snap) in
+            guard let dic = snap.value as? [String: AnyObject] else {
+                return
+            }
+            let roomChat = RoomChat.init(dic: dic)
+            room(roomChat)
+        }
+    }
     func getMessageChat(dic: Dictionary<String, AnyObject>) -> [Message] {
         var arrayMessage = [Message]()
         for d in  dic {

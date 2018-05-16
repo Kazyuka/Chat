@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static let NOTIFICATION_URL = "https://fcm.googleapis.com/fcm/send"
     static var DEVICEID = String()
     static let SERVERCEY = "AAAAtA1rnxA:APA91bE3DLt8fiJSsVguz_yZn2LPKNXYndNEMlCmIoalRrF9r3r_zXmJjshrJRlMNVsTS_IRgrj6s2WBrOKa7WQLdHevFRtVKhxqs94LYjFmUF3tCp4mo0oKttipj3bCXva3xWawkyzH"
-
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
@@ -30,10 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().backgroundImage = UIImage.colorForNavBar(color: #colorLiteral(red: 0.003921568627, green: 0.7450980392, blue: 0.9411764706, alpha: 1))
         UITabBar.appearance().shadowImage = UIImage.colorForNavBar(color: .white)
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let tabController = storyboard.instantiateViewController(withIdentifier: "TabController") as! TabController
         let loginController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-        
         let uid = Auth.auth().currentUser?.uid
         
         if uid == nil {
@@ -65,10 +63,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any]) {
+        
+        
+        print(userInfo)
     }
     
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
                      fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        print(userInfo)
 
         completionHandler(UIBackgroundFetchResult.newData)
     }
@@ -90,6 +93,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
+        
+        
         UIApplication.shared.applicationIconBadgeNumber = 0
     }
 
@@ -119,7 +124,6 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
         
-        print(userInfo)
         
         completionHandler([])
     }
@@ -129,7 +133,37 @@ extension AppDelegate : UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
       
-        print(userInfo)
+        
+        let navigation = UINavigationController()
+        let tabController = storyboard.instantiateViewController(withIdentifier: "TabController") as! TabController
+        let chatGroup = storyboard.instantiateViewController(withIdentifier: "ChatGrupController") as! ChatGrupController
+        let chatSingle =  self.storyboard.instantiateViewController(withIdentifier: "ChatSingleController") as! ChatSingleController
+        
+        let typeChat = userInfo["gcm.notification.isSingle"] as? String
+        let idChat = userInfo["gcm.notification.idRoom"] as? String
+        
+        if typeChat == "1" {
+            
+            RoomChat.getChatRoombyId(id: idChat!, room: { (chat) in
+                
+                RoomChat.getCurrentUserFromSingleMessage(chatRoom: chat) { (us) in
+                    chatSingle.user = us
+                    chatSingle.unicKyeForChatRoom = chat.groupUID
+                    chatSingle.isPushingNitification = true
+                    navigation.setViewControllers([tabController,chatSingle], animated: true)
+                    self.window?.rootViewController =  navigation
+                }
+            })
+        } else {
+            
+            RoomChat.getChatRoombyId(id: idChat!, room: { (chat) in
+                chatGroup.room = chat
+                chatGroup.isPushingNitification = true
+                navigation.setViewControllers([tabController, chatGroup], animated: true)
+                self.window?.rootViewController =  navigation
+            })
+            
+        }
         
         completionHandler()
     }

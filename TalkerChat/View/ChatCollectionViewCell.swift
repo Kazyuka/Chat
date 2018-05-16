@@ -18,7 +18,8 @@ class ChatCollectionViewCell: UICollectionViewCell {
         }
     }
     func dataForCell()  {
-        
+        messageImageView.image = nil
+        messageText.text = nil
         bubleLeftAchor?.isActive = false
         bubleRightAchor?.isActive = false
         messageText.text = message?.text

@@ -113,6 +113,13 @@ class ChatController: UIViewController {
                         self.grouChat.append(g)
                     }
                 }
+                self.grouChat.sort(by: { (chat1, chat2) -> Bool in
+                    
+                    if let time = chat1.time, let time2 = chat2.time {
+                         return time > time2
+                    }
+                    return true
+                })
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -306,6 +313,5 @@ extension ChatController: UITabBarControllerDelegate {
 
 extension Notification.Name {
     static let REMOVE_GROUP = Notification.Name("REMOVE_GROUP")
-    static let argentina = Notification.Name("argentina")
 }
 

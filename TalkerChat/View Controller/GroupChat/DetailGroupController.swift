@@ -54,6 +54,7 @@ class DetailGroupController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationItem.title = roomChat?.groupName
+        self.imageGroupView.setRounded()
     }
     
     func configureView() {
@@ -115,7 +116,7 @@ class DetailGroupController: UIViewController {
         Storage.storage().reference().child("group_images")
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
-        let uploadData = UIImagePNGRepresentation(self.imageGroupView.image!)
+        let imageData = self.imageGroupView.image?.lowQualityJPEGNSData
         let ref = Database.database().reference().child("chat-romm").child(self.roomChat!.groupUID!).child("users")
         ref.removeValue()
         
@@ -124,7 +125,8 @@ class DetailGroupController: UIViewController {
             let v = ["toId" : us.userId]
             ch.updateChildValues(v)
         }
-        storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
+        
+        storageRef.putData(imageData! as Data, metadata: nil, completion: { (metadata, err) in
             if err != nil{
                 
                 self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)

@@ -12,6 +12,7 @@ import Alamofire
 
 class ChatSingleController: UIViewController {
    
+    @IBOutlet weak var backItem: UIBarButtonItem!
     @IBOutlet weak var collectionView: UICollectionView!
     var arrayMessages = [Message]()
     var startingFrame: CGRect?
@@ -22,6 +23,7 @@ class ChatSingleController: UIViewController {
     var unicKyeForChatRoom: String?
     var activityIndicator: NVActivityIndicatorView?
     var grouChat = [RoomChat]()
+    var isPushingNitification: Bool = false
     
     weak var delegate: ChatControllerDelegate?
     
@@ -57,6 +59,7 @@ class ChatSingleController: UIViewController {
                 gesture.numberOfTapsRequired = 1
                 imageView.isUserInteractionEnabled = true
                 imageView.addGestureRecognizer(gesture)
+                imageView.contentMode = .scaleAspectFill
                 imageView.setRounded()
                 imageView.image = self.imageUserForNavigationBar
                 viewImage.addSubview(imageView)
@@ -68,7 +71,7 @@ class ChatSingleController: UIViewController {
     }
     
     func observerMessages() {
-      
+        arrayMessages.removeAll()
         let refChatRom = Database.database().reference().child("chat-romm").child(unicKyeForChatRoom!).child("messages")
         refChatRom.observe(.childAdded) { (snap) in
             
@@ -97,11 +100,14 @@ class ChatSingleController: UIViewController {
             }
         }
     }
-    override func didMove(toParentViewController parent: UIViewController?) {
-        super.didMove(toParentViewController: parent)
-        
-        if parent == nil {
-           self.delegate?.observeChangedMessageInsideChatRoom()
+    @IBAction func backButtonAction(_ sender: Any) {
+        if isPushingNitification {
+            self.navigationController?.setNavigationBarHidden(true, animated: true)
+            self.navigationController?.viewControllers.remove(at: 1)
+            self.delegate?.observeChangedMessageInsideChatRoom()
+        } else {
+            self.navigationController?.viewControllers.remove(at: 1)
+            self.delegate?.observeChangedMessageInsideChatRoom()
         }
     }
     
@@ -123,6 +129,7 @@ class ChatSingleController: UIViewController {
         activityIndicator?.center = self.view.center
         self.view.addSubview(activityIndicator!)
         self.arrayMessages.removeAll()
+        self.navigationItem.leftBarButtonItem = backItem
         FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
             if isConnect {
                 self.observerMessages()
@@ -208,7 +215,7 @@ class ChatSingleController: UIViewController {
         let toIdUser = user?.uid
         let fromId = Auth.auth().currentUser!.uid
         let time = Int(NSDate().timeIntervalSince1970)
-        let value =  ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": unicKyeForChatRoom] as [String : Any]
+        let value = ["ovnerGroup": fromId, "isSingle": 1, "uidGroup": unicKyeForChatRoom] as [String : Any]
         let text = self.textFieldInputTex.text
         
         ref.updateChildValues(value) { (err, data) in
@@ -237,6 +244,10 @@ class ChatSingleController: UIViewController {
             
             let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
             refLastMessage.updateChildValues(["last-message": text])
+            
+            let timeRef = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+            timeRef.updateChildValues(["time": time])
+            
             let refToIdUser = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
             refToIdUser.updateChildValues(["toId": toIdUser])
             self.featchMessages(toId: toIdUser!, textMessage: text!)
@@ -265,7 +276,7 @@ class ChatSingleController: UIViewController {
         
         var headers: HTTPHeaders = HTTPHeaders()
         headers = ["Content-Type": "application/json", "Authorization": "key=\(AppDelegate.SERVERCEY)"]
-        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " " ,"badge":1,"sound":"default","idRoom": self.unicKyeForChatRoom!]] as [String: AnyObject]
+        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " " ,"badge":1,"sound":"default","idRoom": self.unicKyeForChatRoom!, "isSingle": 1]] as [String: AnyObject]
         Alamofire.request(AppDelegate.NOTIFICATION_URL as URLConvertible, method: .post as HTTPMethod, parameters: notificatios, encoding: JSONEncoding.default, headers: headers).responseJSON { (response) in
     
         }

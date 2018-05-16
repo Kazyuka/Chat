@@ -18,6 +18,7 @@ import Alamofire
 class ChatGrupController: UIViewController {
   
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var backItem: UIBarButtonItem!
     
     var activityIndicator: NVActivityIndicatorView?
     var idUsersWhoGetMessage = [String]()
@@ -32,6 +33,7 @@ class ChatGrupController: UIViewController {
     var hieghtConstraitForKeyword: NSLayoutConstraint?
     var heightConstraintForConteinerViewForMessage: NSLayoutConstraint?
     var unicKyeForChatRoom: String?
+    var isPushingNitification: Bool = false
     
     weak var delegate: ChatControllerDelegate?
     
@@ -58,14 +60,6 @@ class ChatGrupController: UIViewController {
     }
     
     func addImageForNavigationButton() {
-        if let im = room?.imageGroup {
-            let url = NSURL.init(string: im)
-            imageUserForNavigationBar.sd_setImage(with: url! as URL)
-        } else {
-            imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
-        }
-        self.allUsers = room.usersChat
-        self.unicKyeForChatRoom = room.groupUID
     
         let viewImage = UIView()
         let imageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 25, height: 25))
@@ -75,13 +69,36 @@ class ChatGrupController: UIViewController {
         imageView.isUserInteractionEnabled = true
         imageView.addGestureRecognizer(gesture)
         imageView.setRounded()
-        imageView.image = self.imageUserForNavigationBar.image
-        viewImage.addSubview(imageView)
-        viewImage.frame = imageView.bounds
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
+        imageView.backgroundColor = UIColor.green
+        
+        if let im = room?.imageGroup {
+            let url = NSURL.init(string: im)
+            
+            DispatchQueue.main.async(execute: {
+                var date = NSData.init(contentsOf: url as! URL)
+                if date != nil {
+                    self.imageUserForNavigationBar.image = UIImage.init(data: date as! Data)
+                } else {
+                    self.imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
+                }
+                imageView.contentMode = .scaleAspectFill
+                imageView.image = self.imageUserForNavigationBar.image
+                viewImage.addSubview(imageView)
+                viewImage.frame = imageView.bounds
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
+            })
+            
+        } else {
+            imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
+            imageView.image = self.imageUserForNavigationBar.image
+            viewImage.addSubview(imageView)
+            viewImage.frame = imageView.bounds
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
+        }
+        self.allUsers = room.usersChat
+        self.unicKyeForChatRoom = room.groupUID
     }
     
-
     func observerMessages() {
         arrayMessages.removeAll()
         if let keyUnick = unicKyeForChatRoom {
@@ -94,8 +111,9 @@ class ChatGrupController: UIViewController {
                 let g = GroupMessage.init(dic: dic)
                 self.arrayMessages.append(g)
                 self.activityIndicator?.stopAnimating()
-                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1), execute: {
-                    self.collectionView?.reloadData()
+                
+                DispatchQueue.main.async(execute: {
+                    self.collectionView.reloadData()
                     let indexPath  = IndexPath(item: self.arrayMessages.count - 1, section: 0)
                     self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                 })
@@ -121,13 +139,9 @@ class ChatGrupController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
         tapGesture.cancelsTouchesInView = true
         self.view.addGestureRecognizer(tapGesture)
-        
-        FirebaseInternetConnection.isConnectedToInternet { (isConnect) in
-            if isConnect {
-                self.addImageForNavigationButton()
-                self.observerMessages()
-            }
-        }
+        self.navigationItem.leftBarButtonItem = backItem
+        self.addImageForNavigationButton()
+        self.observerMessages()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -137,21 +151,18 @@ class ChatGrupController: UIViewController {
         self.navigationItem.title = room?.groupName
     }
     
-   
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
-        if (self.isMovingFromParentViewController || self.isBeingDismissed) {
-
-            if self.navigationController!.viewControllers.count == 2 {
-                self.navigationController!.viewControllers.remove(at: 1)
-                NotificationCenter.default.post(name: .REMOVE_GROUP, object: nil)
-            } else {
-                self.delegate?.observeChangedMessageInsideChatRoom()
-            }
+    @IBAction func backButtonAction(_ sender: Any) {
+        if isPushingNitification {
+            self.navigationController?.setNavigationBarHidden(true, animated: true)
+            self.navigationController?.viewControllers.remove(at: 1)
+            self.delegate?.observeChangedMessageInsideChatRoom()
+        } else {
+            self.navigationController?.viewControllers.remove(at: 1)
+            self.navigationController?.viewControllers.remove(at: 1)
+            NotificationCenter.default.post(name: .REMOVE_GROUP, object: nil)
         }
     }
-    
+   
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         collectionView?.collectionViewLayout.invalidateLayout()
     }
@@ -164,14 +175,20 @@ class ChatGrupController: UIViewController {
         view.endEditing(true)
     }
     @objc func sendMassegaButtonTapped() {
-
+        sendButton.isEnabled = false
+        heightConstraintForConteinerViewForMessage?.constant = 40
+      
         if let unicKye = unicKyeForChatRoom {
             let ref = databaseRef.child("chat-romm").child(unicKye).child("messages").childByAutoId()
             let fromId = Auth.auth().currentUser!.uid
             let time = Int(NSDate().timeIntervalSince1970)
-            let text = textFieldInputTex.text!
+            let text = textFieldInputTex.text
             
             let value = ["text": text,"fromId" : fromId, "time": time] as [String : Any]
+            
+            textFieldInputTex.text = " "
+            self.plceholderLabel.isHidden = false
+            
             ref.updateChildValues(value) { (error, ref) in
                 
                 if error != nil {
@@ -180,13 +197,12 @@ class ChatGrupController: UIViewController {
                 
                 let refLastMessage = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
                 refLastMessage.updateChildValues(["last-message": text])
-                self.featchMessages(chatId: self.unicKyeForChatRoom!, textMessage: text)
+                
+                let refTime = self.databaseRef.child("chat-romm").child(self.unicKyeForChatRoom!)
+                refLastMessage.updateChildValues(["time": time])
+                self.featchMessages(chatId: self.unicKyeForChatRoom!, textMessage: text!)
             }
         }
-        heightConstraintForConteinerViewForMessage?.constant = 40
-        sendButton.isEnabled = false
-        textFieldInputTex.text = " "
-        self.plceholderLabel.isHidden = false
     }
     
     private func featchMessages(chatId: String, textMessage: String) {
@@ -196,9 +212,7 @@ class ChatGrupController: UIViewController {
             guard let dic = snap.value  as? [String: AnyObject] else {
                 return
             }
-            
             let toIdDevice = dic["deviceId"] as? String
-
             dic.forEach({ (value, key) in
                 
                 guard let uid = Auth.auth().currentUser?.uid else {
@@ -230,7 +244,7 @@ class ChatGrupController: UIViewController {
     private func sendPushNotificationToUser(idUser: String, textMessage: String) {
         var headers: HTTPHeaders = HTTPHeaders()
         headers = ["Content-Type": "application/json", "Authorization": "key=\(AppDelegate.SERVERCEY)"]
-        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " ","badge":1,"sound":"default"]] as [String: AnyObject]
+        let notificatios = ["to":"\(idUser)","notification":["body":textMessage,"title": " ","badge":1,"sound":"default", "idRoom": self.unicKyeForChatRoom!, "isSingle": 0]] as [String: AnyObject]
         Alamofire.request(AppDelegate.NOTIFICATION_URL as URLConvertible, method: .post as HTTPMethod, parameters: notificatios, encoding: JSONEncoding.default, headers: headers).responseJSON { (response) in
             
         }
@@ -413,7 +427,7 @@ class ChatGrupController: UIViewController {
     
     
     private func messegeTextFieldUp() {
-        if self.arrayMessages.count > 1 {
+        if self.arrayMessages.count > 2 {
             let indexPath  = IndexPath(item: self.arrayMessages.count - 1, section: 0)
             self.collectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
         }
@@ -480,10 +494,21 @@ extension ChatGrupController: UICollectionViewDelegateFlowLayout {
     public  func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let text = arrayMessages[indexPath.item].text
         
+        var height: CGFloat = 80
+        
         if let messageText = text {
-            return CGSize(width: UIScreen.main.bounds.width, height: (messageText.height(withConstrainedWidth: 200, font: UIFont.boldSystemFont(ofSize: 14))) + 20)
+            height = estimateFrameForText(text: messageText).height + 20
+        } else {
+            height = 200
         }
-        return CGSize(width: UIScreen.main.bounds.width, height: 200 )
+        return CGSize(width: UIScreen.main.bounds.width, height: height )
+    }
+    
+    private func estimateFrameForText(text: String) -> CGRect {
+        let size = CGSize(width: 200, height: 1000)
+        let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
+        return NSString.init(string: text).boundingRect(with: size, options: options, attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16)], context: nil)
+        
     }
 }
 extension ChatGrupController: UITextViewDelegate {

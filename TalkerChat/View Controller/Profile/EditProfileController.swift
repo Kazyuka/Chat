@@ -55,6 +55,7 @@ class EditProfileController: UIViewController {
             NSAttributedStringKey.font: UIFont.systemFont(ofSize: 21, weight: UIFont.Weight.bold), NSAttributedStringKey.foregroundColor: UIColor.white]
         
         activityIndicator = NVActivityIndicatorView.init(frame: CGRect.init(x: self.view.frame.width/2, y: self.view.frame.height/2, width: 30.0, height: 30.0), type: .ballClipRotatePulse, color:  #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1), padding: 0.0)
+        activityIndicator?.center = self.view.center
         self.view.addSubview(activityIndicator!)
     }
     
@@ -161,7 +162,6 @@ extension EditProfileController: UIImagePickerControllerDelegate, UINavigationCo
                 if let urlString = metadata?.downloadURL()?.absoluteString {
                     
                     value["profileImageUrl"] = urlString as AnyObject
-                    
                     let ref = Database.database().reference().child("users").child(self.user!.uid!)
                     ref.updateChildValues(value)
                     self.activityIndicator?.stopAnimating()

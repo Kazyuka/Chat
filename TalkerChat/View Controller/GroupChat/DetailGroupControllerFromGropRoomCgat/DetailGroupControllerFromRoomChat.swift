@@ -166,44 +166,46 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         Storage.storage().reference().child("group_images")
         let imageName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("group_images").child("\(imageName).png")
-        let uploadData = UIImagePNGRepresentation(self.imageGroup.image!)
-        let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom).child("users")
-        ref.removeValue()
-        
-        for us in self.userArray {
-            let ch = ref.childByAutoId()
-            let v = ["toId" : us.userId]
-            ch.updateChildValues(v)
-        }
-        storageRef.putData(uploadData!, metadata: nil, completion: { (metadata, err) in
-            if err != nil{
-                
-                self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
-                return
+      
+        if let uploadData = self.imageGroup.image?.lowQualityJPEGNSData {
+
+            let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom).child("users")
+            ref.removeValue()
+            for us in self.userArray {
+                let ch = ref.childByAutoId()
+                let v = ["toId" : us.userId]
+                ch.updateChildValues(v)
             }
-            if let meta = metadata?.downloadURL()?.absoluteString {
-                
-                let value = ["nameGroup": self.nameGroup?.text, "groupImageUrl" : meta] as [String : Any]
-                let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom)
-                ref.updateChildValues(value, withCompletionBlock: { (err, data) in
+            storageRef.putData(uploadData as Data as Data, metadata: nil, completion: { (metadata, err) in
+                if err != nil{
                     
-                    if err != nil{
-                        self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
-                        return
-                    }
+                    self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
+                    return
+                }
+                if let meta = metadata?.downloadURL()?.absoluteString {
                     
-                    for us in self.userArray {
-                        let ref2 = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom).child("users").childByAutoId()
-                        ref2.updateChildValues(["toId" :us.uid])
-                    }
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
-                        self.activityIndicator?.stopAnimating()
-                        self.navigationController?.popViewController(animated: true)
+                    let value = ["nameGroup": self.nameGroup?.text, "groupImageUrl" : meta] as [String : Any]
+                    let ref = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom)
+                    ref.updateChildValues(value, withCompletionBlock: { (err, data) in
+                        
+                        if err != nil{
+                            self.present(self.allertControllerWithOneButton(message: err!.localizedDescription), animated: true, completion: nil)
+                            return
+                        }
+                        
+                        for us in self.userArray {
+                            let ref2 = Database.database().reference().child("chat-romm").child(self.unicKyeForChatRoom).child("users").childByAutoId()
+                            ref2.updateChildValues(["toId" :us.uid])
+                        }
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                            self.activityIndicator?.stopAnimating()
+                            self.navigationController?.popViewController(animated: true)
+                        })
                     })
-                })
-            }
-        })
+                }
+            })
+        }
     }
 }
 

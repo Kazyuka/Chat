@@ -73,7 +73,7 @@ enum Language: String {
            UIApplication.shared.windows[0].rootViewController = UIStoryboard(
                 name: "Main",
                 bundle: nil
-                ).instantiateInitialViewController()
+                ).instantiateViewController(withIdentifier: "TabController")
         }
     }
 }

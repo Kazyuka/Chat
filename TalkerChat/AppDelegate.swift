@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     static let NOTIFICATION_URL = "https://fcm.googleapis.com/fcm/send"
     static var DEVICEID = String()
-    static let SERVERCEY = "AAAAtA1rnxA:APA91bE3DLt8fiJSsVguz_yZn2LPKNXYndNEMlCmIoalRrF9r3r_zXmJjshrJRlMNVsTS_IRgrj6s2WBrOKa7WQLdHevFRtVKhxqs94LYjFmUF3tCp4mo0oKttipj3bCXva3xWawkyzH"
+    static let SERVERCEY = "AAAA9FBioNQ:APA91bF_3JwRVHspCydCjkPmAedEQfKYyzJz4qqlcgWEuqsJ4EB_VeZfPY_1cfigUiQ6wQHeBrEhCc1ONU-wVDSx6-Xd9aH5KwIUgDIjid347VGin-N1UFZn07oy7cSlzrUdIm83zc8Z"
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

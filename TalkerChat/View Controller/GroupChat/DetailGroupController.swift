@@ -109,6 +109,19 @@ class DetailGroupController: UIViewController {
    
     @IBAction func backButtonAction(_ sender: Any) {
         updateGroupIntoFirebase()
+        blockedNavigationButton()
+    }
+    
+    private func blockedNavigationButton() {
+        self.backButton.isEnabled = false
+        self.editButton.isEnabled = false
+        self.addUserButton.isEnabled = false
+    }
+    
+    private func unBlockedNavigationButton() {
+        self.backButton.isEnabled = true
+        self.editButton.isEnabled = true
+        self.addUserButton.isEnabled = true
     }
 
     private func updateGroupIntoFirebase() {
@@ -171,6 +184,7 @@ class DetailGroupController: UIViewController {
             let chatLogGroupController =  self.storyboard?.instantiateViewController(withIdentifier: "ChatGrupController") as! ChatGrupController
             chatLogGroupController.room = roomChat
             chatLogGroupController.delegate = self.chatController
+            self.unBlockedNavigationButton()
             self.navigationController?.pushViewController(chatLogGroupController, animated: true)
         }
     }

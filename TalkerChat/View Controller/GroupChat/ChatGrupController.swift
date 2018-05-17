@@ -74,20 +74,24 @@ class ChatGrupController: UIViewController {
         if let im = room?.imageGroup {
             let url = NSURL.init(string: im)
             
-            DispatchQueue.main.async(execute: {
-                var date = NSData.init(contentsOf: url as! URL)
-                if date != nil {
-                    self.imageUserForNavigationBar.image = UIImage.init(data: date as! Data)
-                } else {
-                    self.imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
-                }
-                imageView.contentMode = .scaleAspectFill
-                imageView.image = self.imageUserForNavigationBar.image
-                viewImage.addSubview(imageView)
-                viewImage.frame = imageView.bounds
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
-            })
             
+            DispatchQueue.global().async(execute: {
+                
+                var date = NSData.init(contentsOf: url as! URL)
+                DispatchQueue.main.async(execute: {
+                    
+                    if date != nil {
+                        self.imageUserForNavigationBar.image = UIImage.init(data: date as! Data)
+                    } else {
+                        self.imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
+                    }
+                    imageView.contentMode = .scaleAspectFill
+                    imageView.image = self.imageUserForNavigationBar.image
+                    viewImage.addSubview(imageView)
+                    viewImage.frame = imageView.bounds
+                    self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: viewImage)
+                })
+            })
         } else {
             imageUserForNavigationBar.image = UIImage.init(named: "groupImage.png")!
             imageView.image = self.imageUserForNavigationBar.image

@@ -129,6 +129,19 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         self.currentUserImageView.setRounded()
     }
     
+    
+    private func blockedNavigationButton() {
+        self.back.isEnabled = false
+        self.editButtonUser.isEnabled = false
+        self.addButtonUser.isEnabled = false
+    }
+    
+    private func unBlockedNavigationButton() {
+        self.back.isEnabled = true
+        self.editButtonUser.isEnabled = true
+        self.addButtonUser.isEnabled = true
+    }
+    
     private func checkOvnerGroup() {
         if currentUser == roomChat!.ovnerGroup {
             addButtonUser.isHidden = false
@@ -143,9 +156,11 @@ class DetailGroupControllerFromRoomChat: UIViewController {
         }
     }
     
+    
     @IBAction func backButtonAction(_ sender: Any) {
         if currentUser == roomChat!.ovnerGroup {
             updateGroupIntoFirebase()
+            blockedNavigationButton()
         } else {
             self.navigationController?.popViewController(animated: true)
         }
@@ -199,6 +214,7 @@ class DetailGroupControllerFromRoomChat: UIViewController {
                         }
                         
                         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2), execute: {
+                            self.unBlockedNavigationButton() 
                             self.activityIndicator?.stopAnimating()
                             self.navigationController?.popViewController(animated: true)
                         })

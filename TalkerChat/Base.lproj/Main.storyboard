@@ -1178,6 +1178,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addUserButton" destination="pWi-tV-uHD" id="uOB-HE-mbn"/>
                         <outlet property="addUserLabel" destination="ZY3-iN-J7F" id="RJa-Ho-KJ0"/>
                         <outlet property="backButton" destination="mNe-Nr-uOY" id="mXn-yh-zje"/>
                         <outlet property="currentUserImageView" destination="L6p-RV-RJh" id="gwH-ph-fyn"/>
